@@ -13,57 +13,104 @@ class MarketService:
         """Get trending markets from Polymarket using Events API"""
         try:
             # Use events API for active markets
-            events_data = self.client.get_events(limit=limit)
+            events_data = self.client.get_events(limit=limit * 2)
             
             # Transform event data to market format
             transformed_markets = []
             for event in events_data:
                 try:
-                    # Get the first market from the event
+                    # Get all markets from the event
                     markets = event.get('markets', [])
                     if not markets:
                         continue
                     
-                    # Use the first market in the event
-                    market = markets[0]
-                    
-                    # Get outcome prices
-                    outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
-                    if isinstance(outcome_prices, str):
-                        outcome_prices = json.loads(outcome_prices)
-                    
-                    # Get YES price
-                    yes_price = float(outcome_prices[0]) if outcome_prices and outcome_prices[0] not in ["0", "0.0"] else 0.5
-                    
-                    # Extract token IDs
-                    token_ids_str = market.get('clobTokenIds', '[]')
-                    if isinstance(token_ids_str, str):
-                        token_ids = json.loads(token_ids_str)
+                    # Check if this is a multi-outcome event (multiple markets)
+                    if len(markets) > 1:
+                        # Multi-outcome market - group all outcomes
+                        outcomes = []
+                        for market in markets:
+                            outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
+                            if isinstance(outcome_prices, str):
+                                outcome_prices = json.loads(outcome_prices)
+                            
+                            yes_price = float(outcome_prices[0]) if outcome_prices and outcome_prices[0] not in ["0", "0.0"] else 0.01
+                            
+                            outcome_title = market.get('groupItemTitle', market.get('question', ''))
+                            if not outcome_title or outcome_title == "0":
+                                # Try to extract from question
+                                question = market.get('question', '')
+                                if 'will' in question.lower() and '?' in question:
+                                    outcome_title = question.split('will')[1].split('?')[0].strip() if 'will' in question.lower() else question
+                                else:
+                                    outcome_title = question
+                            
+                            token_ids_str = market.get('clobTokenIds', '[]')
+                            if isinstance(token_ids_str, str):
+                                token_ids = json.loads(token_ids_str)
+                            else:
+                                token_ids = token_ids_str
+                            
+                            outcomes.append({
+                                'title': outcome_title,
+                                'price': yes_price,
+                                'token_id': token_ids[0] if token_ids else '',
+                                'market_id': market.get('id', '')
+                            })
+                        
+                        transformed_market = {
+                            'id': str(event.get('id', '')),
+                            'title': event.get('title', ''),
+                            'category': self._get_category_from_event(event),
+                            'is_multi_outcome': True,
+                            'outcomes': outcomes,
+                            'volume': float(event.get('volume', 0)),
+                            'liquidity': float(event.get('liquidity', 0)),
+                            'endDate': event.get('endDate', '2025-12-31')[:10],
+                            'image': event.get('image', event.get('icon', '')),
+                            'change24h': self._calculate_change(event),
+                            'slug': event.get('slug', ''),
+                        }
+                        transformed_markets.append(transformed_market)
                     else:
-                        token_ids = token_ids_str
-                    
-                    token_id = token_ids[0] if token_ids else ''
-                    
-                    transformed_market = {
-                        'id': str(market.get('id', '')),
-                        'title': event.get('title', market.get('question', '')),
-                        'category': self._get_category_from_event(event),
-                        'yesPrice': yes_price,
-                        'noPrice': 1 - yes_price,
-                        'volume': float(event.get('volume', 0)),
-                        'liquidity': float(event.get('liquidity', 0)),
-                        'endDate': event.get('endDate', '2025-12-31')[:10],
-                        'image': event.get('image', event.get('icon', '')),
-                        'change24h': self._calculate_change(event),
-                        'slug': market.get('slug', ''),
-                        'token_id': token_id
-                    }
-                    transformed_markets.append(transformed_market)
+                        # Single outcome (YES/NO) market
+                        market = markets[0]
+                        
+                        outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
+                        if isinstance(outcome_prices, str):
+                            outcome_prices = json.loads(outcome_prices)
+                        
+                        yes_price = float(outcome_prices[0]) if outcome_prices and outcome_prices[0] not in ["0", "0.0"] else 0.5
+                        
+                        token_ids_str = market.get('clobTokenIds', '[]')
+                        if isinstance(token_ids_str, str):
+                            token_ids = json.loads(token_ids_str)
+                        else:
+                            token_ids = token_ids_str
+                        
+                        token_id = token_ids[0] if token_ids else ''
+                        
+                        transformed_market = {
+                            'id': str(market.get('id', '')),
+                            'title': event.get('title', market.get('question', '')),
+                            'category': self._get_category_from_event(event),
+                            'is_multi_outcome': False,
+                            'yesPrice': yes_price,
+                            'noPrice': 1 - yes_price,
+                            'volume': float(event.get('volume', 0)),
+                            'liquidity': float(event.get('liquidity', 0)),
+                            'endDate': event.get('endDate', '2025-12-31')[:10],
+                            'image': event.get('image', event.get('icon', '')),
+                            'change24h': self._calculate_change(event),
+                            'slug': market.get('slug', ''),
+                            'token_id': token_id
+                        }
+                        transformed_markets.append(transformed_market)
+                        
                 except Exception as e:
                     logger.error(f"Error transforming event: {e}")
                     continue
             
-            return transformed_markets
+            return transformed_markets[:limit]
         except Exception as e:
             logger.error(f"Error getting trending markets: {e}")
             return []
