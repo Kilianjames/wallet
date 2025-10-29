@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, TrendingUp, TrendingDown, ArrowUpRight } from 'lucide-react';
-import { trendingMarkets } from '../mockData';
+import { Search, TrendingUp, TrendingDown, ArrowUpRight, Loader2 } from 'lucide-react';
+import { marketService } from '../services/api';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -10,10 +10,28 @@ const Markets = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [markets, setMarkets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const categories = ['ALL', 'Crypto', 'Sports', 'Politics', 'Economics'];
 
-  const filteredMarkets = trendingMarkets.filter((market) => {
+  useEffect(() => {
+    loadMarkets();
+  }, []);
+
+  const loadMarkets = async () => {
+    try {
+      setLoading(true);
+      const data = await marketService.getMarkets(50);
+      setMarkets(data);
+    } catch (error) {
+      console.error('Error loading markets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredMarkets = markets.filter((market) => {
     const matchesSearch = market.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'ALL' || market.category === selectedCategory;
     return matchesSearch && matchesCategory;
