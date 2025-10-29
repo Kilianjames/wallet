@@ -145,21 +145,36 @@ const Markets = () => {
                     {market.title}
                   </h3>
 
-                  {/* Price Display */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <div className="text-gray-400 text-xs mb-1">YES Price</div>
-                      <div className="text-2xl font-bold text-green-400">
-                        ${(market.yesPrice * 100).toFixed(1)}
+                  {/* Display outcomes based on market type */}
+                  {market.is_multi_outcome ? (
+                    /* Multi-outcome market - show all options */
+                    <div className="space-y-2 mb-4">
+                      {market.outcomes.map((outcome, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-[#1a3a2e] rounded-lg hover:bg-[#254538] transition-colors">
+                          <span className="text-sm text-gray-300">{outcome.title}</span>
+                          <span className="text-lg font-bold text-[#7fffd4]">
+                            ${(outcome.price * 100).toFixed(1)}¢
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    /* YES/NO market */
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <div className="text-gray-400 text-xs mb-1">YES Price</div>
+                        <div className="text-2xl font-bold text-green-400">
+                          ${(market.yesPrice * 100).toFixed(1)}¢
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-gray-400 text-xs mb-1">NO Price</div>
+                        <div className="text-2xl font-bold text-red-400">
+                          ${(market.noPrice * 100).toFixed(1)}¢
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-gray-400 text-xs mb-1">NO Price</div>
-                      <div className="text-2xl font-bold text-red-400">
-                        ${(market.noPrice * 100).toFixed(1)}
-                      </div>
-                    </div>
-                  </div>
+                  )}
 
                   {/* Stats */}
                   <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-[#1a3a2e]">
