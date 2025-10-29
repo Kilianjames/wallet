@@ -1,9 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BarChart3, Shield, Zap } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import { marketService } from '../services/api';
 
 const Landing = () => {
+  const [stats, setStats] = useState({
+    volume: '0M',
+    markets: '0+',
+    liquidity: '0M',
+    traders: '12.4K'
+  });
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const loadStats = async () => {
+    try {
+      const markets = await marketService.getMarkets(100);
+      const totalVolume = markets.reduce((sum, m) => sum + m.volume, 0);
+      const totalLiquidity = markets.reduce((sum, m) => sum + m.liquidity, 0);
+      
+      setStats({
+        volume: `$${(totalVolume / 1000000).toFixed(0)}M`,
+        markets: `${markets.length}+`,
+        liquidity: `$${(totalLiquidity / 1000000).toFixed(0)}M`,
+        traders: '12.4K'
+      });
+    } catch (error) {
+      console.error('Error loading stats:', error);
+    }
+  };
   return (
     <div className="min-h-screen bg-[#0a1f1a] text-white">
       {/* Hero Section */}
