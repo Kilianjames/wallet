@@ -9,6 +9,7 @@ import Markets from "./pages/Markets";
 import Portfolio from "./pages/Portfolio";
 import { Toaster } from "./components/ui/toaster";
 
+// Use a default Privy App ID - user needs to replace with their own
 const PRIVY_APP_ID = process.env.REACT_APP_PRIVY_APP_ID || 'clz3o9t2b02o63b1s14k85nty';
 
 function App() {
@@ -25,10 +26,10 @@ function App() {
           embeddedWallets: {
             createOnLogin: 'users-without-wallets',
           },
-          loginMethods: ['wallet', 'email'],
+          loginMethods: ['wallet', 'email', 'sms'],
           supportedChains: [
             {
-              id: 137, // Polygon mainnet (Polymarket uses Polygon)
+              id: 137, // Polygon (Polymarket runs on Polygon)
               name: 'Polygon',
               network: 'polygon',
               nativeCurrency: {
@@ -40,11 +41,15 @@ function App() {
                 default: { http: ['https://polygon-rpc.com'] },
                 public: { http: ['https://polygon-rpc.com'] },
               },
-              blockExplorers: {
-                default: { name: 'PolygonScan', url: 'https://polygonscan.com' },
-              },
             },
           ],
+          // Enable Solana wallets
+          externalWallets: {
+            solana: {
+              enabled: true,
+              connectors: ['phantom', 'solflare', 'backpack'],
+            },
+          },
         }}
       >
         <WalletProvider>
