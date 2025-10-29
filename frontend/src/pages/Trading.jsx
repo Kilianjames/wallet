@@ -131,7 +131,7 @@ const Trading = () => {
           {markets.slice(0, 4).map((market) => (
             <button
               key={market.id}
-              onClick={() => setSelectedMarket(market)}
+              onClick={() => handleMarketChange(market)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
                 selectedMarket.id === market.id
                   ? 'bg-[#7fffd4] text-[#0a1f1a] font-semibold'
