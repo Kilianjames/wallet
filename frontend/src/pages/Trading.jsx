@@ -167,7 +167,7 @@ const Trading = () => {
               </div>
               <div className="text-right">
                 <div className="text-3xl font-bold text-white mb-1">
-                  ${(currentPrice * 100).toFixed(1)}
+                  ${(currentPrice * 100).toFixed(1)}¢
                 </div>
                 <div className={`flex items-center gap-1 text-sm ${
                   change24h >= 0 ? 'text-green-400' : 'text-red-400'
@@ -177,6 +177,31 @@ const Trading = () => {
                 </div>
               </div>
             </div>
+            
+            {/* Multi-outcome selector */}
+            {selectedMarket.is_multi_outcome && selectedMarket.outcomes && (
+              <div className="mb-4">
+                <div className="text-sm text-gray-400 mb-3">Select Outcome to Trade:</div>
+                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                  {selectedMarket.outcomes.map((outcome, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleOutcomeChange(outcome)}
+                      className={`p-3 rounded-lg border transition-all text-left ${
+                        selectedOutcome?.market_id === outcome.market_id
+                          ? 'border-[#7fffd4] bg-[#1a3a2e]'
+                          : 'border-[#1a3a2e] hover:border-[#254538]'
+                      }`}
+                    >
+                      <div className="text-sm text-white mb-1 truncate">{outcome.title}</div>
+                      <div className="text-lg font-bold text-[#7fffd4]">
+                        ${(outcome.price * 100).toFixed(1)}¢
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             
             <div className="grid grid-cols-3 gap-4 mt-4">
               <div>
