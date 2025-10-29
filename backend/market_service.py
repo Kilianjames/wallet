@@ -154,8 +154,14 @@ class MarketService:
     
     def _get_category_from_event(self, event: Dict) -> str:
         """Extract category from event data"""
-        category_raw = event.get('category', '').lower()
-        tags = [t.lower() for t in event.get('tags', [])]
+        category_raw = str(event.get('category', '')).lower()
+        tags_raw = event.get('tags', [])
+        
+        # Convert tags to list of strings
+        if isinstance(tags_raw, list):
+            tags = [str(t).lower() if not isinstance(t, dict) else str(t.get('label', '')).lower() for t in tags_raw]
+        else:
+            tags = []
         
         # Check category field first
         if 'sports' in category_raw or any('sport' in t or 'nfl' in t or 'nba' in t or 'mlb' in t or 'soccer' in t or 'football' in t or 'baseball' in t or 'basketball' in t for t in tags):
@@ -171,13 +177,13 @@ class MarketService:
         elif 'science' in category_raw or 'technology' in category_raw:
             return 'Science'
         
-        # Default based on common patterns
-        title_lower = event.get('title', '').lower()
-        if any(word in title_lower for word in ['nfl', 'nba', 'mlb', 'super bowl', 'world series', 'championship', 'playoff']):
+        # Default based on common patterns in title
+        title_lower = str(event.get('title', '')).lower()
+        if any(word in title_lower for word in ['nfl', 'nba', 'mlb', 'super bowl', 'world series', 'championship', 'playoff', 'soccer', 'football']):
             return 'Sports'
-        elif any(word in title_lower for word in ['bitcoin', 'ethereum', 'crypto', 'blockchain']):
+        elif any(word in title_lower for word in ['bitcoin', 'ethereum', 'crypto', 'blockchain', 'btc', 'eth']):
             return 'Crypto'
-        elif any(word in title_lower for word in ['fed', 'rate', 'recession', 'gdp', 'economy', 'inflation']):
+        elif any(word in title_lower for word in ['fed', 'rate', 'recession', 'gdp', 'economy', 'inflation', 'jobs']):
             return 'Economics'
         
         return 'Politics'  # Default
