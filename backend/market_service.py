@@ -1,6 +1,7 @@
 from polymarket_client import PolymarketClient
 from typing import List, Dict, Optional
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -11,33 +12,40 @@ class MarketService:
     def get_trending_markets(self, limit: int = 30) -> List[Dict]:
         """Get trending markets from Polymarket"""
         try:
-            markets_data = self.client.get_markets(limit=limit)
+            markets_data = self.client.get_markets(limit=limit * 2)  # Fetch more to filter
+            
+            # Filter for active markets only
+            active_markets = [m for m in markets_data if m.get('active', False) and not m.get('closed', False)]
             
             # Transform Polymarket data to our format
             transformed_markets = []
-            for market in markets_data:
+            for market in active_markets[:limit]:
                 try:
-                    # Extract market data
-                    tokens = market.get('tokens', [])
-                    if not tokens:
-                        continue
+                    # Get outcome prices
+                    outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
+                    if isinstance(outcome_prices, str):
+                        import json
+                        outcome_prices = json.loads(outcome_prices)
                     
-                    # Get YES token (first token)
-                    yes_token = tokens[0]
+                    # Get YES price (first price)
+                    yes_price = float(outcome_prices[0]) if len(outcome_prices) > 0 and outcome_prices[0] != "0" else 0.5
+                    
+                    # Extract category/tags
+                    category = self._get_category_from_market(market)
                     
                     transformed_market = {
-                        'id': market.get('id', ''),
+                        'id': str(market.get('id', '')),
                         'title': market.get('question', ''),
-                        'category': self._get_category(market.get('tags', [])),
-                        'yesPrice': float(yes_token.get('price', 0.5)),
-                        'noPrice': 1 - float(yes_token.get('price', 0.5)),
-                        'volume': float(market.get('volume', 0)),
-                        'liquidity': float(market.get('liquidity', 0)),
-                        'endDate': market.get('end_date_iso', '2025-12-31'),
-                        'image': market.get('image', ''),
+                        'category': category,
+                        'yesPrice': yes_price,
+                        'noPrice': 1 - yes_price,
+                        'volume': float(market.get('volumeNum', 0)),
+                        'liquidity': float(market.get('liquidityNum', 0)),
+                        'endDate': market.get('endDateIso', '2025-12-31'),
+                        'image': market.get('image', market.get('icon', '')),
                         'change24h': self._calculate_change(market),
                         'slug': market.get('slug', ''),
-                        'token_id': yes_token.get('token_id', '')
+                        'token_ids': market.get('clobTokenIds', '')
                     }
                     transformed_markets.append(transformed_market)
                 except Exception as e:
@@ -56,24 +64,26 @@ class MarketService:
             if not market:
                 return None
             
-            tokens = market.get('tokens', [])
-            if not tokens:
-                return None
+            # Get outcome prices
+            outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
+            if isinstance(outcome_prices, str):
+                import json
+                outcome_prices = json.loads(outcome_prices)
             
-            yes_token = tokens[0]
+            yes_price = float(outcome_prices[0]) if len(outcome_prices) > 0 and outcome_prices[0] != "0" else 0.5
             
             return {
-                'id': market.get('id', ''),
+                'id': str(market.get('id', '')),
                 'title': market.get('question', ''),
-                'category': self._get_category(market.get('tags', [])),
-                'yesPrice': float(yes_token.get('price', 0.5)),
-                'noPrice': 1 - float(yes_token.get('price', 0.5)),
-                'volume': float(market.get('volume', 0)),
-                'liquidity': float(market.get('liquidity', 0)),
-                'endDate': market.get('end_date_iso', '2025-12-31'),
-                'image': market.get('image', ''),
+                'category': self._get_category_from_market(market),
+                'yesPrice': yes_price,
+                'noPrice': 1 - yes_price,
+                'volume': float(market.get('volumeNum', 0)),
+                'liquidity': float(market.get('liquidityNum', 0)),
+                'endDate': market.get('endDateIso', '2025-12-31'),
+                'image': market.get('image', market.get('icon', '')),
                 'description': market.get('description', ''),
-                'token_id': yes_token.get('token_id', '')
+                'token_ids': market.get('clobTokenIds', '')
             }
         except Exception as e:
             logger.error(f"Error getting market details: {e}")
@@ -123,27 +133,33 @@ class MarketService:
             logger.error(f"Error getting orderbook: {e}")
             return None
     
-    def _get_category(self, tags: List[str]) -> str:
-        """Extract category from tags"""
+    def _get_category_from_market(self, market: Dict) -> str:
+        """Extract category from market data"""
+        category_raw = market.get('category', '')
+        
         category_map = {
-            'Politics': 'Politics',
-            'Crypto': 'Crypto',
-            'Sports': 'Sports',
-            'Economics': 'Economics',
-            'Pop Culture': 'Entertainment',
-            'Science': 'Science'
+            'politics': 'Politics',
+            'crypto': 'Crypto',
+            'sports': 'Sports',
+            'economics': 'Economics',
+            'economy': 'Economics',
+            'pop-culture': 'Entertainment',
+            'entertainment': 'Entertainment',
+            'science': 'Science',
+            'technology': 'Crypto',
+            'us-current-affairs': 'Politics'
         }
         
-        for tag in tags:
-            for key, value in category_map.items():
-                if key.lower() in tag.lower():
-                    return value
+        for key, value in category_map.items():
+            if key in category_raw.lower():
+                return value
         
         return 'Politics'  # Default
     
     def _calculate_change(self, market: Dict) -> float:
         """Calculate 24h price change"""
-        # This would require historical data
-        # For now, return a placeholder
-        import random
-        return round(random.uniform(-10, 10), 2)
+        try:
+            change = market.get('oneDayPriceChange', 0)
+            return round(float(change) * 100, 2) if change else 0.0
+        except:
+            return 0.0
