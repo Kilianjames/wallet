@@ -145,18 +145,26 @@ const Markets = () => {
                     {market.title}
                   </h3>
 
-                  {/* Display outcomes based on market type */}
+                  {/* Show summary for multi-outcome, full prices for YES/NO */}
                   {market.is_multi_outcome ? (
-                    /* Multi-outcome market - show all options */
+                    /* Multi-outcome market - show top 3 outcomes as preview */
                     <div className="space-y-2 mb-4">
-                      {market.outcomes.map((outcome, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-3 bg-[#1a3a2e] rounded-lg hover:bg-[#254538] transition-colors">
-                          <span className="text-sm text-gray-300">{outcome.title}</span>
-                          <span className="text-lg font-bold text-[#7fffd4]">
+                      <div className="text-sm text-gray-400 mb-3">
+                        {market.outcomes.length} possible outcomes
+                      </div>
+                      {market.outcomes.slice(0, 3).map((outcome, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-300 truncate">{outcome.title}</span>
+                          <span className="text-[#7fffd4] font-semibold ml-2">
                             ${(outcome.price * 100).toFixed(1)}¢
                           </span>
                         </div>
                       ))}
+                      {market.outcomes.length > 3 && (
+                        <div className="text-xs text-gray-500 text-center pt-2">
+                          +{market.outcomes.length - 3} more outcomes
+                        </div>
+                      )}
                     </div>
                   ) : (
                     /* YES/NO market */
