@@ -211,7 +211,7 @@ const Trading = () => {
 
           {/* Orderbook */}
           <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
-            <h2 className="text-lg font-semibold text-[#7fffd4] mb-4">Order Book</h2>
+            <h2 className="text-lg font-semibold text-[#7fffd4] mb-4">Order Book {orderbook ? '(Live)' : '(Loading...)'}</h2>
             <div className="grid grid-cols-2 gap-4">
               {/* Bids */}
               <div>
@@ -220,14 +220,18 @@ const Trading = () => {
                   <div className="text-right">Size</div>
                   <div className="text-right">Total</div>
                 </div>
-                {mockOrderbook.bids.slice(0, 8).map((bid, i) => (
-                  <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-[#1a3a2e] rounded relative">
-                    <div className="absolute inset-0 bg-green-500 opacity-10" style={{ width: `${(bid.total / 30000) * 100}%` }} />
-                    <div className="text-green-400 relative z-10">${(bid.price * 100).toFixed(1)}</div>
-                    <div className="text-right relative z-10">{bid.size}</div>
-                    <div className="text-right text-gray-400 relative z-10">{bid.total}</div>
-                  </div>
-                ))}
+                {orderbook && orderbook.bids.length > 0 ? (
+                  orderbook.bids.slice(0, 8).map((bid, i) => (
+                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-[#1a3a2e] rounded relative">
+                      <div className="absolute inset-0 bg-green-500 opacity-10" style={{ width: `${(bid.total / (orderbook.bids[orderbook.bids.length - 1]?.total || 1)) * 100}%` }} />
+                      <div className="text-green-400 relative z-10">${(bid.price * 100).toFixed(1)}</div>
+                      <div className="text-right relative z-10">{bid.size.toFixed(0)}</div>
+                      <div className="text-right text-gray-400 relative z-10">{bid.total.toFixed(0)}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-500 py-4 text-sm">No bids</div>
+                )}
               </div>
               
               {/* Asks */}
@@ -237,14 +241,18 @@ const Trading = () => {
                   <div className="text-right">Size</div>
                   <div className="text-right">Total</div>
                 </div>
-                {mockOrderbook.asks.slice(0, 8).map((ask, i) => (
-                  <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-[#1a3a2e] rounded relative">
-                    <div className="absolute inset-0 bg-red-500 opacity-10" style={{ width: `${(ask.total / 30000) * 100}%` }} />
-                    <div className="text-red-400 relative z-10">${(ask.price * 100).toFixed(1)}</div>
-                    <div className="text-right relative z-10">{ask.size}</div>
-                    <div className="text-right text-gray-400 relative z-10">{ask.total}</div>
-                  </div>
-                ))}
+                {orderbook && orderbook.asks.length > 0 ? (
+                  orderbook.asks.slice(0, 8).map((ask, i) => (
+                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-[#1a3a2e] rounded relative">
+                      <div className="absolute inset-0 bg-red-500 opacity-10" style={{ width: `${(ask.total / (orderbook.asks[orderbook.asks.length - 1]?.total || 1)) * 100}%` }} />
+                      <div className="text-red-400 relative z-10">${(ask.price * 100).toFixed(1)}</div>
+                      <div className="text-right relative z-10">{ask.size.toFixed(0)}</div>
+                      <div className="text-right text-gray-400 relative z-10">{ask.total.toFixed(0)}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-500 py-4 text-sm">No asks</div>
+                )}
               </div>
             </div>
           </div>
