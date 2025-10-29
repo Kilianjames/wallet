@@ -104,7 +104,7 @@ const Trading = () => {
       {/* Market Selector Bar */}
       <div className="border-b border-[#1a3a2e] bg-[#0d2520] px-6 py-3">
         <div className="flex items-center gap-4 overflow-x-auto">
-          {trendingMarkets.slice(0, 4).map((market) => (
+          {markets.slice(0, 4).map((market) => (
             <button
               key={market.id}
               onClick={() => setSelectedMarket(market)}
@@ -115,11 +115,13 @@ const Trading = () => {
               }`}
             >
               <span className="text-sm">{market.title.slice(0, 30)}...</span>
-              <span className={`text-xs ${
-                market.change24h >= 0 ? 'text-green-400' : 'text-red-400'
-              }`}>
-                {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(1)}%
-              </span>
+              {market.change24h !== 0 && (
+                <span className={`text-xs ${
+                  market.change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                }`}>
+                  {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(1)}%
+                </span>
+              )}
             </button>
           ))}
         </div>
