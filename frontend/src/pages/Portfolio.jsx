@@ -61,7 +61,7 @@ const Portfolio = () => {
                 Connect your wallet to view your positions, orders, and trading history
               </p>
               <Button 
-                onClick={handleConnect}
+                onClick={connect}
                 className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-8 py-6 text-lg"
               >
                 Connect Wallet
@@ -72,6 +72,22 @@ const Portfolio = () => {
       </div>
     );
   }
+
+  const handleClosePosition = (positionId) => {
+    toast({
+      title: 'Position Closed',
+      description: 'Your position has been closed successfully',
+    });
+    setPositions(positions.filter(p => p.id !== positionId));
+  };
+
+  const handleCancelOrder = (orderId) => {
+    toast({
+      title: 'Order Cancelled',
+      description: 'Your order has been cancelled',
+    });
+    setOrders(orders.filter(o => o.id !== orderId));
+  };
 
   return (
     <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
