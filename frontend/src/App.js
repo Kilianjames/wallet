@@ -9,8 +9,8 @@ import Markets from "./pages/Markets";
 import Portfolio from "./pages/Portfolio";
 import { Toaster } from "./components/ui/toaster";
 
-// Use a default Privy App ID - user needs to replace with their own
-const PRIVY_APP_ID = process.env.REACT_APP_PRIVY_APP_ID || 'clz3o9t2b02o63b1s14k85nty';
+// IMPORTANT: Replace with your Privy App ID from https://dashboard.privy.io
+const PRIVY_APP_ID = process.env.REACT_APP_PRIVY_APP_ID || 'YOUR_PRIVY_APP_ID_HERE';
 
 function App() {
   return (
@@ -22,6 +22,7 @@ function App() {
             theme: 'dark',
             accentColor: '#7fffd4',
             logo: 'https://customer-assets.emergentagent.com/job_e3912c72-e03b-483a-9a13-e7cb5f99c7ec/artifacts/tpoy6ypf_ZMgOwNQU_400x400.jpg',
+            landingHeader: 'Connect to Polynator',
           },
           embeddedWallets: {
             createOnLogin: 'users-without-wallets',
@@ -43,13 +44,6 @@ function App() {
               },
             },
           ],
-          // Enable Solana wallets
-          externalWallets: {
-            solana: {
-              enabled: true,
-              connectors: ['phantom', 'solflare', 'backpack'],
-            },
-          },
         }}
       >
         <WalletProvider>
