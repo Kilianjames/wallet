@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity, Loader2 } from 'lucide-react';
 import { marketService } from '../services/api';
 import { Button } from '../components/ui/button';
@@ -9,6 +10,7 @@ import { toast } from '../hooks/use-toast';
 import { generateChartData } from '../mockData';
 
 const Trading = () => {
+  const location = useLocation();
   const [markets, setMarkets] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
   const [selectedOutcome, setSelectedOutcome] = useState(null);
@@ -25,6 +27,19 @@ const Trading = () => {
   useEffect(() => {
     loadMarkets();
   }, []);
+
+  // Check if market was passed from Markets page
+  useEffect(() => {
+    if (location.state?.selectedMarket && markets.length > 0) {
+      const passedMarket = location.state.selectedMarket;
+      // Find the market in our loaded markets list
+      const foundMarket = markets.find(m => m.id === passedMarket.id) || passedMarket;
+      setSelectedMarket(foundMarket);
+      if (foundMarket.is_multi_outcome && foundMarket.outcomes?.length > 0) {
+        setSelectedOutcome(foundMarket.outcomes[0]);
+      }
+    }
+  }, [location.state, markets]);
 
   useEffect(() => {
     if (selectedMarket) {
