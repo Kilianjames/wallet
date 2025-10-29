@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException, Query
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,9 +6,10 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
+from market_service import MarketService
 
 
 ROOT_DIR = Path(__file__).parent
@@ -18,6 +19,9 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# Initialize market service
+market_service = MarketService()
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -37,10 +41,123 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+class Position(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    market_id: str
+    market_title: str
+    side: str  # LONG or SHORT
+    entry_price: float
+    current_price: float
+    size: float
+    leverage: int
+    liquidation_price: float
+    status: str = "OPEN"
+    opened_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    closed_at: Optional[datetime] = None
+    pnl: Optional[float] = None
+
+class Order(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    market_id: str
+    market_title: str
+    type: str  # MARKET or LIMIT
+    side: str  # LONG or SHORT
+    price: float
+    size: float
+    filled: float = 0
+    status: str = "OPEN"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Polynator Perp DEX API"}
+
+@api_router.get("/markets")
+async def get_markets(limit: int = Query(30, ge=1, le=100)):
+    """Get trending markets from Polymarket"""
+    try:
+        markets = market_service.get_trending_markets(limit=limit)
+        return {"markets": markets, "count": len(markets)}
+    except Exception as e:
+        logging.error(f"Error fetching markets: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch markets")
+
+@api_router.get("/markets/{market_id}")
+async def get_market_details(market_id: str):
+    """Get detailed market information"""
+    try:
+        market = market_service.get_market_details(market_id)
+        if not market:
+            raise HTTPException(status_code=404, detail="Market not found")
+        return market
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error fetching market details: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch market details")
+
+@api_router.get("/orderbook/{token_id}")
+async def get_orderbook(token_id: str):
+    """Get orderbook for a market token"""
+    try:
+        orderbook = market_service.get_orderbook(token_id)
+        if not orderbook:
+            raise HTTPException(status_code=404, detail="Orderbook not found")
+        return orderbook
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error fetching orderbook: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch orderbook")
+
+@api_router.post("/positions")
+async def create_position(position: Position):
+    """Create a new position (mock for now)"""
+    position_dict = position.model_dump()
+    position_dict['opened_at'] = position_dict['opened_at'].isoformat()
+    if position_dict.get('closed_at'):
+        position_dict['closed_at'] = position_dict['closed_at'].isoformat()
+    
+    result = await db.positions.insert_one(position_dict)
+    return {"id": str(result.inserted_id), "message": "Position created"}
+
+@api_router.get("/positions")
+async def get_positions(user_id: str = Query(...)):
+    """Get user's open positions"""
+    positions = await db.positions.find({"user_id": user_id, "status": "OPEN"}, {"_id": 0}).to_list(100)
+    
+    # Convert ISO string timestamps back to datetime objects
+    for position in positions:
+        if isinstance(position.get('opened_at'), str):
+            position['opened_at'] = datetime.fromisoformat(position['opened_at'])
+        if position.get('closed_at') and isinstance(position['closed_at'], str):
+            position['closed_at'] = datetime.fromisoformat(position['closed_at'])
+    
+    return {"positions": positions}
+
+@api_router.post("/orders")
+async def create_order(order: Order):
+    """Create a new order (mock for now)"""
+    order_dict = order.model_dump()
+    order_dict['created_at'] = order_dict['created_at'].isoformat()
+    
+    result = await db.orders.insert_one(order_dict)
+    return {"id": str(result.inserted_id), "message": "Order created"}
+
+@api_router.get("/orders")
+async def get_orders(user_id: str = Query(...)):
+    """Get user's open orders"""
+    orders = await db.orders.find({"user_id": user_id, "status": "OPEN"}, {"_id": 0}).to_list(100)
+    
+    # Convert ISO string timestamps back to datetime objects
+    for order in orders:
+        if isinstance(order.get('created_at'), str):
+            order['created_at'] = datetime.fromisoformat(order['created_at'])
+    
+    return {"orders": orders}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
