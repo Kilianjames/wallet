@@ -37,6 +37,11 @@ const Markets = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const handleMarketClick = (market) => {
+    // Navigate to trade page with market data in state
+    navigate('/trade', { state: { selectedMarket: market } });
+  };
+
   return (
     <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
       <div className="max-w-7xl mx-auto">
