@@ -11,6 +11,7 @@ import { generateChartData } from '../mockData';
 const Trading = () => {
   const [markets, setMarkets] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
+  const [selectedOutcome, setSelectedOutcome] = useState(null);
   const [orderbook, setOrderbook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [orderSide, setOrderSide] = useState('LONG');
@@ -26,10 +27,18 @@ const Trading = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedMarket?.token_id) {
-      loadOrderbook(selectedMarket.token_id);
+    if (selectedMarket) {
+      // If multi-outcome and no outcome selected, select first one
+      if (selectedMarket.is_multi_outcome && !selectedOutcome && selectedMarket.outcomes?.length > 0) {
+        setSelectedOutcome(selectedMarket.outcomes[0]);
+      }
+      // Load orderbook based on selected outcome or market token
+      const tokenId = selectedOutcome?.token_id || selectedMarket.token_id;
+      if (tokenId) {
+        loadOrderbook(tokenId);
+      }
     }
-  }, [selectedMarket?.id]);
+  }, [selectedMarket?.id, selectedOutcome?.market_id]);
 
   const loadMarkets = async () => {
     try {
@@ -38,6 +47,9 @@ const Trading = () => {
       setMarkets(data);
       if (data.length > 0) {
         setSelectedMarket(data[0]);
+        if (data[0].is_multi_outcome && data[0].outcomes?.length > 0) {
+          setSelectedOutcome(data[0].outcomes[0]);
+        }
       }
     } catch (error) {
       console.error('Error loading markets:', error);
@@ -62,7 +74,19 @@ const Trading = () => {
     }
   };
 
-  const currentPrice = selectedMarket?.yesPrice || 0.5;
+  const handleMarketChange = (market) => {
+    setSelectedMarket(market);
+    setSelectedOutcome(null);
+    if (market.is_multi_outcome && market.outcomes?.length > 0) {
+      setSelectedOutcome(market.outcomes[0]);
+    }
+  };
+
+  const handleOutcomeChange = (outcome) => {
+    setSelectedOutcome(outcome);
+  };
+
+  const currentPrice = selectedOutcome?.price || selectedMarket?.yesPrice || 0.5;
   const change24h = selectedMarket?.change24h || 0;
 
   const handlePlaceOrder = () => {
