@@ -3,6 +3,7 @@ import { TrendingUp, TrendingDown, X, Activity, Clock, CheckCircle, Info, Lock }
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from '../hooks/use-toast';
+import { useWallet } from '../contexts/WalletContext';
 import {
   Dialog,
   DialogContent,
@@ -13,18 +14,12 @@ import {
 } from '../components/ui/dialog';
 
 const Portfolio = () => {
+  const { isConnected, connect, address } = useWallet();
   const [positions, setPositions] = useState([]);
   const [orders, setOrders] = useState([]);
 
   const totalPnL = positions.reduce((sum, pos) => sum + pos.pnl, 0);
   const totalValue = positions.reduce((sum, pos) => sum + pos.size, 0);
-
-  // Show locked state (no wallet connected)
-  const isConnected = false;
-
-  const handleConnect = () => {
-    alert('To enable wallet connection:\n\n1. Get FREE Privy App ID from https://dashboard.privy.io\n2. Update /app/frontend/.env with your App ID\n3. Restart frontend\n\nSee /app/PRIVY_SETUP.md for details!');
-  };
 
   const handleClosePosition = (positionId) => {
     toast({
