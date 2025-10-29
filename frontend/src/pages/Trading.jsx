@@ -312,6 +312,15 @@ const Trading = () => {
           <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e] sticky top-6">
             <h2 className="text-lg font-semibold text-[#7fffd4] mb-4">Place Order</h2>
             
+            {/* Show selected outcome for multi-outcome markets */}
+            {selectedMarket.is_multi_outcome && selectedOutcome && (
+              <div className="mb-4 p-3 bg-[#1a3a2e] rounded-lg">
+                <div className="text-xs text-gray-400 mb-1">Trading on:</div>
+                <div className="text-sm font-semibold text-[#7fffd4]">{selectedOutcome.title}</div>
+                <div className="text-lg font-bold text-white mt-1">${(selectedOutcome.price * 100).toFixed(1)}¢</div>
+              </div>
+            )}
+            
             {/* Order Side */}
             <div className="grid grid-cols-2 gap-2 mb-4">
               <Button
