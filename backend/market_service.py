@@ -154,26 +154,33 @@ class MarketService:
     
     def _get_category_from_event(self, event: Dict) -> str:
         """Extract category from event data"""
-        category_raw = event.get('category', '')
+        category_raw = event.get('category', '').lower()
+        tags = [t.lower() for t in event.get('tags', [])]
         
-        category_map = {
-            'politics': 'Politics',
-            'crypto': 'Crypto',
-            'sports': 'Sports',
-            'economics': 'Economics',
-            'economy': 'Economics',
-            'pop-culture': 'Entertainment',
-            'entertainment': 'Entertainment',
-            'science': 'Science',
-            'technology': 'Crypto',
-            'us-current-affairs': 'Politics'
-        }
+        # Check category field first
+        if 'sports' in category_raw or any('sport' in t or 'nfl' in t or 'nba' in t or 'mlb' in t or 'soccer' in t or 'football' in t or 'baseball' in t or 'basketball' in t for t in tags):
+            return 'Sports'
+        elif 'crypto' in category_raw or any('crypto' in t or 'bitcoin' in t or 'ethereum' in t or 'blockchain' in t for t in tags):
+            return 'Crypto'
+        elif 'econom' in category_raw or any('econom' in t or 'fed' in t or 'rate' in t or 'gdp' in t or 'inflation' in t or 'recession' in t for t in tags):
+            return 'Economics'
+        elif 'politic' in category_raw or 'election' in category_raw or any('politic' in t or 'election' in t or 'president' in t or 'congress' in t or 'senate' in t for t in tags):
+            return 'Politics'
+        elif 'pop' in category_raw or 'culture' in category_raw or 'entertainment' in category_raw:
+            return 'Entertainment'
+        elif 'science' in category_raw or 'technology' in category_raw:
+            return 'Science'
         
-        for key, value in category_map.items():
-            if key in category_raw.lower():
-                return value
+        # Default based on common patterns
+        title_lower = event.get('title', '').lower()
+        if any(word in title_lower for word in ['nfl', 'nba', 'mlb', 'super bowl', 'world series', 'championship', 'playoff']):
+            return 'Sports'
+        elif any(word in title_lower for word in ['bitcoin', 'ethereum', 'crypto', 'blockchain']):
+            return 'Crypto'
+        elif any(word in title_lower for word in ['fed', 'rate', 'recession', 'gdp', 'economy', 'inflation']):
+            return 'Economics'
         
-        return 'Politics'
+        return 'Politics'  # Default
     
     def _get_category_from_market(self, market: Dict) -> str:
         """Extract category from market data"""
