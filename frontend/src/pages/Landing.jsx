@@ -82,10 +82,10 @@ const Landing = () => {
       <div className="max-w-7xl mx-auto px-6 py-20">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[
-            { label: 'Total Volume', value: '$359M' },
-            { label: 'Active Markets', value: '8+' },
-            { label: 'Total Liquidity', value: '$469M' },
-            { label: 'Active Traders', value: '12.4K' },
+            { label: 'Total Volume', value: stats.volume },
+            { label: 'Active Markets', value: stats.markets },
+            { label: 'Total Liquidity', value: stats.liquidity },
+            { label: 'Active Traders', value: stats.traders },
           ].map((stat, i) => (
             <div key={i} className="bg-[#0d2520] rounded-xl p-8 border border-[#1a3a2e] hover:border-[#7fffd4] transition-all group">
               <div className="text-gray-400 text-sm mb-2">{stat.label}</div>
