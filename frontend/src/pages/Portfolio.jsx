@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { TrendingUp, TrendingDown, X, Activity, Clock, CheckCircle, Info } from 'lucide-react';
+import { TrendingUp, TrendingDown, X, Activity, Clock, CheckCircle, Info, Lock } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from '../hooks/use-toast';
+import { useWallet } from '../contexts/WalletContext';
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ import {
 } from '../components/ui/dialog';
 
 const Portfolio = () => {
+  const { isConnected, connect, address } = useWallet();
   const [positions, setPositions] = useState([]);
   const [orders, setOrders] = useState([]);
 
@@ -34,6 +36,42 @@ const Portfolio = () => {
     });
     setOrders(orders.filter(o => o.id !== orderId));
   };
+
+  // Show locked state if wallet not connected
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-[#7fffd4] mb-2">Portfolio</h1>
+            <p className="text-gray-400">Manage your positions and view trading history</p>
+          </div>
+
+          {/* Locked State */}
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="bg-[#0d2520] rounded-xl p-12 border-2 border-[#7fffd4] max-w-md text-center">
+              <div className="w-24 h-24 bg-[#1a3a2e] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Lock size={48} className="text-[#7fffd4]" />
+              </div>
+              <h2 className="text-2xl font-bold text-[#7fffd4] mb-4">
+                Portfolio Locked
+              </h2>
+              <p className="text-gray-400 mb-6">
+                Connect your wallet to view your positions, orders, and trading history
+              </p>
+              <Button 
+                onClick={connect}
+                className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-8 py-6 text-lg"
+              >
+                Connect Wallet
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
@@ -121,8 +159,8 @@ const Portfolio = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
             <div className="text-gray-400 text-sm mb-2">Total Balance</div>
-            <div className="text-3xl font-bold text-[#7fffd4]">$10,000.00</div>
-            <div className="text-xs text-gray-500 mt-1">Connect wallet to see real balance</div>
+            <div className="text-3xl font-bold text-[#7fffd4]">$0.00</div>
+            <div className="text-xs text-gray-500 mt-1">Connected: {address?.slice(0, 6)}...{address?.slice(-4)}</div>
           </div>
           <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
             <div className="text-gray-400 text-sm mb-2">Total PnL</div>
@@ -164,7 +202,7 @@ const Portfolio = () => {
             <div className="bg-[#0d2520] rounded-xl p-12 border border-[#1a3a2e] text-center">
               <Activity size={48} className="mx-auto mb-4 text-gray-600" />
               <p className="text-gray-400 text-lg mb-2">No open positions</p>
-              <p className="text-gray-500 text-sm">Connect your wallet to view your Polymarket positions</p>
+              <p className="text-gray-500 text-sm">Start trading to see your positions here</p>
             </div>
           </TabsContent>
 
@@ -173,7 +211,7 @@ const Portfolio = () => {
             <div className="bg-[#0d2520] rounded-xl p-12 border border-[#1a3a2e] text-center">
               <Clock size={48} className="mx-auto mb-4 text-gray-600" />
               <p className="text-gray-400 text-lg mb-2">No open orders</p>
-              <p className="text-gray-500 text-sm">Connect your wallet to view your Polymarket orders</p>
+              <p className="text-gray-500 text-sm">Your pending orders will appear here</p>
             </div>
           </TabsContent>
 
@@ -182,7 +220,7 @@ const Portfolio = () => {
             <div className="bg-[#0d2520] rounded-xl p-12 border border-[#1a3a2e] text-center">
               <CheckCircle size={48} className="mx-auto mb-4 text-gray-600" />
               <p className="text-gray-400 text-lg mb-2">No trade history</p>
-              <p className="text-gray-500 text-sm">Connect your wallet to view your trading history</p>
+              <p className="text-gray-500 text-sm">Your completed trades will be shown here</p>
             </div>
           </TabsContent>
         </Tabs>
