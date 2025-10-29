@@ -22,14 +22,11 @@ function App() {
             accentColor: '#7fffd4',
             logo: 'https://customer-assets.emergentagent.com/job_e3912c72-e03b-483a-9a13-e7cb5f99c7ec/artifacts/tpoy6ypf_ZMgOwNQU_400x400.jpg',
             landingHeader: 'Connect to Polynator',
-            walletList: ['detected_solana_wallets', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'],
           },
           embeddedWallets: {
             createOnLogin: 'users-without-wallets',
-            requireUserPasswordOnCreate: false,
           },
           loginMethods: ['wallet', 'email', 'sms'],
-          supportedChains: [],
         }}
       >
         <WalletProvider>
