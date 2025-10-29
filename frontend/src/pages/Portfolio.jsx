@@ -66,7 +66,7 @@ const Portfolio = () => {
                 Connect your wallet to view your positions, orders, and trading history
               </p>
               <Button 
-                onClick={connect}
+                onClick={handleConnect}
                 className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-8 py-6 text-lg"
               >
                 Connect Wallet
