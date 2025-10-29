@@ -2,16 +2,31 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutGrid, TrendingUp, Wallet, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
+import { useWallet } from '../contexts/WalletContext';
 
 const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isConnected, address, connect, disconnect, isReady } = useWallet();
 
   const navItems = [
     { path: '/trade', label: 'Trade', icon: TrendingUp },
     { path: '/markets', label: 'Markets', icon: LayoutGrid },
     { path: '/portfolio', label: 'Portfolio', icon: Wallet },
   ];
+
+  const formatAddress = (addr) => {
+    if (!addr) return '';
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
+
+  const handleWalletClick = async () => {
+    if (isConnected) {
+      await disconnect();
+    } else {
+      await connect();
+    }
+  };
 
   return (
     <nav className="bg-[#0d2520] border-b border-[#1a3a2e] sticky top-0 z-50">
@@ -54,9 +69,13 @@ const Navbar = () => {
 
           {/* Connect Wallet Button */}
           <div className="hidden md:block">
-            <Button className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-6 transition-all">
+            <Button 
+              onClick={handleWalletClick}
+              disabled={!isReady}
+              className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-6 transition-all disabled:opacity-50"
+            >
               <Wallet size={18} className="mr-2" />
-              Connect Wallet
+              {!isReady ? 'Loading...' : isConnected ? formatAddress(address) : 'Connect Wallet'}
             </Button>
           </div>
 
@@ -93,9 +112,13 @@ const Navbar = () => {
                   </Link>
                 );
               })}
-              <Button className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold mt-2">
+              <Button 
+                onClick={handleWalletClick}
+                disabled={!isReady}
+                className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold mt-2 disabled:opacity-50"
+              >
                 <Wallet size={18} className="mr-2" />
-                Connect Wallet
+                {!isReady ? 'Loading...' : isConnected ? formatAddress(address) : 'Connect Wallet'}
               </Button>
             </div>
           </div>
