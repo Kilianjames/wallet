@@ -377,8 +377,12 @@ const Trading = () => {
                   : 'bg-red-500 hover:bg-red-600'
               } text-white font-semibold py-6 transition-all`}
             >
-              {orderSide === 'LONG' ? 'Open Long' : 'Open Short'}
+              {orderSide === 'LONG' ? 'Buy YES Tokens' : 'Buy NO Tokens'}
             </Button>
+            
+            <div className="text-xs text-center text-gray-500 mt-2">
+              {orderSide === 'LONG' ? '(Betting event WILL happen)' : '(Betting event WON\'T happen)'}
+            </div>
 
             {/* Quick Stats */}
             <div className="mt-6 pt-6 border-t border-[#1a3a2e]">
