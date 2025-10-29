@@ -207,7 +207,10 @@ const Markets = () => {
 
                   {/* Trade Button */}
                   <Button
-                    onClick={() => navigate('/trade')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMarketClick(market);
+                    }}
                     className="w-full bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold transition-all group"
                   >
                     Trade Now
