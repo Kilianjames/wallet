@@ -165,7 +165,7 @@ const Portfolio = () => {
           <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
             <div className="text-gray-400 text-sm mb-2">Total Balance</div>
             <div className="text-3xl font-bold text-[#7fffd4]">$0.00</div>
-            <div className="text-xs text-gray-500 mt-1">Connected: {address?.slice(0, 6)}...{address?.slice(-4)}</div>
+            <div className="text-xs text-gray-500 mt-1">Wallet not connected</div>
           </div>
           <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
             <div className="text-gray-400 text-sm mb-2">Total PnL</div>
