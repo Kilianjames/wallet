@@ -73,22 +73,6 @@ const Portfolio = () => {
     );
   }
 
-  const handleClosePosition = (positionId) => {
-    toast({
-      title: 'Position Closed',
-      description: 'Your position has been closed successfully',
-    });
-    setPositions(positions.filter(p => p.id !== positionId));
-  };
-
-  const handleCancelOrder = (orderId) => {
-    toast({
-      title: 'Order Cancelled',
-      description: 'Your order has been cancelled',
-    });
-    setOrders(orders.filter(o => o.id !== orderId));
-  };
-
   return (
     <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
       <div className="max-w-7xl mx-auto">
