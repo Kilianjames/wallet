@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutGrid, TrendingUp, Wallet, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
-import { useWallet } from '../contexts/WalletContext';
 
 const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isConnected, address, connect, disconnect, isReady } = useWallet();
 
   const navItems = [
     { path: '/trade', label: 'Trade', icon: TrendingUp },
@@ -15,17 +13,8 @@ const Navbar = () => {
     { path: '/portfolio', label: 'Portfolio', icon: Wallet },
   ];
 
-  const formatAddress = (addr) => {
-    if (!addr) return '';
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
-
-  const handleWalletClick = async () => {
-    if (isConnected) {
-      await disconnect();
-    } else {
-      await connect();
-    }
+  const handleWalletClick = () => {
+    alert('To enable wallet connection:\n\n1. Get FREE Privy App ID from https://dashboard.privy.io\n2. Update /app/frontend/.env with your App ID\n3. Restart frontend\n\nSee /app/PRIVY_SETUP.md for details!');
   };
 
   return (
