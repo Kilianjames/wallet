@@ -116,7 +116,7 @@ const Markets = () => {
               <div
                 key={market.id}
                 className="bg-[#0d2520] rounded-xl border border-[#1a3a2e] overflow-hidden hover:border-[#7fffd4] transition-all group cursor-pointer"
-                onClick={() => navigate('/trade')}
+                onClick={() => handleMarketClick(market)}
               >
                 {/* Market Image */}
                 <div className="relative h-48 overflow-hidden">
