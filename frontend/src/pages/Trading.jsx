@@ -1,23 +1,69 @@
-import React, { useState, useMemo } from 'react';
-import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity } from 'lucide-react';
-import { trendingMarkets, mockOrderbook, generateChartData } from '../mockData';
+import React, { useState, useMemo, useEffect } from 'react';
+import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity, Loader2 } from 'lucide-react';
+import { marketService } from '../services/api';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Slider } from '../components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from '../hooks/use-toast';
+import { generateChartData } from '../mockData';
 
 const Trading = () => {
-  const [selectedMarket, setSelectedMarket] = useState(trendingMarkets[0]);
+  const [markets, setMarkets] = useState([]);
+  const [selectedMarket, setSelectedMarket] = useState(null);
+  const [orderbook, setOrderbook] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [orderSide, setOrderSide] = useState('LONG');
   const [orderType, setOrderType] = useState('MARKET');
   const [amount, setAmount] = useState('');
   const [leverage, setLeverage] = useState([3]);
   const [limitPrice, setLimitPrice] = useState('');
   
-  const chartData = useMemo(() => generateChartData(), [selectedMarket.id]);
-  const currentPrice = selectedMarket.yesPrice;
-  const change24h = selectedMarket.change24h;
+  const chartData = useMemo(() => generateChartData(), [selectedMarket?.id]);
+
+  useEffect(() => {
+    loadMarkets();
+  }, []);
+
+  useEffect(() => {
+    if (selectedMarket?.token_id) {
+      loadOrderbook(selectedMarket.token_id);
+    }
+  }, [selectedMarket?.id]);
+
+  const loadMarkets = async () => {
+    try {
+      setLoading(true);
+      const data = await marketService.getMarkets(10);
+      setMarkets(data);
+      if (data.length > 0) {
+        setSelectedMarket(data[0]);
+      }
+    } catch (error) {
+      console.error('Error loading markets:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load markets',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadOrderbook = async (tokenId) => {
+    try {
+      const data = await marketService.getOrderbook(tokenId);
+      setOrderbook(data);
+    } catch (error) {
+      console.error('Error loading orderbook:', error);
+      // Use fallback empty orderbook
+      setOrderbook({ bids: [], asks: [] });
+    }
+  };
+
+  const currentPrice = selectedMarket?.yesPrice || 0.5;
+  const change24h = selectedMarket?.change24h || 0;
 
   const handlePlaceOrder = () => {
     if (!amount || parseFloat(amount) <= 0) {
@@ -36,6 +82,22 @@ const Trading = () => {
     
     setAmount('');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a1f1a] flex items-center justify-center">
+        <Loader2 className="animate-spin text-[#7fffd4]" size={48} />
+      </div>
+    );
+  }
+
+  if (!selectedMarket) {
+    return (
+      <div className="min-h-screen bg-[#0a1f1a] flex items-center justify-center text-white">
+        <div>No markets available</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a1f1a] text-white">
