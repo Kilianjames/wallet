@@ -1,6 +1,7 @@
 import requests
 from typing import List, Dict, Optional
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -9,21 +10,41 @@ class PolymarketClient:
         self.gamma_base_url = "https://gamma-api.polymarket.com"
         self.clob_base_url = "https://clob.polymarket.com"
         
-    def get_markets(self, limit: int = 50, offset: int = 0, tags: Optional[str] = None) -> Dict:
+    def get_markets(self, limit: int = 50, offset: int = 0) -> List[Dict]:
         """Fetch markets from Polymarket Gamma API"""
         try:
             params = {
                 "limit": limit,
                 "offset": offset,
+                "closed": "false",
+                "order": "volume24hr",
+                "ascending": "false"
             }
-            if tags:
-                params["tags"] = tags
                 
             response = requests.get(f"{self.gamma_base_url}/markets", params=params, timeout=10)
             response.raise_for_status()
             return response.json()
         except Exception as e:
             logger.error(f"Error fetching markets: {e}")
+            return []
+    
+    def get_events(self, limit: int = 50, offset: int = 0) -> List[Dict]:
+        """Fetch events from Polymarket - better for active markets"""
+        try:
+            params = {
+                "limit": limit,
+                "offset": offset,
+                "closed": "false",
+                "archived": "false",
+                "order": "volume24hr",
+                "ascending": "false"
+            }
+            
+            response = requests.get(f"{self.gamma_base_url}/events", params=params, timeout=10)
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            logger.error(f"Error fetching events: {e}")
             return []
     
     def get_market_by_slug(self, slug: str) -> Optional[Dict]:
@@ -64,17 +85,3 @@ class PolymarketClient:
         except Exception as e:
             logger.error(f"Error fetching prices: {e}")
             return {}
-    
-    def get_events(self, limit: int = 20, offset: int = 0) -> List[Dict]:
-        """Fetch events from Polymarket"""
-        try:
-            params = {
-                "limit": limit,
-                "offset": offset,
-            }
-            response = requests.get(f"{self.gamma_base_url}/events", params=params, timeout=10)
-            response.raise_for_status()
-            return response.json()
-        except Exception as e:
-            logger.error(f"Error fetching events: {e}")
-            return []

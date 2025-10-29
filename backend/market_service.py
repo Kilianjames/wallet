@@ -1,7 +1,7 @@
 from polymarket_client import PolymarketClient
 from typing import List, Dict, Optional
 import logging
-from datetime import datetime
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -10,46 +10,57 @@ class MarketService:
         self.client = PolymarketClient()
     
     def get_trending_markets(self, limit: int = 30) -> List[Dict]:
-        """Get trending markets from Polymarket"""
+        """Get trending markets from Polymarket using Events API"""
         try:
-            markets_data = self.client.get_markets(limit=limit * 2)  # Fetch more to filter
+            # Use events API for active markets
+            events_data = self.client.get_events(limit=limit)
             
-            # Filter for active markets only
-            active_markets = [m for m in markets_data if m.get('active', False) and not m.get('closed', False)]
-            
-            # Transform Polymarket data to our format
+            # Transform event data to market format
             transformed_markets = []
-            for market in active_markets[:limit]:
+            for event in events_data:
                 try:
+                    # Get the first market from the event
+                    markets = event.get('markets', [])
+                    if not markets:
+                        continue
+                    
+                    # Use the first market in the event
+                    market = markets[0]
+                    
                     # Get outcome prices
                     outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
                     if isinstance(outcome_prices, str):
-                        import json
                         outcome_prices = json.loads(outcome_prices)
                     
-                    # Get YES price (first price)
-                    yes_price = float(outcome_prices[0]) if len(outcome_prices) > 0 and outcome_prices[0] != "0" else 0.5
+                    # Get YES price
+                    yes_price = float(outcome_prices[0]) if outcome_prices and outcome_prices[0] not in ["0", "0.0"] else 0.5
                     
-                    # Extract category/tags
-                    category = self._get_category_from_market(market)
+                    # Extract token IDs
+                    token_ids_str = market.get('clobTokenIds', '[]')
+                    if isinstance(token_ids_str, str):
+                        token_ids = json.loads(token_ids_str)
+                    else:
+                        token_ids = token_ids_str
+                    
+                    token_id = token_ids[0] if token_ids else ''
                     
                     transformed_market = {
                         'id': str(market.get('id', '')),
-                        'title': market.get('question', ''),
-                        'category': category,
+                        'title': event.get('title', market.get('question', '')),
+                        'category': self._get_category_from_event(event),
                         'yesPrice': yes_price,
                         'noPrice': 1 - yes_price,
-                        'volume': float(market.get('volumeNum', 0)),
-                        'liquidity': float(market.get('liquidityNum', 0)),
-                        'endDate': market.get('endDateIso', '2025-12-31'),
-                        'image': market.get('image', market.get('icon', '')),
-                        'change24h': self._calculate_change(market),
+                        'volume': float(event.get('volume', 0)),
+                        'liquidity': float(event.get('liquidity', 0)),
+                        'endDate': event.get('endDate', '2025-12-31')[:10],
+                        'image': event.get('image', event.get('icon', '')),
+                        'change24h': self._calculate_change(event),
                         'slug': market.get('slug', ''),
-                        'token_ids': market.get('clobTokenIds', '')
+                        'token_id': token_id
                     }
                     transformed_markets.append(transformed_market)
                 except Exception as e:
-                    logger.error(f"Error transforming market: {e}")
+                    logger.error(f"Error transforming event: {e}")
                     continue
             
             return transformed_markets
@@ -67,10 +78,18 @@ class MarketService:
             # Get outcome prices
             outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
             if isinstance(outcome_prices, str):
-                import json
                 outcome_prices = json.loads(outcome_prices)
             
-            yes_price = float(outcome_prices[0]) if len(outcome_prices) > 0 and outcome_prices[0] != "0" else 0.5
+            yes_price = float(outcome_prices[0]) if outcome_prices and outcome_prices[0] not in ["0", "0.0"] else 0.5
+            
+            # Extract token IDs
+            token_ids_str = market.get('clobTokenIds', '[]')
+            if isinstance(token_ids_str, str):
+                token_ids = json.loads(token_ids_str)
+            else:
+                token_ids = token_ids_str
+            
+            token_id = token_ids[0] if token_ids else ''
             
             return {
                 'id': str(market.get('id', '')),
@@ -83,7 +102,7 @@ class MarketService:
                 'endDate': market.get('endDateIso', '2025-12-31'),
                 'image': market.get('image', market.get('icon', '')),
                 'description': market.get('description', ''),
-                'token_ids': market.get('clobTokenIds', '')
+                'token_id': token_id
             }
         except Exception as e:
             logger.error(f"Error getting market details: {e}")
@@ -104,7 +123,7 @@ class MarketService:
                 bids.append({
                     'price': float(bid.get('price', 0)),
                     'size': float(bid.get('size', 0)),
-                    'total': 0  # Calculate cumulative
+                    'total': 0
                 })
             
             for ask in orderbook.get('asks', [])[:10]:
@@ -133,6 +152,29 @@ class MarketService:
             logger.error(f"Error getting orderbook: {e}")
             return None
     
+    def _get_category_from_event(self, event: Dict) -> str:
+        """Extract category from event data"""
+        category_raw = event.get('category', '')
+        
+        category_map = {
+            'politics': 'Politics',
+            'crypto': 'Crypto',
+            'sports': 'Sports',
+            'economics': 'Economics',
+            'economy': 'Economics',
+            'pop-culture': 'Entertainment',
+            'entertainment': 'Entertainment',
+            'science': 'Science',
+            'technology': 'Crypto',
+            'us-current-affairs': 'Politics'
+        }
+        
+        for key, value in category_map.items():
+            if key in category_raw.lower():
+                return value
+        
+        return 'Politics'
+    
     def _get_category_from_market(self, market: Dict) -> str:
         """Extract category from market data"""
         category_raw = market.get('category', '')
@@ -154,12 +196,14 @@ class MarketService:
             if key in category_raw.lower():
                 return value
         
-        return 'Politics'  # Default
+        return 'Politics'
     
-    def _calculate_change(self, market: Dict) -> float:
+    def _calculate_change(self, data: Dict) -> float:
         """Calculate 24h price change"""
         try:
-            change = market.get('oneDayPriceChange', 0)
-            return round(float(change) * 100, 2) if change else 0.0
+            change = data.get('oneDayPriceChange', 0)
+            if change:
+                return round(float(change) * 100, 2)
+            return 0.0
         except:
             return 0.0
