@@ -71,10 +71,11 @@ const Navbar = () => {
           <div className="hidden md:block">
             <Button 
               onClick={handleWalletClick}
-              className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-6 transition-all"
+              disabled={!isReady}
+              className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-6 transition-all disabled:opacity-50"
             >
               <Wallet size={18} className="mr-2" />
-              Connect Wallet
+              {!isReady ? 'Loading...' : isConnected ? formatAddress(address) : 'Connect Wallet'}
             </Button>
           </div>
 
