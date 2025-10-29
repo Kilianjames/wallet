@@ -102,11 +102,10 @@ const Navbar = () => {
               })}
               <Button 
                 onClick={handleWalletClick}
-                disabled={!isReady}
-                className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold mt-2 disabled:opacity-50"
+                className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold mt-2"
               >
                 <Wallet size={18} className="mr-2" />
-                {!isReady ? 'Loading...' : isConnected ? formatAddress(address) : 'Connect Wallet'}
+                Connect Wallet
               </Button>
             </div>
           </div>
