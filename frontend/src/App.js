@@ -8,7 +8,6 @@ import Trading from "./pages/Trading";
 import Markets from "./pages/Markets";
 import Portfolio from "./pages/Portfolio";
 import { Toaster } from "./components/ui/toaster";
-import { solana } from '@privy-io/react-auth/solana';
 
 const PRIVY_APP_ID = process.env.REACT_APP_PRIVY_APP_ID || 'cmhaixqzc00v7jo0cqqrf5czd';
 
@@ -23,29 +22,14 @@ function App() {
             accentColor: '#7fffd4',
             logo: 'https://customer-assets.emergentagent.com/job_e3912c72-e03b-483a-9a13-e7cb5f99c7ec/artifacts/tpoy6ypf_ZMgOwNQU_400x400.jpg',
             landingHeader: 'Connect to Polynator',
-            walletList: ['detected_solana_wallets', 'metamask', 'rainbow', 'wallet_connect'],
+            walletList: ['detected_solana_wallets', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'],
           },
           embeddedWallets: {
             createOnLogin: 'users-without-wallets',
+            requireUserPasswordOnCreate: false,
           },
           loginMethods: ['wallet', 'email', 'sms'],
-          supportedChains: [
-            solana, // Add Solana support
-            {
-              id: 137,
-              name: 'Polygon',
-              network: 'polygon',
-              nativeCurrency: {
-                name: 'MATIC',
-                symbol: 'MATIC',
-                decimals: 18,
-              },
-              rpcUrls: {
-                default: { http: ['https://polygon-rpc.com'] },
-                public: { http: ['https://polygon-rpc.com'] },
-              },
-            },
-          ],
+          supportedChains: [],
         }}
       >
         <WalletProvider>
