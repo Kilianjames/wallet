@@ -29,18 +29,18 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-[#0d2520] border-b border-[#1a3a2e] sticky top-0 z-50">
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <img
-              src="https://customer-assets.emergentagent.com/job_e3912c72-e03b-483a-9a13-e7cb5f99c7ec/artifacts/tpoy6ypf_ZMgOwNQU_400x400.jpg"
-              alt="Polynator Logo"
-              className="h-12 w-12 rounded-lg group-hover:scale-110 transition-transform"
+              src="https://customer-assets.emergentagent.com/job_d5c149cb-8bda-4095-b402-80a5f60716e4/artifacts/3mwtxpba_Untitled.jpeg"
+              alt="Polyflux Logo"
+              className="h-10 w-10 rounded-lg group-hover:scale-105 transition-transform"
             />
-            <span className="text-2xl font-bold text-[#7fffd4] group-hover:text-[#6eeec3] transition-colors">
-              Polynator
+            <span className="text-2xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors">
+              Polyflux
             </span>
           </Link>
 
