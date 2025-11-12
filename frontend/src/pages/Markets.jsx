@@ -43,12 +43,12 @@ const Markets = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-[#7fffd4] mb-2">Markets</h1>
-          <p className="text-gray-400">Trade perpetuals on trending Polymarket events</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Markets</h1>
+          <p className="text-gray-600">Explore and trade prediction markets</p>
         </div>
 
         {/* Search and Filter */}
