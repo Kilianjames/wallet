@@ -343,11 +343,11 @@ const Trading = () => {
                 </div>
                 {orderbook && orderbook.bids.length > 0 ? (
                   orderbook.bids.slice(0, 8).map((bid, i) => (
-                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-[#1a3a2e] rounded relative">
+                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
                       <div className="absolute inset-0 bg-green-500 opacity-10" style={{ width: `${(bid.total / (orderbook.bids[orderbook.bids.length - 1]?.total || 1)) * 100}%` }} />
-                      <div className="text-green-400 relative z-10">${(bid.price * 100).toFixed(1)}</div>
-                      <div className="text-right relative z-10">{bid.size.toFixed(0)}</div>
-                      <div className="text-right text-gray-400 relative z-10">{bid.total.toFixed(0)}</div>
+                      <div className="text-green-600 relative z-10">${(bid.price * 100).toFixed(1)}</div>
+                      <div className="text-right relative z-10 text-gray-900">{bid.size.toFixed(0)}</div>
+                      <div className="text-right text-gray-600 relative z-10">{bid.total.toFixed(0)}</div>
                     </div>
                   ))
                 ) : (
