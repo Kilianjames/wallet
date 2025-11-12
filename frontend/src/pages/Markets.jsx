@@ -155,7 +155,7 @@ const Markets = () => {
                   {market.is_multi_outcome ? (
                     /* Multi-outcome market - show top 3 outcomes as preview */
                     <div className="space-y-2 mb-4">
-                      <div className="text-sm text-gray-400 mb-3">
+                      <div className="text-sm text-gray-600 mb-3">
                         {market.outcomes.length} possible outcomes
                       </div>
                       {market.outcomes.slice(0, 3).map((outcome, idx) => (
