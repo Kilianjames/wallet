@@ -106,7 +106,7 @@ const Markets = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center py-20">
-            <Loader2 className="animate-spin text-[#7fffd4]" size={48} />
+            <Loader2 className="animate-spin text-blue-600" size={48} />
           </div>
         )}
 
