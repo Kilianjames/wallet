@@ -40,30 +40,30 @@ const Portfolio = () => {
   // Show locked state if wallet not connected
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-[#7fffd4] mb-2">Portfolio</h1>
-            <p className="text-gray-400">Manage your positions and view trading history</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Portfolio</h1>
+            <p className="text-gray-600">Connect your wallet to view your portfolio</p>
           </div>
 
           {/* Locked State */}
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="bg-[#0d2520] rounded-xl p-12 border-2 border-[#7fffd4] max-w-md text-center">
-              <div className="w-24 h-24 bg-[#1a3a2e] rounded-full flex items-center justify-center mx-auto mb-6">
-                <Lock size={48} className="text-[#7fffd4]" />
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="bg-white rounded-xl p-12 border-2 border-blue-600 max-w-md text-center shadow-lg">
+              <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Lock size={48} className="text-blue-600" />
               </div>
-              <h2 className="text-2xl font-bold text-[#7fffd4] mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Portfolio Locked
               </h2>
-              <p className="text-gray-400 mb-6">
-                Connect your wallet to view your positions, orders, and trading history
+              <p className="text-gray-600 mb-6">
+                Connect your wallet to view your trading positions, history, and performance
               </p>
               <Button 
                 onClick={connect}
-                className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold px-8 py-6 text-lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8"
               >
+                <Wallet size={20} className="mr-2" />
                 Connect Wallet
               </Button>
             </div>
