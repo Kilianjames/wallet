@@ -394,44 +394,79 @@ const Trading = () => {
           </div>
         </div>
 
-        {/* Right Side - Order Entry */}
-        <div className="space-y-4">
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm sticky top-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Place Order</h2>
-            
-            {/* Show selected outcome for multi-outcome markets */}
+        {/* Right Side - Trade Panel (40%) */}
+        <div className="lg:w-2/5 bg-white border-l border-gray-200 p-6 overflow-y-auto">
+          <div className="max-w-md mx-auto">
+            {/* Header */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Place Trade</h2>
+              <p className="text-sm text-gray-600">Configure your position below</p>
+            </div>
+
+            {/* Selected Outcome Display */}
             {selectedMarket.is_multi_outcome && selectedOutcome && (
-              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                <div className="text-xs text-gray-600 mb-1">Trading on:</div>
-                <div className="text-sm font-semibold text-gray-900">{selectedOutcome.title}</div>
-                <div className="text-lg font-bold text-blue-600 mt-1">${(selectedOutcome.price * 100).toFixed(1)}¢</div>
+              <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+                <div className="text-xs text-gray-600 mb-1 flex items-center gap-1">
+                  <Activity size={12} />
+                  Trading on:
+                </div>
+                <div className="text-base font-bold text-gray-900 mb-1">{selectedOutcome.title}</div>
+                <div className="text-2xl font-bold text-blue-600">{(selectedOutcome.price * 100).toFixed(0)}%</div>
               </div>
             )}
             
-            {/* Order Side */}
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              <Button
-                onClick={() => setOrderSide('LONG')}
-                className={`${
-                  orderSide === 'LONG'
-                    ? 'bg-green-600 text-white shadow-sm'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                } transition-all`}
-              >
-                <ArrowUp size={16} className="mr-1" />
-                Long
-              </Button>
-              <Button
-                onClick={() => setOrderSide('SHORT')}
-                className={`${
-                  orderSide === 'SHORT'
-                    ? 'bg-red-600 text-white shadow-sm'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                } transition-all`}
-              >
-                <ArrowDown size={16} className="mr-1" />
-                Short
-              </Button>
+            {/* Position Selector */}
+            <div className="mb-6">
+              <label className="text-sm font-semibold text-gray-900 mb-3 block">Select Position</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setOrderSide('LONG')}
+                  className={`relative p-6 rounded-xl border-2 transition-all ${
+                    orderSide === 'LONG'
+                      ? 'border-green-600 bg-green-50 shadow-lg scale-105'
+                      : 'border-gray-200 hover:border-green-300 bg-white'
+                  }`}
+                >
+                  <div className="flex flex-col items-center">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
+                      orderSide === 'LONG' ? 'bg-green-600' : 'bg-gray-100'
+                    }`}>
+                      <TrendingUp size={24} className={orderSide === 'LONG' ? 'text-white' : 'text-gray-400'} />
+                    </div>
+                    <div className={`font-bold ${orderSide === 'LONG' ? 'text-green-600' : 'text-gray-600'}`}>
+                      YES
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">Will happen</div>
+                  </div>
+                  {orderSide === 'LONG' && (
+                    <div className="absolute top-2 right-2 w-3 h-3 bg-green-600 rounded-full" />
+                  )}
+                </button>
+                
+                <button
+                  onClick={() => setOrderSide('SHORT')}
+                  className={`relative p-6 rounded-xl border-2 transition-all ${
+                    orderSide === 'SHORT'
+                      ? 'border-red-600 bg-red-50 shadow-lg scale-105'
+                      : 'border-gray-200 hover:border-red-300 bg-white'
+                  }`}
+                >
+                  <div className="flex flex-col items-center">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
+                      orderSide === 'SHORT' ? 'bg-red-600' : 'bg-gray-100'
+                    }`}>
+                      <TrendingDown size={24} className={orderSide === 'SHORT' ? 'text-white' : 'text-gray-400'} />
+                    </div>
+                    <div className={`font-bold ${orderSide === 'SHORT' ? 'text-red-600' : 'text-gray-600'}`}>
+                      NO
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">Won't happen</div>
+                  </div>
+                  {orderSide === 'SHORT' && (
+                    <div className="absolute top-2 right-2 w-3 h-3 bg-red-600 rounded-full" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Leverage - FIRST */}
