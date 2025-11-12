@@ -127,7 +127,7 @@ const Markets = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d2520] to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-semibold">
                       {market.category}
