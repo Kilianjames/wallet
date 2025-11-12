@@ -52,30 +52,31 @@ const Markets = () => {
         </div>
 
         {/* Search and Filter */}
-        <div className="mb-6 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <Input
-              placeholder="Search markets..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 bg-[#0d2520] border-[#1a3a2e] text-white h-12"
-            />
+        <div className="bg-white rounded-xl p-6 mb-6 border border-gray-200 shadow-sm">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <Input
+                placeholder="Search markets..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-white border-gray-300 text-gray-900"
+              />
+            </div>
+            <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
+              <TabsList className="bg-gray-100">
+                {categories.map((cat) => (
+                  <TabsTrigger 
+                    key={cat} 
+                    value={cat}
+                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+                  >
+                    {cat}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
           </div>
-
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-            <TabsList className="bg-[#0d2520] border border-[#1a3a2e]">
-              {categories.map((cat) => (
-                <TabsTrigger
-                  key={cat}
-                  value={cat}
-                  className="data-[state=active]:bg-[#7fffd4] data-[state=active]:text-[#0a1f1a]"
-                >
-                  {cat}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
         </div>
 
         {/* Market Stats */}
