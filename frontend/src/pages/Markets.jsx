@@ -161,7 +161,7 @@ const Markets = () => {
                       {market.outcomes.slice(0, 3).map((outcome, idx) => (
                         <div key={idx} className="flex items-center justify-between text-sm">
                           <span className="text-gray-300 truncate">{outcome.title}</span>
-                          <span className="text-[#7fffd4] font-semibold ml-2">
+                          <span className="text-blue-600 font-semibold ml-2">
                             ${(outcome.price * 100).toFixed(1)}¢
                           </span>
                         </div>
