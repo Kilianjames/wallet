@@ -274,47 +274,37 @@ const Trading = () => {
               </div>
             </div>
           </div>
-            
-            {/* Multi-outcome selector */}
-            {selectedMarket.is_multi_outcome && selectedMarket.outcomes && (
-              <div className="mb-4">
-                <div className="text-sm text-gray-600 mb-3 font-medium">Select Outcome to Trade:</div>
-                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-                  {selectedMarket.outcomes.map((outcome, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleOutcomeChange(outcome)}
-                      className={`p-3 rounded-lg border transition-all text-left ${
-                        selectedOutcome?.market_id === outcome.market_id
-                          ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
-                          : 'border-gray-200 hover:border-gray-300 bg-white'
-                      }`}
-                    >
-                      <div className="text-sm text-gray-900 mb-1 truncate font-medium">{outcome.title}</div>
-                      <div className="text-lg font-bold text-blue-600">
+
+
+          {/* Multi-outcome selector */}
+          {selectedMarket.is_multi_outcome && selectedMarket.outcomes && (
+            <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Select Outcome</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                {selectedMarket.outcomes.map((outcome, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleOutcomeChange(outcome)}
+                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                      selectedOutcome?.market_id === outcome.market_id
+                        ? 'border-blue-600 bg-blue-50 shadow-md'
+                        : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow'
+                    }`}
+                  >
+                    <div className="text-sm text-gray-900 mb-2 font-medium line-clamp-2">{outcome.title}</div>
+                    <div className="flex items-end justify-between">
+                      <div className="text-2xl font-bold text-blue-600">
+                        {(outcome.price * 100).toFixed(0)}%
+                      </div>
+                      <div className="text-xs text-gray-500">
                         ${(outcome.price * 100).toFixed(1)}¢
                       </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div>
-                <div className="text-gray-600 text-sm mb-1">24h Volume</div>
-                <div className="text-gray-900 font-semibold">${selectedMarket.volume.toLocaleString()}</div>
-              </div>
-              <div>
-                <div className="text-gray-600 text-sm mb-1">Liquidity</div>
-                <div className="text-gray-900 font-semibold">${selectedMarket.liquidity.toLocaleString()}</div>
-              </div>
-              <div>
-                <div className="text-gray-600 text-sm mb-1">Ends</div>
-                <div className="text-gray-900 font-semibold">{new Date(selectedMarket.endDate).toLocaleDateString()}</div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
-          </div>
+          )}
 
           {/* Chart */}
           <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
