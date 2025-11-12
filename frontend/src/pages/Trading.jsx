@@ -458,29 +458,23 @@ const Trading = () => {
               </div>
             </div>
 
-            {/* Order Info */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-2 text-sm border border-gray-200">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Token Price</span>
-                <span className="text-gray-900">${(currentPrice * 100).toFixed(2)}</span>
+            {/* Order Summary */}
+            {solAmount && parseFloat(solAmount) > 0 && (
+              <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-2 text-sm border border-gray-200">
+                <div className="flex justify-between font-semibold text-gray-900">
+                  <span>Order Summary</span>
+                  <span>{solAmount} SOL</span>
+                </div>
+                <div className="flex justify-between text-gray-600">
+                  <span>Leverage</span>
+                  <span className="text-blue-600 font-semibold">{leverage[0]}x</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t border-gray-300">
+                  <span className="text-gray-600">Position Size</span>
+                  <span className="text-gray-900 font-semibold">{(parseFloat(solAmount) * leverage[0]).toFixed(2)} SOL</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Tokens to Buy</span>
-                <span className="text-gray-900">{amount ? (parseFloat(amount) / currentPrice).toFixed(2) : '0.00'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Max Payout</span>
-                <span className="text-green-600">${amount ? (parseFloat(amount) / currentPrice).toFixed(2) : '0.00'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Potential Profit</span>
-                <span className="text-blue-600">${amount ? ((parseFloat(amount) / currentPrice) - parseFloat(amount)).toFixed(2) : '0.00'}</span>
-              </div>
-              <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-300">
-                Note: This simulates position sizing. Actual Polymarket trades: Buy YES/NO tokens at market price. 
-                Each winning token = $1.00 at resolution.
-              </div>
-            </div>
+            )}
 
             {/* Place Order Button */}
             {!isConnected ? (
