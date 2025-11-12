@@ -191,7 +191,7 @@ const Markets = () => {
                   )}
 
                   {/* Stats */}
-                  <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-[#1a3a2e]">
+                  <div className="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-gray-200">
                     <div>
                       <div className="text-gray-400 text-xs mb-1">Volume</div>
                       <div className="text-white font-semibold text-sm">
