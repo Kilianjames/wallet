@@ -171,7 +171,7 @@ const Landing = () => {
               />
               <span className="text-[#7fffd4] font-semibold">Polyflux</span>
             </div>
-            <p className="text-gray-400 text-sm">© 2025 Polynator. All rights reserved.</p>
+            <p className="text-gray-400 text-sm">© 2025 Polyflux. All rights reserved.</p>
           </div>
         </div>
       </div>
