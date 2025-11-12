@@ -198,16 +198,25 @@ Open browser DevTools (F12) to see helpful logs:
 
 - ✅ Direct Phantom wallet connection (no Privy)
 - ✅ Solana Mainnet integration
+- ✅ **VersionedTransaction (V0) format** - modern Solana transaction format
 - ✅ Custom SOL amount input
-- ✅ Transaction signing via Phantom
+- ✅ Transaction signing via Phantom popup
 - ✅ Real-time transaction confirmation
-- ✅ Multiple RPC endpoint failover
+- ✅ Multiple RPC endpoint failover (Helius, Solana, Serum)
 - ✅ Comprehensive error handling
 - ✅ User-friendly error messages
 - ✅ Transaction success notifications
 - ✅ Wallet state persistence
 - ✅ Account change detection
 - ✅ Disconnect functionality
+
+## 🔧 Latest Fix (Just Applied)
+
+**Issue**: Phantom popup not appearing / wallet stuck on "Loading..."
+**Cause**: Using legacy `Transaction` format instead of modern `VersionedTransaction`
+**Solution**: Migrated to VersionedTransaction (V0) format with `TransactionMessage.compileToV0Message()`
+
+This is now the 2025-standard way to create Solana transactions that work with all modern wallets including Phantom.
 
 ---
 
