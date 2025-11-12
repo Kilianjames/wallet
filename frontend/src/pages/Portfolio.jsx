@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TrendingUp, TrendingDown, X, Activity, Clock, CheckCircle, Info, Lock } from 'lucide-react';
+import { TrendingUp, TrendingDown, X, Activity, Clock, CheckCircle, Info, Lock, Wallet } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from '../hooks/use-toast';
