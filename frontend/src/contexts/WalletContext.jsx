@@ -268,47 +268,49 @@ export const WalletProvider = ({ children }) => {
       // - An object with { signature: string }
       const txSignature = typeof signature === 'string' ? signature : signature.signature;
 
-      // Wait for confirmation with retry logic
-      console.log('⏳ Waiting for confirmation...');
-      let confirmed = false;
-      let attempts = 0;
-      const maxAttempts = 20;
-
-      while (!confirmed && attempts < maxAttempts) {
+      // Return success immediately - transaction was sent!
+      // Don't wait for confirmation to improve UX
+      console.log('✅ Transaction broadcast successful!');
+      console.log(`🔗 View on Solana Explorer: https://solscan.io/tx/${txSignature}`);
+      
+      // Start confirmation check in background (non-blocking)
+      setTimeout(async () => {
         try {
-          attempts++;
-          console.log(`Confirmation attempt ${attempts}/${maxAttempts}...`);
-          
-          const confirmation = await connection.confirmTransaction(
-            {
-              signature: txSignature,
-              blockhash,
-              lastValidBlockHeight,
-            },
-            'confirmed'
-          );
+          console.log('⏳ Background confirmation check started...');
+          let attempts = 0;
+          const maxAttempts = 10;
 
-          if (confirmation.value.err) {
-            throw new Error(`Transaction failed on-chain: ${JSON.stringify(confirmation.value.err)}`);
-          }
+          while (attempts < maxAttempts) {
+            try {
+              attempts++;
+              const confirmation = await connection.confirmTransaction(
+                {
+                  signature: txSignature,
+                  blockhash,
+                  lastValidBlockHeight,
+                },
+                'confirmed'
+              );
 
-          confirmed = true;
-          console.log('✅ Transaction confirmed on blockchain!');
-          break;
-        } catch (confirmError) {
-          console.warn(`⚠️ Confirmation attempt ${attempts} failed:`, confirmError.message);
-          
-          if (attempts >= maxAttempts) {
-            // Return success anyway - transaction was sent to network
-            console.warn('⚠️ Confirmation timeout, but transaction was broadcast to network');
-            console.warn('Check transaction on Solana Explorer');
-            return { signature: txSignature, success: true };
+              if (confirmation.value.err) {
+                console.error(`❌ Transaction failed on-chain: ${JSON.stringify(confirmation.value.err)}`);
+                break;
+              }
+
+              console.log('✅ Transaction confirmed on blockchain!');
+              break;
+            } catch (confirmError) {
+              if (attempts >= maxAttempts) {
+                console.warn('⚠️ Background confirmation timeout - transaction may still succeed');
+                console.log(`Check manually: https://solscan.io/tx/${txSignature}`);
+              }
+              await new Promise(resolve => setTimeout(resolve, 3000));
+            }
           }
-          
-          // Wait 2 seconds before retry
-          await new Promise(resolve => setTimeout(resolve, 2000));
+        } catch (err) {
+          console.warn('Background confirmation check error:', err.message);
         }
-      }
+      }, 0);
 
       return { signature: txSignature, success: true };
     } catch (err) {
