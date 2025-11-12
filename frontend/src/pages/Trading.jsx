@@ -12,6 +12,7 @@ import { useWallet } from '../contexts/WalletContext';
 
 const Trading = () => {
   const location = useLocation();
+  const { isConnected, connect, signAndSendTransaction, publicKey } = useWallet();
   const [markets, setMarkets] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
   const [selectedOutcome, setSelectedOutcome] = useState(null);
@@ -20,8 +21,10 @@ const Trading = () => {
   const [orderSide, setOrderSide] = useState('LONG');
   const [orderType, setOrderType] = useState('MARKET');
   const [amount, setAmount] = useState('');
+  const [solAmount, setSolAmount] = useState('');
   const [leverage, setLeverage] = useState([3]);
   const [limitPrice, setLimitPrice] = useState('');
+  const [isProcessingTx, setIsProcessingTx] = useState(false);
   
   const chartData = useMemo(() => generateChartData(), [selectedMarket?.id]);
 
