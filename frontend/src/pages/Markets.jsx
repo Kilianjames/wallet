@@ -212,7 +212,7 @@ const Markets = () => {
                       e.stopPropagation();
                       handleMarketClick(market);
                     }}
-                    className="w-full bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold transition-all group"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all group"
                   >
                     Trade Now
                     <ArrowUpRight size={16} className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
