@@ -141,14 +141,26 @@ const Trading = () => {
 
       if (result.success) {
         toast({
-          title: 'Bet Placed Successfully!',
+          title: '🎉 Bet Placed Successfully!',
           description: (
-            <div className="space-y-1">
-              <div>{orderSide} position on {selectedOutcome?.title || selectedMarket.title}</div>
+            <div className="space-y-2">
+              <div className="font-semibold">{orderSide} position on {selectedOutcome?.title || selectedMarket.title}</div>
               <div className="text-xs text-gray-400">Amount: {solAmountNum} SOL</div>
-              <div className="text-xs text-gray-400 break-all">Tx: {result.signature.slice(0, 8)}...{result.signature.slice(-8)}</div>
+              <div className="text-xs text-gray-400">Tx: {result.signature.slice(0, 8)}...{result.signature.slice(-8)}</div>
+              <a 
+                href={`https://solscan.io/tx/${result.signature}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-[#7fffd4] hover:underline inline-flex items-center gap-1"
+              >
+                View on Solscan →
+              </a>
+              <div className="text-xs text-gray-500 mt-1">
+                ✅ Transaction sent! Confirmation in progress...
+              </div>
             </div>
           ),
+          duration: 8000,
         });
 
         // Reset form
