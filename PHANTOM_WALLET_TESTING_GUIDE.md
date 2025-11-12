@@ -47,15 +47,19 @@ The Polynator app now has direct Phantom wallet integration with Solana Mainnet 
 
 ## 🔧 Troubleshooting
 
-### Issue: "Failed to get recent blockhash"
+### Issue: "Transaction failed to connect to Solana network"
 
 **Solutions:**
 1. **Network Connection**: Check your internet connection
 2. **Solana Network Status**: Visit https://status.solana.com/ to check if Solana is operational
-3. **Try Again**: Click the bet button again - the app now uses 3 backup RPC endpoints:
-   - Helius RPC (primary)
-   - Solana official RPC (backup)
-   - Project Serum RPC (backup 2)
+3. **Try Again**: Click the bet button again - the app now tries 5 RPC endpoints automatically:
+   - Solana Foundation Official RPC (primary)
+   - PublicNode RPC
+   - OnFinality RPC
+   - Solana Vibe Station RPC
+   - Project Serum RPC (backup)
+4. **Wait**: Each endpoint has 10-second timeout, so the app tries all endpoints automatically
+5. **Browser Console**: Open DevTools (F12) to see which endpoint is being used
 
 ### Issue: "No Phantom popup appearing"
 
