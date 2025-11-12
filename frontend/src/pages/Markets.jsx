@@ -116,7 +116,7 @@ const Markets = () => {
             {filteredMarkets.map((market) => (
               <div
                 key={market.id}
-                className="bg-[#0d2520] rounded-xl border border-[#1a3a2e] overflow-hidden hover:border-[#7fffd4] transition-all group cursor-pointer"
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-blue-600 hover:shadow-md transition-all group cursor-pointer"
                 onClick={() => handleMarketClick(market)}
               >
                 {/* Market Image */}
