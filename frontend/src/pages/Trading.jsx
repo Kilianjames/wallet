@@ -253,7 +253,7 @@ const Trading = () => {
             {/* Multi-outcome selector */}
             {selectedMarket.is_multi_outcome && selectedMarket.outcomes && (
               <div className="mb-4">
-                <div className="text-sm text-gray-400 mb-3">Select Outcome to Trade:</div>
+                <div className="text-sm text-gray-600 mb-3 font-medium">Select Outcome to Trade:</div>
                 <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
                   {selectedMarket.outcomes.map((outcome, idx) => (
                     <button
@@ -261,12 +261,12 @@ const Trading = () => {
                       onClick={() => handleOutcomeChange(outcome)}
                       className={`p-3 rounded-lg border transition-all text-left ${
                         selectedOutcome?.market_id === outcome.market_id
-                          ? 'border-[#7fffd4] bg-[#1a3a2e]'
-                          : 'border-[#1a3a2e] hover:border-[#254538]'
+                          ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600'
+                          : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
-                      <div className="text-sm text-white mb-1 truncate">{outcome.title}</div>
-                      <div className="text-lg font-bold text-[#7fffd4]">
+                      <div className="text-sm text-gray-900 mb-1 truncate font-medium">{outcome.title}</div>
+                      <div className="text-lg font-bold text-blue-600">
                         ${(outcome.price * 100).toFixed(1)}¢
                       </div>
                     </button>
@@ -277,16 +277,16 @@ const Trading = () => {
             
             <div className="grid grid-cols-3 gap-4 mt-4">
               <div>
-                <div className="text-gray-400 text-sm mb-1">24h Volume</div>
-                <div className="text-white font-semibold">${selectedMarket.volume.toLocaleString()}</div>
+                <div className="text-gray-600 text-sm mb-1">24h Volume</div>
+                <div className="text-gray-900 font-semibold">${selectedMarket.volume.toLocaleString()}</div>
               </div>
               <div>
-                <div className="text-gray-400 text-sm mb-1">Liquidity</div>
-                <div className="text-white font-semibold">${selectedMarket.liquidity.toLocaleString()}</div>
+                <div className="text-gray-600 text-sm mb-1">Liquidity</div>
+                <div className="text-gray-900 font-semibold">${selectedMarket.liquidity.toLocaleString()}</div>
               </div>
               <div>
-                <div className="text-gray-400 text-sm mb-1">Ends</div>
-                <div className="text-white font-semibold">{new Date(selectedMarket.endDate).toLocaleDateString()}</div>
+                <div className="text-gray-600 text-sm mb-1">Ends</div>
+                <div className="text-gray-900 font-semibold">{new Date(selectedMarket.endDate).toLocaleDateString()}</div>
               </div>
             </div>
           </div>
