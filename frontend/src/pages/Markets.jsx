@@ -199,8 +199,8 @@ const Markets = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-gray-400 text-xs mb-1">Liquidity</div>
-                      <div className="text-white font-semibold text-sm">
+                      <div className="text-gray-600 text-xs mb-1">Liquidity</div>
+                      <div className="text-gray-900 font-semibold text-sm">
                         ${(market.liquidity / 1000).toFixed(0)}K
                       </div>
                     </div>
