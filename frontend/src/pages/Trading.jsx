@@ -292,12 +292,12 @@ const Trading = () => {
           </div>
 
           {/* Chart */}
-          <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-[#7fffd4]">Price Chart</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Price Chart</h2>
               <div className="flex gap-2">
                 {['1H', '4H', '1D', '1W'].map((tf) => (
-                  <button key={tf} className="px-3 py-1 bg-[#1a3a2e] hover:bg-[#254538] rounded text-xs transition-colors">
+                  <button key={tf} className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs transition-colors">
                     {tf}
                   </button>
                 ))}
