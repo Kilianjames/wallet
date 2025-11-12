@@ -530,21 +530,18 @@ const Trading = () => {
               </>
             )}
 
-            {/* Quick Stats */}
-            <div className="mt-6 pt-6 border-t border-[#1a3a2e]">
-              <div className="text-xs text-gray-400 mb-3">Account Balance</div>
-              <div className="text-2xl font-bold text-[#7fffd4] mb-4">$10,000.00</div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <div className="text-gray-400">Available</div>
-                  <div className="text-white font-semibold">$8,500.00</div>
+            {/* Wallet Info */}
+            {isConnected && (
+              <div className="mt-6 pt-6 border-t border-[#1a3a2e]">
+                <div className="text-xs text-gray-400 mb-3">Connected Wallet</div>
+                <div className="text-xs font-mono text-[#7fffd4] mb-2 break-all">
+                  {publicKey}
                 </div>
-                <div>
-                  <div className="text-gray-400">In Orders</div>
-                  <div className="text-white font-semibold">$1,500.00</div>
+                <div className="text-xs text-gray-400">
+                  Using Solana Mainnet
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
