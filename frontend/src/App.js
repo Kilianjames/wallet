@@ -13,22 +13,13 @@ function App() {
     <div className="App">
       <WalletProvider>
         <BrowserRouter>
+          <Navbar />
           <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route
-              path="/*"
-              element={
-                <>
-                  <Navbar />
-                  <Routes>
-                    <Route path="/trade" element={<Trading />} />
-                    <Route path="/markets" element={<Markets />} />
-                    <Route path="/portfolio" element={<Portfolio />} />
-                    <Route path="*" element={<Navigate to="/trade" replace />} />
-                  </Routes>
-                </>
-              }
-            />
+            <Route path="/" element={<Navigate to="/markets" replace />} />
+            <Route path="/trade" element={<Trading />} />
+            <Route path="/markets" element={<Markets />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="*" element={<Navigate to="/markets" replace />} />
           </Routes>
           <Toaster />
         </BrowserRouter>
