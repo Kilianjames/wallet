@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { 
+  Connection, 
+  PublicKey, 
+  SystemProgram, 
+  Transaction,
+  VersionedTransaction,
+  TransactionMessage,
+  LAMPORTS_PER_SOL 
+} from '@solana/web3.js';
 
 const WalletContext = createContext();
 
