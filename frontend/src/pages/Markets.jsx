@@ -81,25 +81,25 @@ const Markets = () => {
 
         {/* Market Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
-            <div className="text-gray-400 text-sm mb-2">Total Markets</div>
-            <div className="text-3xl font-bold text-[#7fffd4]">{markets.length}</div>
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <div className="text-gray-600 text-sm mb-2">Total Markets</div>
+            <div className="text-3xl font-bold text-gray-900">{markets.length}</div>
           </div>
-          <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
-            <div className="text-gray-400 text-sm mb-2">24h Volume</div>
-            <div className="text-3xl font-bold text-[#7fffd4]">
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <div className="text-gray-600 text-sm mb-2">24h Volume</div>
+            <div className="text-3xl font-bold text-gray-900">
               ${(markets.reduce((sum, m) => sum + m.volume, 0) / 1000000).toFixed(1)}M
             </div>
           </div>
-          <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
-            <div className="text-gray-400 text-sm mb-2">Total Liquidity</div>
-            <div className="text-3xl font-bold text-[#7fffd4]">
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <div className="text-gray-600 text-sm mb-2">Total Liquidity</div>
+            <div className="text-3xl font-bold text-gray-900">
               ${(markets.reduce((sum, m) => sum + m.liquidity, 0) / 1000000).toFixed(1)}M
             </div>
           </div>
-          <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
-            <div className="text-gray-400 text-sm mb-2">Active Traders</div>
-            <div className="text-3xl font-bold text-[#7fffd4]">12.4K</div>
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <div className="text-gray-600 text-sm mb-2">Active Traders</div>
+            <div className="text-3xl font-bold text-gray-900">12.4K</div>
           </div>
         </div>
 
