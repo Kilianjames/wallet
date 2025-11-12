@@ -224,6 +224,30 @@ This is now the 2025-standard way to create Solana transactions that work with a
 
 ---
 
+### 📝 Technical Details
+
+**Transaction Type**: VersionedTransaction V0
+**Network**: Solana Mainnet
+**RPC Endpoints** (tried in order with 10s timeout each):
+- Primary: `https://api.mainnet-beta.solana.com` (Solana Foundation)
+- Backup 1: `https://solana-rpc.publicnode.com` (PublicNode)
+- Backup 2: `https://solana.api.onfinality.io/public` (OnFinality)
+- Backup 3: `https://public.rpc.solanavibestation.com` (Solana Vibe Station)
+- Backup 4: `https://solana-api.projectserum.com` (Project Serum)
+
+**Connection Strategy**:
+- 10-second timeout per endpoint
+- Automatic failover to next endpoint on failure
+- Tests connection by fetching blockhash
+
+**Confirmation Strategy**:
+- Up to 20 retry attempts (2 seconds each)
+- Uses latest blockhash for transaction validity
+- Handles transaction expiration gracefully
+- Returns success even if confirmation times out (transaction was sent)
+
+---
+
 ## 📞 Need Help?
 
 If you encounter issues:
