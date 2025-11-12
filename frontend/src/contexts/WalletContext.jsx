@@ -25,6 +25,7 @@ export const WalletProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
+  const [isReady, setIsReady] = useState(false);
 
   // Initialize Phantom provider
   useEffect(() => {
