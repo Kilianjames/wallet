@@ -181,39 +181,39 @@ const Trading = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a1f1a] flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#7fffd4]" size={48} />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
       </div>
     );
   }
 
   if (!selectedMarket) {
     return (
-      <div className="min-h-screen bg-[#0a1f1a] flex items-center justify-center text-white">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-900">
         <div>No markets available</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a1f1a] text-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Market Selector Bar */}
-      <div className="border-b border-[#1a3a2e] bg-[#0d2520] px-6 py-3">
-        <div className="flex items-center gap-4 overflow-x-auto">
+      <div className="border-b border-gray-200 bg-white px-6 py-3 shadow-sm">
+        <div className="flex items-center gap-3 overflow-x-auto">
           {markets.slice(0, 4).map((market) => (
             <button
               key={market.id}
               onClick={() => handleMarketChange(market)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
                 selectedMarket.id === market.id
-                  ? 'bg-[#7fffd4] text-[#0a1f1a] font-semibold'
-                  : 'bg-[#1a3a2e] hover:bg-[#254538] text-gray-300'
+                  ? 'bg-blue-600 text-white font-semibold shadow-sm'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
               }`}
             >
               <span className="text-sm">{market.title.slice(0, 30)}...</span>
               {market.change24h !== 0 && (
-                <span className={`text-xs ${
-                  market.change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                <span className={`text-xs font-medium ${
+                  market.change24h >= 0 ? 'text-green-500' : 'text-red-500'
                 }`}>
                   {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(1)}%
                 </span>
