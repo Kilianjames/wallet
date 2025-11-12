@@ -166,7 +166,7 @@ const Landing = () => {
             <div className="flex items-center gap-3">
               <img
                 src="https://customer-assets.emergentagent.com/job_e3912c72-e03b-483a-9a13-e7cb5f99c7ec/artifacts/tpoy6ypf_ZMgOwNQU_400x400.jpg"
-                alt="Polynator Logo"
+                alt="Polyflux Logo"
                 className="h-8 w-8 rounded"
               />
               <span className="text-[#7fffd4] font-semibold">Polynator</span>
