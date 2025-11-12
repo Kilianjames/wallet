@@ -419,64 +419,42 @@ const Trading = () => {
               </Button>
             </div>
 
-            {/* Order Type */}
-            <Tabs value={orderType} onValueChange={setOrderType} className="mb-4">
-              <TabsList className="grid w-full grid-cols-2 bg-gray-100">
-                <TabsTrigger value="MARKET" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">Market</TabsTrigger>
-                <TabsTrigger value="LIMIT" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">Limit</TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            {/* Limit Price */}
-            {orderType === 'LIMIT' && (
-              <div className="mb-4">
-                <label className="text-sm text-gray-600 mb-2 block">Limit Price</label>
-                <Input
-                  type="number"
-                  placeholder="0.00"
-                  value={limitPrice}
-                  onChange={(e) => setLimitPrice(e.target.value)}
-                  className="bg-white border-gray-300 text-gray-900"
-                  step="0.01"
-                />
+            {/* Leverage - FIRST */}
+            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+              <div className="flex justify-between mb-3">
+                <label className="text-sm font-semibold text-gray-900">Leverage</label>
+                <span className="text-2xl font-bold text-blue-600">{leverage[0]}x</span>
               </div>
-            )}
+              <Slider
+                value={leverage}
+                onValueChange={setLeverage}
+                max={10}
+                min={1}
+                step={1}
+                className="mb-2"
+              />
+              <div className="flex justify-between text-xs text-gray-600 font-medium">
+                <span>1x</span>
+                <span>5x</span>
+                <span>10x</span>
+              </div>
+            </div>
 
             {/* SOL Bet Amount */}
             <div className="mb-4">
-              <label className="text-sm text-gray-600 mb-2 block">Bet Amount (SOL)</label>
+              <label className="text-sm text-gray-600 mb-2 block font-medium">Bet Amount (SOL)</label>
               <Input
                 type="number"
                 placeholder="0.0"
                 value={solAmount}
                 onChange={(e) => setSolAmount(e.target.value)}
-                className="bg-white border-gray-300 text-gray-900"
+                className="bg-white border-gray-300 text-gray-900 text-lg"
                 step="0.01"
                 min="0"
                 disabled={!isConnected}
               />
               <div className="text-xs text-gray-500 mt-1">
                 {isConnected ? 'Enter SOL amount to bet' : 'Connect wallet to place bets'}
-              </div>
-            </div>
-
-            {/* Leverage */}
-            <div className="mb-6">
-              <div className="flex justify-between mb-2">
-                <label className="text-sm text-gray-600">Leverage</label>
-                <span className="text-blue-600 font-semibold">{leverage[0]}x</span>
-              </div>
-              <Slider
-                value={leverage}
-                onValueChange={setLeverage}
-                min={1}
-                max={10}
-                step={1}
-                className="mb-2"
-              />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>1x</span>
-                <span>10x</span>
               </div>
             </div>
 
