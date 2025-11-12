@@ -33,7 +33,7 @@ const Landing = () => {
     }
   };
   return (
-    <div className="min-h-screen bg-[#0a1f1a] text-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#7fffd4] via-[#0a1f1a] to-[#0a1f1a] opacity-20" />
