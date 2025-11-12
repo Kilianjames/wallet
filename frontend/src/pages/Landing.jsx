@@ -169,7 +169,7 @@ const Landing = () => {
                 alt="Polyflux Logo"
                 className="h-8 w-8 rounded"
               />
-              <span className="text-[#7fffd4] font-semibold">Polynator</span>
+              <span className="text-[#7fffd4] font-semibold">Polyflux</span>
             </div>
             <p className="text-gray-400 text-sm">© 2025 Polynator. All rights reserved.</p>
           </div>
