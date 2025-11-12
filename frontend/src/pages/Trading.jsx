@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity, Loader2 } from 'lucide-react';
+import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity, Loader2, Wallet } from 'lucide-react';
 import { marketService } from '../services/api';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -8,6 +8,7 @@ import { Slider } from '../components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from '../hooks/use-toast';
 import { generateChartData } from '../mockData';
+import { useWallet } from '../contexts/WalletContext';
 
 const Trading = () => {
   const location = useLocation();
