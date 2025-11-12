@@ -481,24 +481,24 @@ const Trading = () => {
             </div>
 
             {/* Order Info */}
-            <div className="bg-[#1a3a2e] rounded-lg p-4 mb-4 space-y-2 text-sm">
+            <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-2 text-sm border border-gray-200">
               <div className="flex justify-between">
-                <span className="text-gray-400">Token Price</span>
-                <span className="text-white">${(currentPrice * 100).toFixed(2)}</span>
+                <span className="text-gray-600">Token Price</span>
+                <span className="text-gray-900">${(currentPrice * 100).toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Tokens to Buy</span>
-                <span className="text-white">{amount ? (parseFloat(amount) / currentPrice).toFixed(2) : '0.00'}</span>
+                <span className="text-gray-600">Tokens to Buy</span>
+                <span className="text-gray-900">{amount ? (parseFloat(amount) / currentPrice).toFixed(2) : '0.00'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Max Payout</span>
-                <span className="text-green-400">${amount ? (parseFloat(amount) / currentPrice).toFixed(2) : '0.00'}</span>
+                <span className="text-gray-600">Max Payout</span>
+                <span className="text-green-600">${amount ? (parseFloat(amount) / currentPrice).toFixed(2) : '0.00'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Potential Profit</span>
-                <span className="text-[#7fffd4]">${amount ? ((parseFloat(amount) / currentPrice) - parseFloat(amount)).toFixed(2) : '0.00'}</span>
+                <span className="text-gray-600">Potential Profit</span>
+                <span className="text-blue-600">${amount ? ((parseFloat(amount) / currentPrice) - parseFloat(amount)).toFixed(2) : '0.00'}</span>
               </div>
-              <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-[#254538]">
+              <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-300">
                 Note: This simulates position sizing. Actual Polymarket trades: Buy YES/NO tokens at market price. 
                 Each winning token = $1.00 at resolution.
               </div>
@@ -508,7 +508,7 @@ const Trading = () => {
             {!isConnected ? (
               <Button
                 onClick={connect}
-                className="w-full bg-[#7fffd4] hover:bg-[#66e6bb] text-[#0a1f1a] font-semibold py-6 transition-all"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6 transition-all"
               >
                 <Wallet size={20} className="mr-2" />
                 Connect Phantom Wallet
