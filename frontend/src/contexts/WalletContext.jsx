@@ -309,7 +309,7 @@ export const WalletProvider = ({ children }) => {
     address: publicKey,
     isConnected,
     isConnecting,
-    isReady: !!provider,
+    isReady,
     error,
     connect,
     disconnect,
