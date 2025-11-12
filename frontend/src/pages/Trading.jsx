@@ -421,22 +421,22 @@ const Trading = () => {
 
             {/* Order Type */}
             <Tabs value={orderType} onValueChange={setOrderType} className="mb-4">
-              <TabsList className="grid w-full grid-cols-2 bg-[#1a3a2e]">
-                <TabsTrigger value="MARKET" className="data-[state=active]:bg-[#7fffd4] data-[state=active]:text-[#0a1f1a]">Market</TabsTrigger>
-                <TabsTrigger value="LIMIT" className="data-[state=active]:bg-[#7fffd4] data-[state=active]:text-[#0a1f1a]">Limit</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 bg-gray-100">
+                <TabsTrigger value="MARKET" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">Market</TabsTrigger>
+                <TabsTrigger value="LIMIT" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">Limit</TabsTrigger>
               </TabsList>
             </Tabs>
 
             {/* Limit Price */}
             {orderType === 'LIMIT' && (
               <div className="mb-4">
-                <label className="text-sm text-gray-400 mb-2 block">Limit Price</label>
+                <label className="text-sm text-gray-600 mb-2 block">Limit Price</label>
                 <Input
                   type="number"
                   placeholder="0.00"
                   value={limitPrice}
                   onChange={(e) => setLimitPrice(e.target.value)}
-                  className="bg-[#1a3a2e] border-[#254538] text-white"
+                  className="bg-white border-gray-300 text-gray-900"
                   step="0.01"
                 />
               </div>
@@ -444,18 +444,18 @@ const Trading = () => {
 
             {/* SOL Bet Amount */}
             <div className="mb-4">
-              <label className="text-sm text-gray-400 mb-2 block">Bet Amount (SOL)</label>
+              <label className="text-sm text-gray-600 mb-2 block">Bet Amount (SOL)</label>
               <Input
                 type="number"
                 placeholder="0.0"
                 value={solAmount}
                 onChange={(e) => setSolAmount(e.target.value)}
-                className="bg-[#1a3a2e] border-[#254538] text-white"
+                className="bg-white border-gray-300 text-gray-900"
                 step="0.01"
                 min="0"
                 disabled={!isConnected}
               />
-              <div className="text-xs text-gray-400 mt-1">
+              <div className="text-xs text-gray-500 mt-1">
                 {isConnected ? 'Enter SOL amount to bet' : 'Connect wallet to place bets'}
               </div>
             </div>
@@ -463,8 +463,8 @@ const Trading = () => {
             {/* Leverage */}
             <div className="mb-6">
               <div className="flex justify-between mb-2">
-                <label className="text-sm text-gray-400">Leverage</label>
-                <span className="text-[#7fffd4] font-semibold">{leverage[0]}x</span>
+                <label className="text-sm text-gray-600">Leverage</label>
+                <span className="text-blue-600 font-semibold">{leverage[0]}x</span>
               </div>
               <Slider
                 value={leverage}
