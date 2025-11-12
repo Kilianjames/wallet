@@ -219,21 +219,26 @@ export const WalletProvider = ({ children }) => {
       }
 
       // Create transfer instruction
-      const transaction = new Transaction({
+      const transferInstruction = SystemProgram.transfer({
+        fromPubkey: new PublicKey(publicKey),
+        toPubkey: recipientPubkey,
+        lamports: Math.floor(amountSOL * LAMPORTS_PER_SOL),
+      });
+
+      // Create V0 message (VersionedTransaction)
+      const messageV0 = new TransactionMessage({
+        payerKey: new PublicKey(publicKey),
         recentBlockhash: blockhash,
-        feePayer: new PublicKey(publicKey),
-      }).add(
-        SystemProgram.transfer({
-          fromPubkey: new PublicKey(publicKey),
-          toPubkey: recipientPubkey,
-          lamports: Math.floor(amountSOL * LAMPORTS_PER_SOL),
-        })
-      );
+        instructions: [transferInstruction],
+      }).compileToV0Message();
 
-      console.log('📝 Transaction created, requesting signature from Phantom...');
+      // Create the VersionedTransaction
+      const transaction = new VersionedTransaction(messageV0);
 
-      // Sign and send transaction via Phantom
-      const { signature } = await provider.signAndSendTransaction(transaction);
+      console.log('📝 VersionedTransaction created, requesting signature from Phantom...');
+
+      // Sign and send transaction via Phantom (returns signature directly)
+      const signature = await provider.signAndSendTransaction(transaction);
       
       console.log('✅ Transaction signed and sent:', signature);
 
