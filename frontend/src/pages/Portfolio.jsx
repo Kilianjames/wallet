@@ -199,27 +199,27 @@ const Portfolio = () => {
 
           {/* Open Positions */}
           <TabsContent value="positions">
-            <div className="bg-[#0d2520] rounded-xl p-12 border border-[#1a3a2e] text-center">
-              <Activity size={48} className="mx-auto mb-4 text-gray-600" />
-              <p className="text-gray-400 text-lg mb-2">No open positions</p>
+            <div className="bg-white rounded-xl p-12 border border-gray-200 text-center shadow-sm">
+              <Activity size={48} className="mx-auto mb-4 text-gray-400" />
+              <p className="text-gray-700 text-lg mb-2">No open positions</p>
               <p className="text-gray-500 text-sm">Start trading to see your positions here</p>
             </div>
           </TabsContent>
 
           {/* Open Orders */}
           <TabsContent value="orders">
-            <div className="bg-[#0d2520] rounded-xl p-12 border border-[#1a3a2e] text-center">
-              <Clock size={48} className="mx-auto mb-4 text-gray-600" />
-              <p className="text-gray-400 text-lg mb-2">No open orders</p>
+            <div className="bg-white rounded-xl p-12 border border-gray-200 text-center shadow-sm">
+              <Clock size={48} className="mx-auto mb-4 text-gray-400" />
+              <p className="text-gray-700 text-lg mb-2">No open orders</p>
               <p className="text-gray-500 text-sm">Your pending orders will appear here</p>
             </div>
           </TabsContent>
 
           {/* Trade History */}
           <TabsContent value="history">
-            <div className="bg-[#0d2520] rounded-xl p-12 border border-[#1a3a2e] text-center">
-              <CheckCircle size={48} className="mx-auto mb-4 text-gray-600" />
-              <p className="text-gray-400 text-lg mb-2">No trade history</p>
+            <div className="bg-white rounded-xl p-12 border border-gray-200 text-center shadow-sm">
+              <CheckCircle size={48} className="mx-auto mb-4 text-gray-400" />
+              <p className="text-gray-700 text-lg mb-2">No trade history</p>
               <p className="text-gray-500 text-sm">Your completed trades will be shown here</p>
             </div>
           </TabsContent>
