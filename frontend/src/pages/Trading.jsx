@@ -430,16 +430,22 @@ const Trading = () => {
               </div>
             )}
 
-            {/* Amount */}
+            {/* SOL Bet Amount */}
             <div className="mb-4">
-              <label className="text-sm text-gray-400 mb-2 block">Amount (USDC)</label>
+              <label className="text-sm text-gray-400 mb-2 block">Bet Amount (SOL)</label>
               <Input
                 type="number"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                placeholder="0.0"
+                value={solAmount}
+                onChange={(e) => setSolAmount(e.target.value)}
                 className="bg-[#1a3a2e] border-[#254538] text-white"
+                step="0.01"
+                min="0"
+                disabled={!isConnected}
               />
+              <div className="text-xs text-gray-400 mt-1">
+                {isConnected ? 'Enter SOL amount to bet' : 'Connect wallet to place bets'}
+              </div>
             </div>
 
             {/* Leverage */}
