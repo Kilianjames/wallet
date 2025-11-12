@@ -37,6 +37,7 @@ export const WalletProvider = ({ children }) => {
         if (phantom?.isPhantom) {
           console.log('✅ Phantom wallet detected');
           setProvider(phantom);
+          setIsReady(true);
           
           // Check if already connected
           if (phantom.isConnected && phantom.publicKey) {
@@ -81,18 +82,22 @@ export const WalletProvider = ({ children }) => {
       // If not found, try again after short delays
       const timeouts = [100, 500, 1000, 2000].map(delay => 
         setTimeout(() => {
-          if (!checkForPhantom()) {
+          if (checkForPhantom()) {
+            // Found it!
+          } else {
             console.warn(`⚠️ Phantom not found after ${delay}ms`);
           }
         }, delay)
       );
 
-      // Set error after all attempts
+      // Set error and ready state after all attempts
       setTimeout(() => {
         if (!window?.phantom?.solana?.isPhantom) {
           setError('Phantom wallet not installed. Please install from https://phantom.app');
           console.error('❌ Phantom wallet not detected');
         }
+        // Set ready anyway so UI doesn't stay stuck
+        setIsReady(true);
       }, 2500);
 
       // Cleanup timeouts
