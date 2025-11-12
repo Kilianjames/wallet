@@ -364,11 +364,11 @@ const Trading = () => {
                 </div>
                 {orderbook && orderbook.asks.length > 0 ? (
                   orderbook.asks.slice(0, 8).map((ask, i) => (
-                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-[#1a3a2e] rounded relative">
+                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
                       <div className="absolute inset-0 bg-red-500 opacity-10" style={{ width: `${(ask.total / (orderbook.asks[orderbook.asks.length - 1]?.total || 1)) * 100}%` }} />
-                      <div className="text-red-400 relative z-10">${(ask.price * 100).toFixed(1)}</div>
-                      <div className="text-right relative z-10">{ask.size.toFixed(0)}</div>
-                      <div className="text-right text-gray-400 relative z-10">{ask.total.toFixed(0)}</div>
+                      <div className="text-red-600 relative z-10">${(ask.price * 100).toFixed(1)}</div>
+                      <div className="text-right relative z-10 text-gray-900">{ask.size.toFixed(0)}</div>
+                      <div className="text-right text-gray-600 relative z-10">{ask.total.toFixed(0)}</div>
                     </div>
                   ))
                 ) : (
