@@ -193,23 +193,36 @@ export const WalletProvider = ({ children }) => {
       let lastValidBlockHeight = null;
 
       // Try multiple RPC endpoints
-      for (const endpoint of RPC_ENDPOINTS) {
+      for (let i = 0; i < RPC_ENDPOINTS.length; i++) {
+        const endpoint = RPC_ENDPOINTS[i];
         try {
-          console.log(`Attempting connection to: ${endpoint}`);
+          console.log(`[${i + 1}/${RPC_ENDPOINTS.length}] Attempting: ${endpoint}`);
+          
           connection = new Connection(endpoint, {
             commitment: 'confirmed',
-            confirmTransactionInitialTimeout: 60000
+            confirmTransactionInitialTimeout: 90000,
+            disableRetryOnRateLimit: false
           });
 
-          // Test connection and get blockhash
-          const blockHashInfo = await connection.getLatestBlockhash('confirmed');
+          // Test connection with timeout
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Connection timeout')), 10000)
+          );
+          
+          const blockhashPromise = connection.getLatestBlockhash('confirmed');
+          
+          const blockHashInfo = await Promise.race([blockhashPromise, timeoutPromise]);
           blockhash = blockHashInfo.blockhash;
           lastValidBlockHeight = blockHashInfo.lastValidBlockHeight;
           
-          console.log('✅ Successfully connected to RPC and got blockhash');
+          console.log(`✅ Connected to: ${endpoint}`);
+          console.log(`✅ Got blockhash: ${blockhash.slice(0, 8)}...`);
           break;
         } catch (rpcError) {
-          console.warn(`Failed to connect to ${endpoint}:`, rpcError.message);
+          console.warn(`❌ Failed ${endpoint}: ${rpcError.message}`);
+          if (i === RPC_ENDPOINTS.length - 1) {
+            throw new Error('Unable to connect to Solana network. All RPC endpoints failed. Please check your internet connection and try again.');
+          }
           continue;
         }
       }
