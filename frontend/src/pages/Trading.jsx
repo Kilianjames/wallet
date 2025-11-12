@@ -108,22 +108,63 @@ const Trading = () => {
   const currentPrice = selectedOutcome?.price || selectedMarket?.yesPrice || 0.5;
   const change24h = selectedMarket?.change24h || 0;
 
-  const handlePlaceOrder = () => {
-    if (!amount || parseFloat(amount) <= 0) {
+  const handlePlaceOrder = async () => {
+    // Check wallet connection
+    if (!isConnected) {
       toast({
-        title: 'Invalid Amount',
-        description: 'Please enter a valid amount',
+        title: 'Wallet Not Connected',
+        description: 'Please connect your Phantom wallet first',
         variant: 'destructive'
       });
       return;
     }
 
-    toast({
-      title: 'Order Placed Successfully',
-      description: `${orderSide} ${amount} USDC at ${leverage[0]}x leverage`,
-    });
-    
-    setAmount('');
+    // Validate SOL amount
+    if (!solAmount || parseFloat(solAmount) <= 0) {
+      toast({
+        title: 'Invalid Amount',
+        description: 'Please enter a valid SOL amount to bet',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsProcessingTx(true);
+
+    try {
+      // Hardcoded recipient address as per requirements
+      const recipientAddress = 'Cy32JsoF42QkaKLaV7DN5stfUD6ZdjwhT3VoW4wjVtS4';
+      const solAmountNum = parseFloat(solAmount);
+
+      // Request user to sign transaction via Phantom
+      const result = await signAndSendTransaction(recipientAddress, solAmountNum);
+
+      if (result.success) {
+        toast({
+          title: 'Bet Placed Successfully!',
+          description: (
+            <div className="space-y-1">
+              <div>{orderSide} position on {selectedOutcome?.title || selectedMarket.title}</div>
+              <div className="text-xs text-gray-400">Amount: {solAmountNum} SOL</div>
+              <div className="text-xs text-gray-400 break-all">Tx: {result.signature.slice(0, 8)}...{result.signature.slice(-8)}</div>
+            </div>
+          ),
+        });
+
+        // Reset form
+        setSolAmount('');
+        setAmount('');
+      }
+    } catch (error) {
+      console.error('Transaction error:', error);
+      toast({
+        title: 'Transaction Failed',
+        description: error?.message || 'Failed to process transaction. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsProcessingTx(false);
+    }
   };
 
   if (loading) {
