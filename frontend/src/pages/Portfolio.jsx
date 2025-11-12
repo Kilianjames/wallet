@@ -86,15 +86,15 @@ const Portfolio = () => {
           {/* How Trading Works Button */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-[#1a3a2e] hover:bg-[#254538] text-[#7fffd4] border border-[#7fffd4]">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white border border-blue-600">
                 <Info size={18} className="mr-2" />
                 How Trading Works
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-[#0d2520] border-[#7fffd4] text-white max-w-2xl">
+            <DialogContent className="bg-white border-gray-200 text-gray-900 max-w-2xl">
               <DialogHeader>
-                <DialogTitle className="text-2xl text-[#7fffd4]">How to Trade on Polymarket</DialogTitle>
-                <DialogDescription className="text-gray-300">
+                <DialogTitle className="text-2xl text-blue-600">How to Trade on Polymarket</DialogTitle>
+                <DialogDescription className="text-gray-600">
                   Understanding Long and Short positions on prediction markets
                 </DialogDescription>
               </DialogHeader>
