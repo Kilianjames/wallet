@@ -269,12 +269,16 @@ export const WalletProvider = ({ children }) => {
       const txSignature = typeof signature === 'string' ? signature : signature.signature;
 
       // Wait for confirmation with retry logic
+      console.log('⏳ Waiting for confirmation...');
       let confirmed = false;
       let attempts = 0;
-      const maxAttempts = 30;
+      const maxAttempts = 20;
 
       while (!confirmed && attempts < maxAttempts) {
         try {
+          attempts++;
+          console.log(`Confirmation attempt ${attempts}/${maxAttempts}...`);
+          
           const confirmation = await connection.confirmTransaction(
             {
               signature: txSignature,
@@ -285,18 +289,23 @@ export const WalletProvider = ({ children }) => {
           );
 
           if (confirmation.value.err) {
-            throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}`);
+            throw new Error(`Transaction failed on-chain: ${JSON.stringify(confirmation.value.err)}`);
           }
 
           confirmed = true;
-          console.log('✅ Transaction confirmed!');
+          console.log('✅ Transaction confirmed on blockchain!');
+          break;
         } catch (confirmError) {
-          attempts++;
+          console.warn(`⚠️ Confirmation attempt ${attempts} failed:`, confirmError.message);
+          
           if (attempts >= maxAttempts) {
-            // Return success anyway - transaction was sent
-            console.warn('⚠️ Confirmation timeout, but transaction was sent');
+            // Return success anyway - transaction was sent to network
+            console.warn('⚠️ Confirmation timeout, but transaction was broadcast to network');
+            console.warn('Check transaction on Solana Explorer');
             return { signature: txSignature, success: true };
           }
+          
+          // Wait 2 seconds before retry
           await new Promise(resolve => setTimeout(resolve, 2000));
         }
       }
