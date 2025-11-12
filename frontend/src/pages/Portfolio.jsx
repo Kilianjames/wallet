@@ -100,12 +100,12 @@ const Portfolio = () => {
               </DialogHeader>
               
               <div className="space-y-4 mt-4">
-                <div className="bg-[#1a3a2e] rounded-lg p-4">
-                  <h3 className="text-lg font-bold text-green-400 mb-2">📈 LONG Position (Buy YES)</h3>
-                  <p className="text-gray-300 mb-2">
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 className="text-lg font-bold text-green-600 mb-2">📈 LONG Position (Buy YES)</h3>
+                  <p className="text-gray-700 mb-2">
                     You believe the event WILL happen. Buy YES tokens at current price (e.g., $0.70).
                   </p>
-                  <ul className="list-disc list-inside text-gray-400 space-y-1">
+                  <ul className="list-disc list-inside text-gray-600 space-y-1">
                     <li>If event happens: Each YES token = $1.00 USDC</li>
                     <li>If event doesn't happen: Token = $0.00</li>
                     <li>Profit: $1.00 - purchase price</li>
