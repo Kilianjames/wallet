@@ -331,8 +331,8 @@ const Trading = () => {
           </div>
 
           {/* Orderbook */}
-          <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
-            <h2 className="text-lg font-semibold text-[#7fffd4] mb-4">Order Book {orderbook ? '(Live)' : '(Loading...)'}</h2>
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Book {orderbook ? '(Live)' : '(Loading...)'}</h2>
             <div className="grid grid-cols-2 gap-4">
               {/* Bids */}
               <div>
