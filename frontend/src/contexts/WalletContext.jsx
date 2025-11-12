@@ -181,8 +181,10 @@ export const WalletProvider = ({ children }) => {
     try {
       // Use multiple RPC endpoints for better reliability
       const RPC_ENDPOINTS = [
-        'https://mainnet.helius-rpc.com/?api-key=public',
         'https://api.mainnet-beta.solana.com',
+        'https://solana-rpc.publicnode.com',
+        'https://solana.api.onfinality.io/public',
+        'https://public.rpc.solanavibestation.com',
         'https://solana-api.projectserum.com'
       ];
 
