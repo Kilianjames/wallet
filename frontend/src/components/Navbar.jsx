@@ -90,7 +90,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-[#1a3a2e]">
+          <div className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col gap-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -103,8 +103,8 @@ const Navbar = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-all ${
                       isActive
-                        ? 'bg-[#7fffd4] text-[#0a1f1a] font-semibold'
-                        : 'text-gray-300 hover:bg-[#1a3a2e] hover:text-[#7fffd4]'
+                        ? 'bg-blue-50 text-blue-600 font-semibold'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }`}
                   >
                     <Icon size={18} />
@@ -115,7 +115,7 @@ const Navbar = () => {
               <Button 
                 onClick={handleWalletClick}
                 disabled={!isReady}
-                className="bg-[#7fffd4] hover:bg-[#6eeec3] text-[#0a1f1a] font-semibold mt-2 disabled:opacity-50"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold mt-2 disabled:opacity-50"
               >
                 <Wallet size={18} className="mr-2" />
                 {!isReady ? 'Loading...' : isConnected ? formatAddress(address) : 'Connect Wallet'}
