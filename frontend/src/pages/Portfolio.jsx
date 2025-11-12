@@ -74,13 +74,13 @@ const Portfolio = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a1f1a] text-white p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-[#7fffd4] mb-2">Portfolio</h1>
-            <p className="text-gray-400">Manage your positions and view trading history</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Portfolio</h1>
+            <p className="text-gray-600">Manage your positions and view trading history</p>
           </div>
           
           {/* How Trading Works Button */}
