@@ -223,32 +223,57 @@ const Trading = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 p-6 max-w-7xl mx-auto">
-        {/* Left Side - Chart & Info */}
-        <div className="lg:col-span-3 space-y-4">
-          {/* Market Info */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-80px)]">
+        {/* Left Side - Market Info & Chart (60%) */}
+        <div className="flex-1 lg:w-3/5 p-6 space-y-4 bg-gray-50">
+          {/* Hero Market Card */}
+          <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-white shadow-xl">
             <div className="flex items-start justify-between mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold">
+                    {selectedMarket.category}
+                  </span>
+                  {selectedMarket.is_multi_outcome && (
+                    <span className="px-3 py-1 bg-purple-500/30 backdrop-blur-sm rounded-full text-xs font-semibold">
+                      Multi-Outcome
+                    </span>
+                  )}
+                </div>
+                <h1 className="text-2xl font-bold mb-2 leading-tight">
                   {selectedMarket.title}
                 </h1>
-                <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-600 font-medium">
-                  {selectedMarket.category}
-                </span>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900 mb-1">
+                <div className="text-sm opacity-80 mb-1">Current Price</div>
+                <div className="text-4xl font-bold">
                   ${(currentPrice * 100).toFixed(1)}¢
                 </div>
-                <div className={`flex items-center gap-1 text-sm font-medium ${
-                  change24h >= 0 ? 'text-green-600' : 'text-red-600'
+                <div className={`flex items-center justify-end gap-1 text-sm font-semibold mt-1 ${
+                  change24h >= 0 ? 'text-green-300' : 'text-red-300'
                 }`}>
                   {change24h >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                  {change24h >= 0 ? '+' : ''}{change24h.toFixed(2)}%
+                  {change24h >= 0 ? '+' : ''}{change24h.toFixed(2)}% (24h)
                 </div>
               </div>
             </div>
+            
+            {/* Quick Stats */}
+            <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/20">
+              <div>
+                <div className="text-xs opacity-80 mb-1">Volume</div>
+                <div className="text-lg font-bold">${selectedMarket.volume.toLocaleString()}</div>
+              </div>
+              <div>
+                <div className="text-xs opacity-80 mb-1">Liquidity</div>
+                <div className="text-lg font-bold">${selectedMarket.liquidity.toLocaleString()}</div>
+              </div>
+              <div>
+                <div className="text-xs opacity-80 mb-1">Ends</div>
+                <div className="text-lg font-bold">{new Date(selectedMarket.endDate).toLocaleDateString()}</div>
+              </div>
+            </div>
+          </div>
             
             {/* Multi-outcome selector */}
             {selectedMarket.is_multi_outcome && selectedMarket.outcomes && (
