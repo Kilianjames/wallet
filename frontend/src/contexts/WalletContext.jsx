@@ -21,46 +21,80 @@ export const WalletProvider = ({ children }) => {
   // Initialize Phantom provider
   useEffect(() => {
     const detectPhantom = () => {
-      const phantom = window?.phantom?.solana;
-      
-      if (phantom?.isPhantom) {
-        setProvider(phantom);
+      // Check multiple times for Phantom (it may load after page load)
+      const checkForPhantom = () => {
+        const phantom = window?.phantom?.solana;
         
-        // Check if already connected
-        if (phantom.isConnected && phantom.publicKey) {
-          setPublicKey(phantom.publicKey.toString());
-          setIsConnected(true);
-        }
+        if (phantom?.isPhantom) {
+          console.log('✅ Phantom wallet detected');
+          setProvider(phantom);
+          
+          // Check if already connected
+          if (phantom.isConnected && phantom.publicKey) {
+            setPublicKey(phantom.publicKey.toString());
+            setIsConnected(true);
+            console.log('✅ Wallet already connected:', phantom.publicKey.toString());
+          }
 
-        // Listen for account changes
-        phantom.on('connect', (pubKey) => {
-          setPublicKey(pubKey.toString());
-          setIsConnected(true);
-          setIsConnecting(false);
-        });
-
-        phantom.on('disconnect', () => {
-          setPublicKey(null);
-          setIsConnected(false);
-        });
-
-        phantom.on('accountChanged', (pubKey) => {
-          if (pubKey) {
+          // Listen for account changes
+          phantom.on('connect', (pubKey) => {
+            console.log('✅ Wallet connected:', pubKey.toString());
             setPublicKey(pubKey.toString());
-          } else {
+            setIsConnected(true);
+            setIsConnecting(false);
+          });
+
+          phantom.on('disconnect', () => {
+            console.log('⚠️ Wallet disconnected');
             setPublicKey(null);
             setIsConnected(false);
+          });
+
+          phantom.on('accountChanged', (pubKey) => {
+            if (pubKey) {
+              console.log('✅ Account changed:', pubKey.toString());
+              setPublicKey(pubKey.toString());
+            } else {
+              console.log('⚠️ Account disconnected');
+              setPublicKey(null);
+              setIsConnected(false);
+            }
+          });
+          
+          return true;
+        }
+        return false;
+      };
+
+      // Try immediately
+      if (checkForPhantom()) return;
+
+      // If not found, try again after short delays
+      const timeouts = [100, 500, 1000, 2000].map(delay => 
+        setTimeout(() => {
+          if (!checkForPhantom()) {
+            console.warn(`⚠️ Phantom not found after ${delay}ms`);
           }
-        });
-      } else {
-        setError('Phantom wallet not installed');
-      }
+        }, delay)
+      );
+
+      // Set error after all attempts
+      setTimeout(() => {
+        if (!window?.phantom?.solana?.isPhantom) {
+          setError('Phantom wallet not installed. Please install from https://phantom.app');
+          console.error('❌ Phantom wallet not detected');
+        }
+      }, 2500);
+
+      // Cleanup timeouts
+      return () => timeouts.forEach(clearTimeout);
     };
 
-    detectPhantom();
+    const cleanup = detectPhantom();
 
     // Cleanup
     return () => {
+      if (cleanup) cleanup();
       if (provider) {
         provider.removeAllListeners();
       }
