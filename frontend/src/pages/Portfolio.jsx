@@ -126,22 +126,22 @@ const Portfolio = () => {
                   </ul>
                 </div>
                 
-                <div className="bg-[#1a3a2e] rounded-lg p-4">
-                  <h3 className="text-lg font-bold text-[#7fffd4] mb-2">💡 Example Trade</h3>
-                  <p className="text-gray-300 mb-2">
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 className="text-lg font-bold text-blue-600 mb-2">💡 Example Trade</h3>
+                  <p className="text-gray-700 mb-2">
                     Market: "Will Bitcoin hit $120k in 2025?"<br/>
                     YES price: $0.70 | NO price: $0.30
                   </p>
                   <div className="grid grid-cols-2 gap-4 mt-2">
-                    <div className="border border-green-500/30 rounded p-2">
-                      <div className="text-green-400 font-bold">Buy YES ($0.70)</div>
-                      <div className="text-sm text-gray-400">If YES: Profit $0.30/token</div>
-                      <div className="text-sm text-gray-400">If NO: Lose $0.70/token</div>
+                    <div className="border border-green-500/30 rounded p-2 bg-green-50">
+                      <div className="text-green-600 font-bold">Buy YES ($0.70)</div>
+                      <div className="text-sm text-gray-600">If YES: Profit $0.30/token</div>
+                      <div className="text-sm text-gray-600">If NO: Lose $0.70/token</div>
                     </div>
-                    <div className="border border-red-500/30 rounded p-2">
-                      <div className="text-red-400 font-bold">Buy NO ($0.30)</div>
-                      <div className="text-sm text-gray-400">If NO: Profit $0.70/token</div>
-                      <div className="text-sm text-gray-400">If YES: Lose $0.30/token</div>
+                    <div className="border border-red-500/30 rounded p-2 bg-red-50">
+                      <div className="text-red-600 font-bold">Buy NO ($0.30)</div>
+                      <div className="text-sm text-gray-600">If NO: Profit $0.70/token</div>
+                      <div className="text-sm text-gray-600">If YES: Lose $0.30/token</div>
                     </div>
                   </div>
                 </div>
