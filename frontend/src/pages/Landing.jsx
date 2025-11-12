@@ -46,9 +46,9 @@ const Landing = () => {
           <div className="text-center max-w-4xl mx-auto">
             <div className="mb-6 flex justify-center">
               <img
-                src="https://customer-assets.emergentagent.com/job_e3912c72-e03b-483a-9a13-e7cb5f99c7ec/artifacts/9j666g7d_1080x360.jpg"
-                alt="Polynator Banner"
-                className="h-24 rounded-lg"
+                src="https://customer-assets.emergentagent.com/job_d5c149cb-8bda-4095-b402-80a5f60716e4/artifacts/3mwtxpba_Untitled.jpeg"
+                alt="Polyflux Banner"
+                className="h-24 rounded-lg shadow-lg"
               />
             </div>
             <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-[#7fffd4] to-[#5fdfc4] bg-clip-text text-transparent">
