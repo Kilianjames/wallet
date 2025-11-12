@@ -129,7 +129,7 @@ const Markets = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0d2520] to-transparent" />
                   <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-[#7fffd4] text-[#0a1f1a] rounded-full text-xs font-semibold">
+                    <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-semibold">
                       {market.category}
                     </span>
                   </div>
