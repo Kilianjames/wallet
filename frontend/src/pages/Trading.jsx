@@ -346,15 +346,15 @@ const Trading = () => {
           </div>
 
           {/* Orderbook */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Book {orderbook ? '(Live)' : '(Loading...)'}</h2>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="bg-white rounded-xl p-4 lg:p-6 border border-gray-200 shadow-sm">
+            <h2 className="text-base lg:text-lg font-semibold text-gray-900 mb-3 lg:mb-4">Order Book {orderbook ? '(Live)' : '(Loading...)'}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Bids */}
-              <div>
-                <div className="grid grid-cols-3 gap-2 text-xs text-gray-600 mb-2 px-2">
-                  <div>Price</div>
-                  <div className="text-right">Size</div>
-                  <div className="text-right">Total</div>
+              <div className="overflow-x-auto">
+                <div className="grid grid-cols-3 gap-1 lg:gap-2 text-xs text-gray-600 mb-2 px-2 min-w-[200px]">
+                  <div className="truncate">Price</div>
+                  <div className="text-right truncate">Size</div>
+                  <div className="text-right truncate">Total</div>
                 </div>
                 {orderbook && orderbook.bids.length > 0 ? (
                   orderbook.bids.slice(0, 8).map((bid, i) => (
