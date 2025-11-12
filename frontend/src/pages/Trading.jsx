@@ -223,26 +223,26 @@ const Trading = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 p-6 max-w-7xl mx-auto">
         {/* Left Side - Chart & Info */}
         <div className="lg:col-span-3 space-y-4">
           {/* Market Info */}
-          <div className="bg-[#0d2520] rounded-xl p-6 border border-[#1a3a2e]">
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h1 className="text-2xl font-bold text-[#7fffd4] mb-2">
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
                   {selectedMarket.title}
                 </h1>
-                <span className="px-3 py-1 bg-[#1a3a2e] rounded-full text-xs text-[#7fffd4]">
+                <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-600 font-medium">
                   {selectedMarket.category}
                 </span>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-white mb-1">
+                <div className="text-3xl font-bold text-gray-900 mb-1">
                   ${(currentPrice * 100).toFixed(1)}¢
                 </div>
-                <div className={`flex items-center gap-1 text-sm ${
-                  change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                <div className={`flex items-center gap-1 text-sm font-medium ${
+                  change24h >= 0 ? 'text-green-600' : 'text-red-600'
                 }`}>
                   {change24h >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                   {change24h >= 0 ? '+' : ''}{change24h.toFixed(2)}%
