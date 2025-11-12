@@ -147,7 +147,7 @@ const Markets = () => {
 
                 {/* Market Info */}
                 <div className="p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4 line-clamp-2">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 line-clamp-2">
                     {market.title}
                   </h3>
 
