@@ -103,7 +103,10 @@ export const WalletProvider = ({ children }) => {
 
   const connect = async () => {
     if (!provider) {
-      setError('Phantom wallet not installed. Please install from https://phantom.app');
+      const errorMsg = 'Phantom wallet not installed. Please install from https://phantom.app';
+      setError(errorMsg);
+      // Open Phantom download page
+      window.open('https://phantom.app/download', '_blank');
       return;
     }
 
@@ -111,14 +114,33 @@ export const WalletProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await provider.connect();
+      console.log('🔗 Requesting wallet connection...');
+      
+      // Request connection with options
+      const response = await provider.connect({ onlyIfTrusted: false });
+      
+      if (!response?.publicKey) {
+        throw new Error('No public key returned from Phantom');
+      }
+      
       const pubKeyString = response.publicKey.toString();
+      console.log('✅ Connected successfully:', pubKeyString);
+      
       setPublicKey(pubKeyString);
       setIsConnected(true);
       localStorage.setItem('phantom_connected', 'true');
+      localStorage.setItem('phantom_pubkey', pubKeyString);
     } catch (err) {
-      setError(err?.message || 'Failed to connect wallet');
-      console.error('Connection error:', err);
+      console.error('❌ Connection error:', err);
+      
+      // Provide helpful error messages
+      if (err?.message?.includes('User rejected')) {
+        setError('Connection cancelled. Please try again.');
+      } else if (err?.code === 4001) {
+        setError('Connection request rejected by user.');
+      } else {
+        setError(err?.message || 'Failed to connect wallet. Please try again.');
+      }
     } finally {
       setIsConnecting(false);
     }
