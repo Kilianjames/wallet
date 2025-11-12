@@ -51,10 +51,8 @@ const Landing = () => {
                 className="h-24 rounded-lg shadow-lg"
               />
             </div>
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-[#7fffd4] to-[#5fdfc4] bg-clip-text text-transparent">
-              Trade Polymarket
-              <br />
-              with Leverage
+            <h1 className="text-6xl md:text-7xl font-bold mb-6 text-gray-900">
+              Polyflux
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed">
               The first perpetual DEX for prediction markets. Trade trending events
