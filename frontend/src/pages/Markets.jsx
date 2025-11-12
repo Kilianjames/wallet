@@ -176,7 +176,7 @@ const Markets = () => {
                     /* YES/NO market */
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <div className="text-gray-400 text-xs mb-1">YES Price</div>
+                        <div className="text-gray-600 text-xs mb-1">YES Price</div>
                         <div className="text-2xl font-bold text-green-400">
                           ${(market.yesPrice * 100).toFixed(1)}¢
                         </div>
