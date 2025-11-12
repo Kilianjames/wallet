@@ -394,8 +394,8 @@ const Trading = () => {
           </div>
         </div>
 
-        {/* Right Side - Trade Panel (40%) */}
-        <div className="lg:w-2/5 bg-white border-l border-gray-200 p-6 overflow-y-auto">
+        {/* Right Side - Trade Panel (40%) - Shows FIRST on mobile */}
+        <div className="lg:w-2/5 bg-white lg:border-l border-gray-200 p-4 lg:p-6 overflow-y-auto">
           <div className="max-w-md mx-auto">
             {/* Header */}
             <div className="mb-6">
