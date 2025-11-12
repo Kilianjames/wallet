@@ -167,7 +167,7 @@ const Markets = () => {
                         </div>
                       ))}
                       {market.outcomes.length > 3 && (
-                        <div className="text-xs text-gray-500 text-center pt-2">
+                        <div className="text-xs text-gray-600 text-center pt-2">
                           +{market.outcomes.length - 3} more outcomes
                         </div>
                       )}
