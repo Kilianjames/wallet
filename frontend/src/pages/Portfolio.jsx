@@ -182,16 +182,16 @@ const Portfolio = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="positions" className="w-full">
-          <TabsList className="bg-[#0d2520] border border-[#1a3a2e] mb-6">
-            <TabsTrigger value="positions" className="data-[state=active]:bg-[#7fffd4] data-[state=active]:text-[#0a1f1a]">
+          <TabsList className="bg-white border border-gray-200 mb-6 shadow-sm">
+            <TabsTrigger value="positions" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <Activity size={16} className="mr-2" />
               Open Positions
             </TabsTrigger>
-            <TabsTrigger value="orders" className="data-[state=active]:bg-[#7fffd4] data-[state=active]:text-[#0a1f1a]">
+            <TabsTrigger value="orders" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <Clock size={16} className="mr-2" />
               Open Orders
             </TabsTrigger>
-            <TabsTrigger value="history" className="data-[state=active]:bg-[#7fffd4] data-[state=active]:text-[#0a1f1a]">
+            <TabsTrigger value="history" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <CheckCircle size={16} className="mr-2" />
               Trade History
             </TabsTrigger>
