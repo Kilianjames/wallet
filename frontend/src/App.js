@@ -2,7 +2,6 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { WalletProvider } from './contexts/WalletContext';
 import Navbar from "./components/Navbar";
-import Landing from "./pages/Landing";
 import Trading from "./pages/Trading";
 import Markets from "./pages/Markets";
 import Portfolio from "./pages/Portfolio";
