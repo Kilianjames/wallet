@@ -182,7 +182,7 @@ const Markets = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-gray-400 text-xs mb-1">NO Price</div>
+                        <div className="text-gray-600 text-xs mb-1">NO Price</div>
                         <div className="text-2xl font-bold text-red-400">
                           ${(market.noPrice * 100).toFixed(1)}¢
                         </div>
