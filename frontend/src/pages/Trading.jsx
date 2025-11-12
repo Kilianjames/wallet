@@ -493,20 +493,42 @@ const Trading = () => {
             </div>
 
             {/* Place Order Button */}
-            <Button
-              onClick={handlePlaceOrder}
-              className={`w-full ${
-                orderSide === 'LONG'
-                  ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-red-500 hover:bg-red-600'
-              } text-white font-semibold py-6 transition-all`}
-            >
-              {orderSide === 'LONG' ? 'Buy YES Tokens' : 'Buy NO Tokens'}
-            </Button>
-            
-            <div className="text-xs text-center text-gray-500 mt-2">
-              {orderSide === 'LONG' ? '(Betting event WILL happen)' : '(Betting event WON\'T happen)'}
-            </div>
+            {!isConnected ? (
+              <Button
+                onClick={connect}
+                className="w-full bg-[#7fffd4] hover:bg-[#66e6bb] text-[#0a1f1a] font-semibold py-6 transition-all"
+              >
+                <Wallet size={20} className="mr-2" />
+                Connect Phantom Wallet
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={handlePlaceOrder}
+                  disabled={isProcessingTx || !solAmount}
+                  className={`w-full ${
+                    orderSide === 'LONG'
+                      ? 'bg-green-500 hover:bg-green-600'
+                      : 'bg-red-500 hover:bg-red-600'
+                  } text-white font-semibold py-6 transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  {isProcessingTx ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" size={20} />
+                      Processing Transaction...
+                    </>
+                  ) : (
+                    <>
+                      {orderSide === 'LONG' ? 'Place YES Bet' : 'Place NO Bet'} ({solAmount || '0'} SOL)
+                    </>
+                  )}
+                </Button>
+                
+                <div className="text-xs text-center text-gray-500 mt-2">
+                  {orderSide === 'LONG' ? '(Betting event WILL happen)' : '(Betting event WON\'T happen)'}
+                </div>
+              </>
+            )}
 
             {/* Quick Stats */}
             <div className="mt-6 pt-6 border-t border-[#1a3a2e]">
