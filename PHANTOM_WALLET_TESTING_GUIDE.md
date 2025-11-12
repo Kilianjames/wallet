@@ -1,8 +1,8 @@
 # 🔷 Phantom Wallet Integration - Testing Guide
 
-## ✅ Implementation Complete
+## ✅ Implementation Complete - FIXED VersionedTransaction
 
-The Polynator app now has direct Phantom wallet integration with Solana Mainnet transaction signing.
+The Polynator app now has direct Phantom wallet integration with Solana Mainnet transaction signing using the modern **VersionedTransaction** format (V0 transactions) which ensures Phantom popup appears correctly.
 
 ---
 
