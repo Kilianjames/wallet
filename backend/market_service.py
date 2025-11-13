@@ -263,6 +263,36 @@ class MarketService:
             
             filtered = [m for m in all_markets if m.get('category', '').lower() == category.lower()]
             return filtered[:limit]
+
+    def get_live_orderbook(self, token_id: str) -> Optional[Dict]:
+        """Get live orderbook data"""
+        try:
+            return self.client.get_orderbook(token_id)
+        except Exception as e:
+            logger.error(f"Error getting live orderbook: {e}")
+            return None
+    
+    def get_price_chart_data(self, token_id: str, interval: str = "1h") -> List[Dict]:
+        """Get price history for chart"""
+        try:
+            history = self.client.get_price_history(token_id, interval)
+            # Transform to chart-friendly format
+            chart_data = []
+            for item in history:
+                try:
+                    chart_data.append({
+                        'timestamp': item.get('t', 0),
+                        'price': float(item.get('p', 0)),
+                        'date': item.get('t', 0) * 1000  # Convert to milliseconds for JS
+                    })
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Error parsing price data: {e}")
+                    continue
+            return chart_data
+        except Exception as e:
+            logger.error(f"Error getting price chart data: {e}")
+            return []
+
         except Exception as e:
             logger.error(f"Error getting markets by category: {e}")
             return []
