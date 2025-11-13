@@ -1,0 +1,92 @@
+<analysis>
+My analysis of the trajectory reveals a highly iterative and user-driven development process for a Polymarket DEX clone, which evolved from Polynator to Polyflux and finally Polyfluid.
+
+The project began with a frontend-only mock-up and progressed to a full-stack application with a React frontend and a FastAPI backend fetching live data from the Polymarket Gamma API. A significant and challenging phase was the wallet integration. Initial attempts to use Privy with Solana support failed repeatedly, leading to a pivot towards a direct Phantom wallet integration. This required extensive debugging, including resolving RPC connection issues, implementing Solana's  for signing, and fixing UI state problems.
+
+Following the successful wallet integration, the project entered a rapid-fire UI/UX overhaul phase. The AI engineer performed multiple complete redesigns of the application's theme, layout, and components based on specific user requests, moving from a dark-green theme to a clean, data-dense, blue-and-white interface inspired by  and .
+
+The most recent work focused on enhancing core functionality. This included refactoring the backend to fetch more market data and provide new endpoints for categories (sports, crypto) and live data (order books, price history). The final tasks involved implementing a portfolio page to display users' live bet positions and upgrading the trading chart to visualize probability changes over time, transforming the application from a simple market viewer into a more comprehensive trading platform.
+</analysis>
+
+<product_requirements>
+The user wants to build a perpetual DEX named Polyfluid that allows users to bet on Polymarket prediction markets.
+
+**Core Features & Evolution:**
+1.  **UI/UX:** The initial design was a clone of  but underwent multiple overhauls. The final design mandates a clean, data-dense, blue-and-white theme. Key user feedback drove changes to reduce thumbnail sizes, increase the number of visible markets, and create a simple, mobile-first interface. The landing page was removed, with users directly landing on the markets page.
+2.  **Branding:** The name evolved from Polynator to Polyflux and finally to Polyfluid.
+3.  **Live Data:** The application must use 100% live data from the Polymarket Gamma API for all markets, categories (sports, crypto, politics), order books, and price history. No mock data should be used.
+4.  **Wallet Integration:** Users must be able to connect a Solana Phantom wallet directly (without Privy). This includes signing and sending s to a specified address () when placing a bet.
+5.  **Core Pages & Functionality:**
+    *   **Markets Page:** Display a large number of markets in a compact, horizontal rectangle layout.
+    *   **Trading Page:** Feature a live, multi-outcome probability chart and a real-time order book. The UI must be clean, with the leverage option placed prominently.
+    *   **Portfolio Page:** Display the connected user's active bets (positions) with live price updates.
+</product_requirements>
+
+<key_technical_concepts>
+- **Frontend**: React, TailwindCSS, ,  for icons, and Shadcn UI components.
+- **Backend**: Python, FastAPI for the server.
+- **Solana Integration**: Direct  provider interaction,  library for creating and signing .
+- **State Management**: React Context API () for global wallet state and React Hooks (, ) for component-level state.
+- **External APIs**: Polymarket Gamma API for markets, categories, order books, and price history.
+- **Data Handling**: Custom  utility for number display.
+</key_technical_concepts>
+
+<code_architecture>
+The application is a standard monorepo with a React frontend and a FastAPI backend.
+
+**Directory Structure:**
+
+
+- ****
+  - **Importance**: Manages all Solana Phantom wallet interactions. It was completely rewritten to remove Privy and implement direct Phantom integration. It handles provider detection, connection, state management (, ), and transaction signing.
+  - **Changes**: Major refactoring to use , implement , and add robust error handling for RPC endpoints and wallet connection states. The logic was improved to resolve a Loading... bug in the UI.
+
+- ****
+  - **Importance**: The core user interface for placing bets, viewing charts, and order books.
+  - **Changes**: Underwent multiple complete redesigns to achieve a clean, mobile-first, split-view layout. Mock data was replaced with live data fetching for charts and order books via new backend endpoints. It now uses  to fetch data periodically. Mobile layout bugs (overlapping elements) were fixed, and the component was updated to use a new probability chart that displays multiple outcomes over time.
+
+- ****
+  - **Importance**: The main entry point of the app, displaying available prediction markets.
+  - **Changes**: UI was redesigned multiple times to improve data density, settling on a horizontal rectangle layout. It was updated to fetch and display a larger number of markets from new categorized backend endpoints and uses the  utility for displaying numbers.
+
+- ****
+  - **Importance**: Displays the user's active bets and their value.
+  - **Changes**: Updated to fetch and display a user's positions. It now contains UI to list out each bet with its current value, linked to the  hook.
+
+- ****
+  - **Importance**: The FastAPI server entry point that defines all API routes.
+  - **Changes**: Expanded significantly to include new endpoints for fetching trending markets (), categorized markets (), live order books (), and price history for charts (). Debugged multiple syntax errors during development.
+
+- ****
+  - **Importance**: Contains the business logic for fetching and transforming data from the Polymarket API.
+  - **Changes**: Heavily modified to fetch a larger number of markets, process data for the new endpoints, and fix critical data transformation bugs (e.g.,  error when parsing outcomes). Error handling was improved to make data processing more resilient.
+
+- ****
+  - **Importance**: The root React component that defines routing.
+  - **Changes**: The routing was updated to remove the landing page and redirect  to . The  was removed and replaced with the new .
+</code_architecture>
+
+<pending_tasks>
+- **Verify End-to-End Betting Flow**: The system for displaying positions on the portfolio page has been coded, but it needs to be tested end-to-end. This involves a user placing a bet on the Trading page and verifying that the position correctly appears on the Portfolio page with live price updates.
+- **Complete and Test Probability Chart**: The price chart was upgraded to show probability changes over time. This complex component needs to be thoroughly tested across different markets (especially multi-outcome ones) to ensure data accuracy and visualization correctness.
+</pending_tasks>
+
+<current_work>
+The most recent work was a major feature enhancement based on the user request: **when a person places a particular bet his address placing his positions must be visible on the portfolios section with live changes in price...and fix price chart for each markets for all variation...make price charge probability charge like november 1st 90% november 15 1% all in one chart**.
+
+To address this, the AI engineer implemented a comprehensive portfolio and charting system:
+
+1.  **Portfolio Positions**:
+    *   A new hook, , was created to manage the logic for fetching and updating user positions.
+    *   The  file was significantly updated. New UI sections were added to fetch the user's wallet address and display a list of their open positions, including details like the market title, outcome, stake, and current value.
+
+2.  **Advanced Probability Chart**:
+    *   The  file was modified to implement a more sophisticated price chart.
+    *   The chart component was redesigned to handle and visualize data for multiple outcomes on a single chart, showing how the probability of each outcome has changed over time, similar to the functionality on Polymarket's site.
+
+The last action taken in the trajectory was running automated tests on the newly updated  page to check for runtime errors, which passed successfully. The next step was to test the new chart on the Trading page.
+</current_work>
+
+<optional_next_step>
+I will now test the newly implemented multi-outcome probability chart on the Trading page to ensure it visualizes live data correctly and is free of runtime errors.
+</optional_next_step>
