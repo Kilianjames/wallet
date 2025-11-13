@@ -21,7 +21,8 @@ class MarketService:
                 try:
                     # Get all markets from the event
                     markets = event.get('markets', [])
-                    if not markets:
+                    if not markets or len(markets) == 0:
+                        logger.debug(f"Skipping event {event.get('id')} - no markets")
                         continue
                     
                     # Check if this is a multi-outcome event (multiple markets)
