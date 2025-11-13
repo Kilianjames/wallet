@@ -30,11 +30,11 @@ class PolyfluidBackendTester:
         self.test_token_id = None
     
     def test_markets_endpoint(self):
-        """Test /api/markets endpoint - FOCUS: Verify expired markets are filtered out"""
-        logger.info("=== Testing Markets Endpoint - EXPIRED MARKET FILTERING ===")
+        """Test /api/markets endpoint - FOCUS: Verify stricter date filtering (Nov 14+ only)"""
+        logger.info("=== Testing Markets Endpoint - STRICTER DATE FILTERING (NOV 14+ ONLY) ===")
         
         try:
-            response = requests.get(f"{self.backend_url}/markets?limit=20", timeout=30)
+            response = requests.get(f"{self.backend_url}/markets?limit=150", timeout=30)
             logger.info(f"Markets API response status: {response.status_code}")
             
             if response.status_code != 200:
