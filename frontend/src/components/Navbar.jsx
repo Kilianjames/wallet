@@ -36,11 +36,11 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <img
               src="https://customer-assets.emergentagent.com/job_d5c149cb-8bda-4095-b402-80a5f60716e4/artifacts/3mwtxpba_Untitled.jpeg"
-              alt="Polyflux Logo"
+              alt="Polyfluid Logo"
               className="h-10 w-10 rounded-lg group-hover:scale-105 transition-transform"
             />
             <span className="text-2xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors">
-              Polyflux
+              Polyfluid
             </span>
           </Link>
 
