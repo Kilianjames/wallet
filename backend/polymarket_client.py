@@ -82,11 +82,22 @@ class PolymarketClient:
     def get_orderbook(self, token_id: str) -> Optional[Dict]:
         """Fetch orderbook for a specific token"""
         try:
-            response = requests.get(f"{self.clob_base_url}/book", params={"token_id": token_id}, timeout=10)
+            url = f"{self.clob_base_url}/book"
+            params = {"token_id": token_id}
+            logger.info(f"GET {url} with params: {params}")
+            
+            response = requests.get(url, params=params, timeout=10)
+            logger.info(f"Orderbook API response status: {response.status_code}")
             response.raise_for_status()
-            return response.json()
+            
+            data = response.json()
+            logger.debug(f"Orderbook API response preview: bids={len(data.get('bids', []))}, asks={len(data.get('asks', []))}")
+            return data
+        except requests.exceptions.RequestException as e:
+            logger.error(f"HTTP error fetching orderbook for token_id={token_id}: {e}")
+            return None
         except Exception as e:
-            logger.error(f"Error fetching orderbook: {e}")
+            logger.error(f"Error fetching orderbook for token_id={token_id}: {e}", exc_info=True)
             return None
     
     def get_price_history(self, token_id: str, interval: str = "1h") -> List[Dict]:
