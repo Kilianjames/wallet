@@ -244,8 +244,20 @@ const Trading = () => {
 
     const solAmountNum = parseFloat(solAmount);
 
+    // Refresh balance before validating (in case it's stale)
+    if (walletBalance === 0) {
+      console.log('Balance is 0, refreshing...');
+      await checkWalletBalance();
+      
+      // Wait a moment for balance to update
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    console.log('Current wallet balance:', walletBalance, 'SOL');
+    console.log('Bet amount:', solAmountNum, 'SOL');
+
     // CRITICAL: Check wallet balance before allowing bet
-    if (solAmountNum > walletBalance) {
+    if (walletBalance > 0 && solAmountNum > walletBalance) {
       toast({
         title: 'Insufficient Balance',
         description: `You only have ${walletBalance.toFixed(4)} SOL in your wallet. Please add more SOL or reduce your bet amount.`,
@@ -256,7 +268,7 @@ const Trading = () => {
 
     // Additional check with buffer for transaction fees
     const minimumRequired = solAmountNum + 0.001; // Amount + fee buffer
-    if (minimumRequired > walletBalance) {
+    if (walletBalance > 0 && minimumRequired > walletBalance) {
       toast({
         title: 'Insufficient Balance for Fees',
         description: `You need at least ${minimumRequired.toFixed(4)} SOL (including transaction fees). Current balance: ${walletBalance.toFixed(4)} SOL`,
