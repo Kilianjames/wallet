@@ -99,6 +99,27 @@ async def get_market_details(market_id: str):
         logging.error(f"Error fetching market details: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch market details")
 
+@api_router.get("/markets/category/{category}")
+async def get_markets_by_category(category: str, limit: int = Query(100, ge=1, le=200)):
+    """Get markets filtered by category"""
+    try:
+        markets = market_service.get_markets_by_category(category, limit)
+        return markets
+    except Exception as e:
+        logging.error(f"Error fetching markets by category: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch markets by category")
+
+@api_router.get("/markets/trending/top")
+async def get_trending_markets(limit: int = Query(50, ge=1, le=100)):
+    """Get top trending markets"""
+    try:
+        markets = market_service.get_trending_only(limit)
+        return markets
+    except Exception as e:
+        logging.error(f"Error fetching trending markets: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch trending markets")
+
+
 @api_router.get("/orderbook/{token_id}")
 async def get_orderbook(token_id: str):
     """Get orderbook for a market token"""
