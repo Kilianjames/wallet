@@ -30,6 +30,29 @@ class MarketService:
                         logger.debug(f"Skipping event {event.get('id')} - no markets")
                         continue
                     
+                    # CRITICAL: Filter out expired markets - only show ACTIVE/ONGOING
+                    end_date_str = event.get('endDate', '')
+                    if end_date_str:
+                        try:
+                            # Parse end date - format is typically ISO8601 like "2025-12-10T00:00:00Z"
+                            end_date = datetime.fromisoformat(end_date_str.replace('Z', '+00:00'))
+                            if end_date <= current_time:
+                                logger.info(f"Skipping EXPIRED market: {event.get('title', '')} (ended: {end_date_str})")
+                                continue
+                        except (ValueError, AttributeError) as e:
+                            logger.warning(f"Could not parse end date '{end_date_str}': {e}")
+                    
+                    # Also check if market is marked as closed or accepting orders
+                    if event.get('closed', False) or event.get('archived', False):
+                        logger.info(f"Skipping CLOSED/ARCHIVED market: {event.get('title', '')}")
+                        continue
+                    
+                    # Check if first market in event has acceptingOrders flag
+                    first_market = markets[0] if markets else {}
+                    if not first_market.get('acceptingOrders', True):
+                        logger.info(f"Skipping market NOT accepting orders: {event.get('title', '')}")
+                        continue
+                    
                     # Check if this is a multi-outcome event (multiple markets)
                     if len(markets) > 1:
                         # Multi-outcome market - group all outcomes
