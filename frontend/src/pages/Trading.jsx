@@ -347,41 +347,73 @@ const Trading = () => {
           )}
 
           {/* Chart */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+          <div className="bg-white rounded-xl p-4 lg:p-6 border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Price Chart</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Price Chart {chartData.length > 0 && <span className="text-sm text-green-600">● Live</span>}
+              </h2>
               <div className="flex gap-2">
-                {['1H', '4H', '1D', '1W'].map((tf) => (
-                  <button key={tf} className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs transition-colors">
-                    {tf}
+                {[
+                  { label: '1H', value: '1h' },
+                  { label: '6H', value: '6h' },
+                  { label: '1D', value: '1d' },
+                  { label: '1W', value: '1w' }
+                ].map((tf) => (
+                  <button 
+                    key={tf.value} 
+                    onClick={() => setChartInterval(tf.value)}
+                    className={`px-3 py-1 rounded text-xs transition-colors ${
+                      chartInterval === tf.value 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    {tf.label}
                   </button>
                 ))}
               </div>
             </div>
-            <div className="h-[400px] relative">
-              <svg width="100%" height="100%" className="overflow-visible">
-                {chartData.map((point, i) => {
-                  if (i === 0) return null;
-                  const prevPoint = chartData[i - 1];
-                  const x1 = (i - 1) * (100 / chartData.length);
-                  const x2 = i * (100 / chartData.length);
-                  const y1 = (1 - prevPoint.price) * 100;
-                  const y2 = (1 - point.price) * 100;
-                  
-                  return (
-                    <line
-                      key={i}
-                      x1={`${x1}%`}
-                      y1={`${y1}%`}
-                      x2={`${x2}%`}
-                      y2={`${y2}%`}
-                      stroke="#7fffd4"
-                      strokeWidth="2"
-                    />
-                  );
-                })}
-              </svg>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#7fffd4] to-transparent opacity-10" />
+            <div className="h-64 border border-gray-200 rounded-lg bg-gray-50 p-4">
+              {chartData.length > 0 ? (
+                <div className="h-full flex flex-col justify-between">
+                  {/* Simple line chart visualization */}
+                  <div className="flex-1 flex items-end gap-1">
+                    {chartData.map((point, idx) => {
+                      const maxPrice = Math.max(...chartData.map(p => p.price));
+                      const minPrice = Math.min(...chartData.map(p => p.price));
+                      const range = maxPrice - minPrice || 1;
+                      const height = ((point.price - minPrice) / range) * 100;
+                      
+                      return (
+                        <div 
+                          key={idx} 
+                          className="flex-1 bg-blue-600 rounded-t hover:bg-blue-700 transition-all relative group"
+                          style={{ height: `${height || 5}%`, minHeight: '2px' }}
+                          title={`$${point.price.toFixed(4)} at ${new Date(point.date).toLocaleTimeString()}`}
+                        >
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                            ${point.price.toFixed(4)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-600 mt-2 pt-2 border-t">
+                    <span>${Math.min(...chartData.map(p => p.price)).toFixed(4)}</span>
+                    <span className="text-blue-600 font-semibold">
+                      ${chartData[chartData.length - 1]?.price.toFixed(4) || '0'}
+                    </span>
+                    <span>${Math.max(...chartData.map(p => p.price)).toFixed(4)}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-full flex items-center justify-center text-gray-500">
+                  <div className="text-center">
+                    <Loader2 className="mx-auto mb-2 text-blue-600 animate-spin" size={32} />
+                    <p>Loading live chart data...</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
