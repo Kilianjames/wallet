@@ -313,25 +313,25 @@ const Trading = () => {
       console.error('Transaction error:', error);
       
       let errorTitle = 'Transaction Failed';
-      let errorDescription = error?.message || 'Failed to process transaction. Please try again.';
+      let errorDescription = 'Transaction failed. Please try again.';
       
-      // Provide helpful error messages
+      // Check for specific error types
       if (error?.message?.includes('User rejected')) {
         errorTitle = 'Transaction Cancelled';
-        errorDescription = 'You cancelled the transaction in your wallet.';
-      } else if (error?.message?.includes('Insufficient')) {
-        errorTitle = 'Insufficient Balance';
-        errorDescription = 'You don\'t have enough SOL. Please add funds to your wallet.';
+        errorDescription = 'You cancelled the transaction.';
+      } else if (error?.message?.includes('Insufficient') || error?.message?.includes('insufficient')) {
+        errorTitle = 'Transaction Failed';
+        errorDescription = 'No SOL - Add funds to your wallet and try again.';
       } else if (error?.message?.includes('timeout') || error?.message?.includes('confirm')) {
         errorTitle = 'Confirmation Timeout';
-        errorDescription = 'Transaction sent but confirmation timed out. Check Solscan to verify if it succeeded. Your position will NOT be saved until confirmed.';
+        errorDescription = 'Transaction may still be processing. Check Solscan to verify.';
       }
       
       toast({
         title: errorTitle,
         description: errorDescription,
         variant: 'destructive',
-        duration: 6000
+        duration: 5000
       });
     } finally {
       setIsProcessingTx(false);
