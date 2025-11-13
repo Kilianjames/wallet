@@ -24,6 +24,7 @@ const Trading = () => {
   const [leverage, setLeverage] = useState([3]);
   const [limitPrice, setLimitPrice] = useState('');
   const [isProcessingTx, setIsProcessingTx] = useState(false);
+  const [showSuccessTick, setShowSuccessTick] = useState(false);
   const [chartData, setChartData] = useState([]);
   const [chartInterval, setChartInterval] = useState('1h');
 
