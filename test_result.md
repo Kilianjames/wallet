@@ -137,15 +137,18 @@ backend:
 
   - task: "Live Market Data (Volume, Liquidity, Prices)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/market_service.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Markets are fetched from Polymarket Events API. Need to verify all numeric values (volume, liquidity, prices) are live and not defaulting to mock values."
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: Markets API returning 100% live data. All 10 tested markets have real volume (80M+, 16M+, 38M+, etc.) and liquidity values. 315 valid price points found in 0-1 probability range. Real end dates (2025-12-10, 2025-11-21, etc.). Only 'Placeholder' entries found are normal Polymarket multi-outcome market structure, not mock data."
 
   - task: "Portfolio Positions Storage"
     implemented: true
