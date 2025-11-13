@@ -456,15 +456,22 @@ const Trading = () => {
                   <div className="text-right">Size</div>
                   <div className="text-right">Total</div>
                 </div>
-                {orderbook && orderbook.asks.length > 0 ? (
-                  orderbook.asks.slice(0, 8).map((ask, i) => (
-                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
-                      <div className="absolute inset-0 bg-red-500 opacity-10" style={{ width: `${(ask.total / (orderbook.asks[orderbook.asks.length - 1]?.total || 1)) * 100}%` }} />
-                      <div className="text-red-600 relative z-10">${(ask.price * 100).toFixed(1)}</div>
-                      <div className="text-right relative z-10 text-gray-900">{ask.size.toFixed(0)}</div>
-                      <div className="text-right text-gray-600 relative z-10">{ask.total.toFixed(0)}</div>
-                    </div>
-                  ))
+                {orderbook && orderbook.asks && orderbook.asks.length > 0 ? (
+                  orderbook.asks.slice(0, 8).map((ask, i) => {
+                    const price = parseFloat(ask.price) || 0;
+                    const size = parseFloat(ask.size) || 0;
+                    const total = parseFloat(ask.total) || size;
+                    const maxTotal = parseFloat(orderbook.asks[orderbook.asks.length - 1]?.total) || 1;
+                    
+                    return (
+                      <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
+                        <div className="absolute inset-0 bg-red-500 opacity-10" style={{ width: `${(total / maxTotal) * 100}%` }} />
+                        <div className="text-red-600 relative z-10">${(price * 100).toFixed(2)}</div>
+                        <div className="text-right relative z-10 text-gray-900">{size.toFixed(0)}</div>
+                        <div className="text-right text-gray-600 relative z-10">{total.toFixed(0)}</div>
+                      </div>
+                    );
+                  })
                 ) : (
                   <div className="text-center text-gray-500 py-4 text-sm">No asks</div>
                 )}
