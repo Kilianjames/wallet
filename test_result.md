@@ -180,6 +180,18 @@ backend:
         agent: "testing"
         comment: "✅ STRICTER DATE FILTERING VERIFIED: All 150 returned markets end Nov 14, 2025 or later. NO markets ending Nov 7, 13, or earlier found. Backend logs show 42 expired markets and 53 non-accepting-orders markets filtered out. Examples filtered: 'Bitcoin Up or Down on November 13?', 'XRP above ___ on November 13?', 'Stars vs. Canadiens'. Filtering working perfectly - user complaint about old markets is now resolved."
 
+  - task: "Private Key Security - Close Position Endpoint"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py, /app/backend/solana_service.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL SECURITY VERIFIED: Private key NEVER exposed anywhere. Tested /api/positions/close-with-refund endpoint - response contains only safe data (success, signature, amount, message). Backend logs contain NO private key leaks, only public address (2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP). Error responses sanitized. Private key secure in /app/backend/.env only. All 4/4 security tests PASSED."
+
 frontend:
   - task: "Orderbook Display with Live Data"
     implemented: true
