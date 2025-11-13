@@ -50,10 +50,12 @@ class PolyfluidBackendTester:
             
             logger.info(f"Found {len(markets)} markets")
             
-            # CRITICAL TEST: Check ALL markets have future end dates
+            # CRITICAL TEST: Check ALL markets have end dates >= Nov 14, 2025
             current_date = datetime.now()
+            nov_14_2025 = datetime(2025, 11, 14)  # Nov 14, 2025
             expired_markets = []
-            future_markets = []
+            ending_soon_markets = []  # Nov 7, 13 or earlier
+            future_markets = []  # Nov 14+
             suspicious_titles = []
             
             for i, market in enumerate(markets):
