@@ -26,14 +26,6 @@ class MarketService:
                 try:
                     # Get all markets from the event
                     markets = event.get('markets', [])
-                    event_title = event.get('title', '')
-                    
-                    # Debug logging for Bitcoin-related events
-                    if 'bitcoin' in event_title.lower():
-                        logger.info(f"DEBUG: Found Bitcoin event #{i}: {event_title}")
-                        logger.info(f"DEBUG: Bitcoin event markets count: {len(markets)}")
-                        logger.info(f"DEBUG: Bitcoin event endDate: {event.get('endDate', 'NO_END_DATE')}")
-                    
                     if not markets or len(markets) == 0:
                         logger.debug(f"Skipping event {event.get('id')} - no markets")
                         continue
