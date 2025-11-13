@@ -10,6 +10,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 from market_service import MarketService
+from solana_service import SolanaService
 
 
 ROOT_DIR = Path(__file__).parent
@@ -20,8 +21,9 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Initialize market service
+# Initialize services
 market_service = MarketService()
+solana_service = SolanaService()
 
 # Create the main app without a prefix
 app = FastAPI()
