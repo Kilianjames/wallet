@@ -126,11 +126,24 @@ const Portfolio = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Portfolio</h1>
-            <p className="text-gray-600">Manage your positions and view trading history</p>
+            <p className="text-gray-600">
+              {isConnected 
+                ? `${positions.length} active position${positions.length !== 1 ? 's' : ''}`
+                : 'Connect your wallet to view your portfolio'
+              }
+            </p>
           </div>
+          {isConnected && (
+            <div className="text-right">
+              <div className="text-sm text-gray-600 mb-1">Total P&L</div>
+              <div className={`text-3xl font-bold ${totalPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {totalPnL >= 0 ? '+' : ''}{totalPnL.toFixed(4)} SOL
+              </div>
+            </div>
+          )}
           
           {/* How Trading Works Button */}
           <Dialog>
