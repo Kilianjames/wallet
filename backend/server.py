@@ -11,6 +11,7 @@ import uuid
 from datetime import datetime, timezone
 from market_service import MarketService
 from solana_service import SolanaService
+from insights_service import MarketInsightsService
 
 
 ROOT_DIR = Path(__file__).parent
@@ -24,6 +25,7 @@ db = client[os.environ['DB_NAME']]
 # Initialize services
 market_service = MarketService()
 solana_service = SolanaService()
+insights_service = MarketInsightsService()
 
 # Create the main app without a prefix
 app = FastAPI()
