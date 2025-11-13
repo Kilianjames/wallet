@@ -428,15 +428,22 @@ const Trading = () => {
                   <div className="text-right truncate">Size</div>
                   <div className="text-right truncate">Total</div>
                 </div>
-                {orderbook && orderbook.bids.length > 0 ? (
-                  orderbook.bids.slice(0, 8).map((bid, i) => (
-                    <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
-                      <div className="absolute inset-0 bg-green-500 opacity-10" style={{ width: `${(bid.total / (orderbook.bids[orderbook.bids.length - 1]?.total || 1)) * 100}%` }} />
-                      <div className="text-green-600 relative z-10">${(bid.price * 100).toFixed(1)}</div>
-                      <div className="text-right relative z-10 text-gray-900">{bid.size.toFixed(0)}</div>
-                      <div className="text-right text-gray-600 relative z-10">{bid.total.toFixed(0)}</div>
-                    </div>
-                  ))
+                {orderbook && orderbook.bids && orderbook.bids.length > 0 ? (
+                  orderbook.bids.slice(0, 8).map((bid, i) => {
+                    const price = parseFloat(bid.price) || 0;
+                    const size = parseFloat(bid.size) || 0;
+                    const total = parseFloat(bid.total) || size;
+                    const maxTotal = parseFloat(orderbook.bids[orderbook.bids.length - 1]?.total) || 1;
+                    
+                    return (
+                      <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
+                        <div className="absolute inset-0 bg-green-500 opacity-10" style={{ width: `${(total / maxTotal) * 100}%` }} />
+                        <div className="text-green-600 relative z-10">${(price * 100).toFixed(2)}</div>
+                        <div className="text-right relative z-10 text-gray-900">{size.toFixed(0)}</div>
+                        <div className="text-right text-gray-600 relative z-10">{total.toFixed(0)}</div>
+                      </div>
+                    );
+                  })
                 ) : (
                   <div className="text-center text-gray-500 py-4 text-sm">No bids</div>
                 )}
