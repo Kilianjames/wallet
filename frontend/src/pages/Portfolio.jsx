@@ -458,17 +458,34 @@ const Portfolio = () => {
                 })}
               </div>
             ) : (
-              <div className="bg-white rounded-xl p-12 border border-gray-200 text-center mb-8">
-                <Activity size={48} className="mx-auto mb-4 text-gray-400" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No Active Positions</h3>
-                <p className="text-gray-600 mb-6">Start trading to see your positions here</p>
-                <Button 
-                  onClick={() => window.location.href = '/markets'}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Browse Markets
-                </Button>
-              </div>
+              <>
+                {/* Info Note for empty state */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <Info size={20} className="text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-blue-900 font-medium mb-1">
+                        Just placed a bet?
+                      </p>
+                      <p className="text-sm text-blue-700">
+                        Your position may take 5-10 minutes to appear here as it's being relayed to the Polymarket wallet. Please refresh this page after a few minutes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white rounded-xl p-12 border border-gray-200 text-center mb-8">
+                  <Activity size={48} className="mx-auto mb-4 text-gray-400" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No Active Positions</h3>
+                  <p className="text-gray-600 mb-6">Start trading to see your positions here</p>
+                  <Button 
+                    onClick={() => window.location.href = '/markets'}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    Browse Markets
+                  </Button>
+                </div>
+              </>
             )}
           </TabsContent>
 
