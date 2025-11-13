@@ -200,6 +200,10 @@ const Trading = () => {
         existingPositions.push(position);
         localStorage.setItem('positions', JSON.stringify(existingPositions));
         
+        // Show success tick animation
+        setShowSuccessTick(true);
+        setTimeout(() => setShowSuccessTick(false), 3000);
+        
         toast({
           title: '🎉 Bet Placed Successfully!',
           description: (
