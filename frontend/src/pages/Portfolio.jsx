@@ -429,10 +429,10 @@ const Portfolio = () => {
                           {closingPositionId === position.id ? (
                             <>
                               <Loader2 className="animate-spin mr-2" size={16} />
-                              Closing & Refunding...
+                              Closing Position...
                             </>
                           ) : (
-                            'Close Position & Get Refund'
+                            'Close Position'
                           )}
                         </Button>
                       </div>
