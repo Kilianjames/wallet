@@ -47,8 +47,8 @@ const Portfolio = () => {
 
     loadPositions();
     
-    // Refresh every 30 seconds
-    const interval = setInterval(loadPositions, 30000);
+    // Refresh every 60 seconds (reduced for performance)
+    const interval = setInterval(loadPositions, 60000);
     return () => clearInterval(interval);
   }, [isConnected, publicKey]);
   
