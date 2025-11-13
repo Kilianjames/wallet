@@ -7,7 +7,6 @@ import { Input } from '../components/ui/input';
 import { Slider } from '../components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from '../hooks/use-toast';
-import { generateChartData } from '../mockData';
 import { useWallet } from '../contexts/WalletContext';
 
 const Trading = () => {
