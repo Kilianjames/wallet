@@ -96,11 +96,20 @@ class MarketService:
                                     market.get('question', '')
                                 )
                                 
-                                # Clean up the title - remove market question if it's duplicated
-                                if outcome_title == "0" or not outcome_title.strip():
-                                    # Fallback: extract from question
-                                    question = market.get('question', '')
-                                    outcome_title = question
+                                # Filter out Polymarket's generic placeholders
+                                # They use patterns like: "Person A", "Company D", "Placeholder 20", "Club A"
+                                if (
+                                    outcome_title == "0" or 
+                                    not outcome_title.strip() or
+                                    outcome_title.lower().startswith('person ') or
+                                    outcome_title.lower().startswith('company ') or
+                                    outcome_title.lower().startswith('placeholder ') or
+                                    outcome_title.lower().startswith('club ') or
+                                    (outcome_title.lower().startswith('option ') and len(outcome_title) < 15)
+                                ):
+                                    # Skip this outcome - it's a placeholder
+                                    logger.debug(f"Skipping placeholder outcome: {outcome_title}")
+                                    continue
                                 
                                 try:
                                     token_ids_str = market.get('clobTokenIds', '[]')
