@@ -26,6 +26,21 @@ export const WalletProvider = ({ children }) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
   const [isReady, setIsReady] = useState(false);
+  const [selectedEndpoint, setSelectedEndpoint] = useState(0);
+  
+  // Multiple Solana RPC endpoints for failover reliability
+  const RPC_ENDPOINTS = [
+    'https://api.mainnet-beta.solana.com',
+    'https://solana-rpc.publicnode.com',
+    'https://solana-mainnet.rpc.extrnode.com',
+  ];
+
+  // Try next RPC endpoint on failure
+  const getNextEndpoint = () => {
+    const nextIndex = (selectedEndpoint + 1) % RPC_ENDPOINTS.length;
+    setSelectedEndpoint(nextIndex);
+    return RPC_ENDPOINTS[nextIndex];
+  };
 
   // Initialize Phantom provider
   useEffect(() => {
