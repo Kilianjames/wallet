@@ -353,18 +353,26 @@ const Portfolio = () => {
                         </div>
                       </div>
                       
-                      <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                        <div className="text-xs text-gray-500">
-                          Opened: {new Date(position.timestamp).toLocaleString()}
+                      <div className="mt-4 pt-4 border-t border-gray-100">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="text-xs text-gray-500">
+                            Opened: {new Date(position.timestamp).toLocaleString()}
+                          </div>
+                          <a 
+                            href={`https://solscan.io/tx/${position.signature}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline"
+                          >
+                            View Transaction →
+                          </a>
                         </div>
-                        <a 
-                          href={`https://solscan.io/tx/${position.signature}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-600 hover:underline"
+                        <Button
+                          onClick={() => handleClosePosition(position)}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold"
                         >
-                          View Transaction →
-                        </a>
+                          Close Position & Get Refund
+                        </Button>
                       </div>
                     </div>
                   );
