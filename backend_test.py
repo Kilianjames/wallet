@@ -497,7 +497,7 @@ class PolyfluidBackendTester:
     def print_summary(self):
         """Print detailed test summary - FOCUS: Expired market filtering"""
         logger.info("\n" + "="*70)
-        logger.info("🔍 POLYFLUID EXPIRED MARKET FILTERING TEST RESULTS")
+        logger.info("🔍 POLYFLUID STRICTER DATE FILTERING TEST RESULTS (NOV 14+ ONLY)")
         logger.info("="*70)
         
         for test_name, result in self.test_results.items():
