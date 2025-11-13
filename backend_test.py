@@ -451,10 +451,10 @@ class PolyfluidBackendTester:
         }
     
     def print_summary(self):
-        """Print detailed test summary"""
-        logger.info("\n" + "="*60)
-        logger.info("🔍 POLYFLUID BACKEND TEST RESULTS")
-        logger.info("="*60)
+        """Print detailed test summary - FOCUS: Expired market filtering"""
+        logger.info("\n" + "="*70)
+        logger.info("🔍 POLYFLUID EXPIRED MARKET FILTERING TEST RESULTS")
+        logger.info("="*70)
         
         for test_name, result in self.test_results.items():
             status = "✅ PASSED" if result["passed"] else "❌ FAILED"
@@ -469,12 +469,20 @@ class PolyfluidBackendTester:
         
         logger.info(f"\n📊 OVERALL: {passed_tests}/{total_tests} tests passed")
         
-        if passed_tests == total_tests:
-            logger.info("🎉 ALL TESTS PASSED - Live Polymarket data confirmed!")
-        elif passed_tests >= total_tests - 1:
-            logger.info("⚠️ MOSTLY WORKING - Minor issues detected")
+        # Specific assessment for expired market filtering
+        markets_passed = self.test_results["markets"]["passed"]
+        logs_passed = self.test_results["logs_check"]["passed"]
+        
+        if markets_passed and logs_passed:
+            logger.info("🎉 EXPIRED MARKET FILTERING WORKING CORRECTLY!")
+            logger.info("   ✅ All returned markets have future end dates")
+            logger.info("   ✅ Backend logs show filtering is active")
+        elif markets_passed:
+            logger.info("✅ MARKETS FILTERING WORKING - No expired markets in results")
+            logger.info("⚠️ Log evidence unclear - but results are correct")
         else:
-            logger.info("❌ SIGNIFICANT ISSUES - Multiple tests failed")
+            logger.info("❌ CRITICAL ISSUE - Expired markets found in API response!")
+            logger.info("   User complaint about old markets is VALID")
 
 if __name__ == "__main__":
     tester = PolyfluidBackendTester()
