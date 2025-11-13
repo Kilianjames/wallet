@@ -180,12 +180,12 @@ const Markets = () => {
                       <div className="flex items-center gap-6 text-xs">
                         <div>
                           <div className="text-gray-500 mb-0.5">Volume</div>
-                          <div className="font-bold text-gray-900">${(market.volume / 1000).toFixed(1)}K</div>
+                          <div className="font-bold text-gray-900">{formatCurrency(market.volume)}</div>
                         </div>
                         <div className="w-px h-8 bg-gray-200" />
                         <div>
                           <div className="text-gray-500 mb-0.5">Liquidity</div>
-                          <div className="font-bold text-gray-900">${(market.liquidity / 1000).toFixed(1)}K</div>
+                          <div className="font-bold text-gray-900">{formatCurrency(market.liquidity)}</div>
                         </div>
                         <div className="w-px h-8 bg-gray-200" />
                         <div>
