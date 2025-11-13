@@ -263,6 +263,9 @@ class MarketService:
             
             filtered = [m for m in all_markets if m.get('category', '').lower() == category.lower()]
             return filtered[:limit]
+        except Exception as e:
+            logger.error(f"Error getting markets by category: {e}")
+            return []
 
     def get_live_orderbook(self, token_id: str) -> Optional[Dict]:
         """Get live orderbook data"""
