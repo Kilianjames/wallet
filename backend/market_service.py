@@ -42,27 +42,33 @@ class MarketService:
                                 logger.warning(f"Error parsing outcome prices: {e}")
                                 yes_price = 0.5
                             
-                            outcome_title = market.get('groupItemTitle', market.get('question', ''))
-                            if not outcome_title or outcome_title == "0":
-                                # Try to extract from question
-                                question = market.get('question', '')
-                                if 'will' in question.lower() and '?' in question:
-                                    outcome_title = question.split('will')[1].split('?')[0].strip() if 'will' in question.lower() else question
-                                else:
-                                    outcome_title = question
-                            
-                            token_ids_str = market.get('clobTokenIds', '[]')
-                            if isinstance(token_ids_str, str):
-                                token_ids = json.loads(token_ids_str)
-                            else:
-                                token_ids = token_ids_str
-                            
-                            outcomes.append({
-                                'title': outcome_title,
-                                'price': yes_price,
-                                'token_id': token_ids[0] if token_ids else '',
-                                'market_id': market.get('id', '')
-                            })
+                                outcome_title = market.get('groupItemTitle', market.get('question', ''))
+                                if not outcome_title or outcome_title == "0":
+                                    # Try to extract from question
+                                    question = market.get('question', '')
+                                    if 'will' in question.lower() and '?' in question:
+                                        outcome_title = question.split('will')[1].split('?')[0].strip() if 'will' in question.lower() else question
+                                    else:
+                                        outcome_title = question
+                                
+                                try:
+                                    token_ids_str = market.get('clobTokenIds', '[]')
+                                    if isinstance(token_ids_str, str):
+                                        token_ids = json.loads(token_ids_str)
+                                    else:
+                                        token_ids = token_ids_str
+                                except (json.JSONDecodeError, TypeError):
+                                    token_ids = []
+                                
+                                outcomes.append({
+                                    'title': outcome_title,
+                                    'price': yes_price,
+                                    'token_id': token_ids[0] if token_ids and len(token_ids) > 0 else '',
+                                    'market_id': market.get('id', '')
+                                })
+                            except Exception as e:
+                                logger.warning(f"Error parsing outcome: {e}")
+                                continue
                         
                         transformed_market = {
                             'id': str(event.get('id', '')),
