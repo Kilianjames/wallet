@@ -17,9 +17,17 @@ export const marketService = {
   },
 
   // Get orderbook for a token
-  getOrderbook: async (tokenId) => {
-    const response = await axios.get(`${API}/orderbook/${tokenId}`);
+  getOrderbook: async (marketId, tokenId) => {
+    const response = await axios.get(`${API}/markets/${marketId}/orderbook`, { params: { token_id: tokenId } });
     return response.data;
+  },
+
+  // Get price chart data
+  getChartData: async (marketId, tokenId, interval = '1h') => {
+    const response = await axios.get(`${API}/markets/${marketId}/chart`, { 
+      params: { token_id: tokenId, interval } 
+    });
+    return response.data.data;
   },
 };
 
