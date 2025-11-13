@@ -32,6 +32,12 @@ class MarketService:
                     
                     # CRITICAL: Filter out expired markets - only show ACTIVE/ONGOING
                     end_date_str = event.get('endDate', '')
+                    event_title = event.get('title', '')
+                    
+                    # Debug logging for Bitcoin market
+                    if 'bitcoin' in event_title.lower():
+                        logger.info(f"DEBUG: Processing Bitcoin event: {event_title}, endDate: {end_date_str}")
+                    
                     if end_date_str:
                         try:
                             # Parse end date - handle multiple formats
@@ -44,13 +50,17 @@ class MarketService:
                                 # Add timezone info and set to end of day to be more restrictive
                                 end_date = end_date.replace(hour=23, minute=59, second=59, tzinfo=timezone.utc)
                             
+                            # Debug logging for Bitcoin market
+                            if 'bitcoin' in event_title.lower():
+                                logger.info(f"DEBUG: Bitcoin market parsed end_date: {end_date}, current_time: {current_time}")
+                            
                             if end_date <= current_time:
-                                logger.info(f"Skipping EXPIRED market: {event.get('title', '')} (ended: {end_date_str})")
+                                logger.info(f"Skipping EXPIRED market: {event_title} (ended: {end_date_str})")
                                 continue
                         except (ValueError, AttributeError) as e:
-                            logger.warning(f"Could not parse end date '{end_date_str}': {e}")
+                            logger.warning(f"Could not parse end date '{end_date_str}' for event '{event_title}': {e}")
                             # If we can't parse the date, skip the market to be safe
-                            logger.info(f"Skipping market with unparseable end date: {event.get('title', '')}")
+                            logger.info(f"Skipping market with unparseable end date: {event_title}")
                             continue
                     
                     # Also check if market is marked as closed or accepting orders
