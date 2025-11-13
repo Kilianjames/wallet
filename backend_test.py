@@ -386,12 +386,15 @@ class PolyfluidBackendTester:
                     filtering_evidence.append(f"✅ Found {orders_filter_logs} 'Skipping market NOT accepting orders' log entries")
                     self.test_results["logs_check"]["details"].append(f"✅ Non-accepting orders filtering active: {orders_filter_logs} markets filtered")
                 
-                # Look for specific expired market examples
+                # Look for specific expired/ending-soon market examples
                 log_lines = error_log.split('\n')
                 expired_examples = []
+                ending_soon_examples = []
                 for line in log_lines:
                     if "Skipping EXPIRED market" in line:
                         expired_examples.append(line.strip())
+                    elif "Skipping ENDING-SOON market" in line:
+                        ending_soon_examples.append(line.strip())
                 
                 if expired_examples:
                     self.test_results["logs_check"]["details"].append("📋 Examples of filtered expired markets:")
