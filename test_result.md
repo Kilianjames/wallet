@@ -243,11 +243,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Live Orderbook API Integration"
-    - "Live Price Chart Data API"
-    - "Live Market Data (Volume, Liquidity, Prices)"
-    - "Orderbook Display with Live Data"
-    - "Market Data Display (Volume, Liquidity, etc.)"
+    - "Backend Market Count Improvements"
+    - "Portfolio Positions Storage"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
