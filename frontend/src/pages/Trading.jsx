@@ -50,13 +50,54 @@ const Trading = () => {
       if (selectedMarket.is_multi_outcome && !selectedOutcome && selectedMarket.outcomes?.length > 0) {
         setSelectedOutcome(selectedMarket.outcomes[0]);
       }
-      // Load orderbook based on selected outcome or market token
-      const tokenId = selectedOutcome?.token_id || selectedMarket.token_id;
-      if (tokenId) {
-        loadOrderbook(tokenId);
-      }
     }
-  }, [selectedMarket?.id, selectedOutcome?.market_id]);
+  }, [selectedMarket?.id]);
+
+  // Fetch live orderbook when outcome changes
+  useEffect(() => {
+    const fetchOrderbook = async () => {
+      if (selectedOutcome?.token_id && selectedOutcome?.market_id) {
+        try {
+          const data = await marketService.getOrderbook(selectedOutcome.market_id, selectedOutcome.token_id);
+          setOrderbook(data);
+        } catch (error) {
+          console.error('Error fetching orderbook:', error);
+          setOrderbook(null);
+        }
+      }
+    };
+
+    fetchOrderbook();
+    
+    // Refresh orderbook every 10 seconds
+    const interval = setInterval(fetchOrderbook, 10000);
+    return () => clearInterval(interval);
+  }, [selectedOutcome]);
+
+  // Fetch live chart data when outcome changes
+  useEffect(() => {
+    const fetchChartData = async () => {
+      if (selectedOutcome?.token_id && selectedOutcome?.market_id) {
+        try {
+          const data = await marketService.getChartData(
+            selectedOutcome.market_id, 
+            selectedOutcome.token_id, 
+            chartInterval
+          );
+          setChartData(data || []);
+        } catch (error) {
+          console.error('Error fetching chart data:', error);
+          setChartData([]);
+        }
+      }
+    };
+
+    fetchChartData();
+    
+    // Refresh chart every 30 seconds
+    const interval = setInterval(fetchChartData, 30000);
+    return () => clearInterval(interval);
+  }, [selectedOutcome, chartInterval]);
 
   const loadMarkets = async () => {
     try {
