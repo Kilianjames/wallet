@@ -223,6 +223,29 @@ const Trading = () => {
       return;
     }
 
+    const solAmountNum = parseFloat(solAmount);
+
+    // CRITICAL: Check wallet balance before allowing bet
+    if (solAmountNum > walletBalance) {
+      toast({
+        title: 'Insufficient Balance',
+        description: `You only have ${walletBalance.toFixed(4)} SOL in your wallet. Please add more SOL or reduce your bet amount.`,
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    // Additional check with buffer for transaction fees
+    const minimumRequired = solAmountNum + 0.001; // Amount + fee buffer
+    if (minimumRequired > walletBalance) {
+      toast({
+        title: 'Insufficient Balance for Fees',
+        description: `You need at least ${minimumRequired.toFixed(4)} SOL (including transaction fees). Current balance: ${walletBalance.toFixed(4)} SOL`,
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setIsProcessingTx(true);
 
     try {
