@@ -333,7 +333,24 @@ const Portfolio = () => {
               </div>
             ) : positions.length > 0 ? (
               <div className="space-y-4 mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Active Positions</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold text-gray-900">Active Positions</h2>
+                </div>
+                
+                {/* Info Note */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <Info size={20} className="text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-blue-900 font-medium mb-1">
+                        Processing Time Notice
+                      </p>
+                      <p className="text-sm text-blue-700">
+                        Your bet may take 5-10 minutes to appear here as it's being relayed to the Polymarket wallet. Please be patient.
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 {positions.map((position) => {
                   const market = markets[position.marketId];
                   
