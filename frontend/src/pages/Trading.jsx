@@ -103,6 +103,30 @@ const Trading = () => {
     return () => clearInterval(interval);
   }, [selectedOutcome, chartInterval]);
 
+  // Fetch insights when market changes
+  useEffect(() => {
+    if (selectedMarket) {
+      fetchInsights();
+    }
+  }, [selectedMarket]);
+
+  const fetchInsights = async () => {
+    if (!selectedMarket) return;
+    
+    try {
+      setInsightsLoading(true);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/markets/${selectedMarket.id}/insights?market_title=${encodeURIComponent(selectedMarket.title)}&category=${selectedMarket.category}`
+      );
+      const data = await response.json();
+      setInsights(data);
+    } catch (error) {
+      console.error('Error fetching insights:', error);
+    } finally {
+      setInsightsLoading(false);
+    }
+  };
+
   const loadMarkets = async () => {
     try {
       setLoading(true);
