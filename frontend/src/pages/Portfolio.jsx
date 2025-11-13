@@ -59,7 +59,7 @@ const Portfolio = () => {
   const [closingPositionId, setClosingPositionId] = useState(null);
 
   const handleClosePosition = async (position) => {
-    if (!confirm(`Close position and get ${position.amount} SOL refunded?`)) {
+    if (!confirm(`Close position and get ${position.amount} SOL back?`)) {
       return;
     }
 
@@ -87,7 +87,10 @@ const Portfolio = () => {
           title: '✅ Position Closed!',
           description: (
             <div className="space-y-2">
-              <div className="font-semibold">{position.amount} SOL refunded to your wallet</div>
+              <div className="font-semibold">{position.amount} SOL being sent to your wallet</div>
+              <div className="text-xs text-gray-500">
+                ⏱️ If SOL was sent to Polymarket wallet, refund may take 5-10 minutes to arrive
+              </div>
               <a 
                 href={`https://solscan.io/tx/${data.signature}`}
                 target="_blank"
@@ -98,7 +101,7 @@ const Portfolio = () => {
               </a>
             </div>
           ),
-          duration: 8000,
+          duration: 10000,
         });
       } else {
         throw new Error(data.detail || 'Failed to close position');
