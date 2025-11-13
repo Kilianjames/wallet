@@ -260,11 +260,102 @@ const Portfolio = () => {
 
           {/* Open Positions */}
           <TabsContent value="positions">
-            <div className="bg-white rounded-xl p-12 border border-gray-200 text-center shadow-sm">
-              <Activity size={48} className="mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-700 text-lg mb-2">No open positions</p>
-              <p className="text-gray-500 text-sm">Start trading to see your positions here</p>
-            </div>
+            {/* Active Positions */}
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="animate-spin text-blue-600" size={48} />
+              </div>
+            ) : positions.length > 0 ? (
+              <div className="space-y-4 mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">Active Positions</h2>
+                {positions.map((position) => {
+                  const market = markets[position.marketId];
+                  const currentPrice = market?.price || position.entryPrice;
+                  const priceDiff = currentPrice - position.entryPrice;
+                  const pnl = position.side === 'LONG' 
+                    ? priceDiff * position.amount * position.leverage
+                    : -priceDiff * position.amount * position.leverage;
+                  const pnlPercent = ((priceDiff / position.entryPrice) * 100 * position.leverage) * (position.side === 'LONG' ? 1 : -1);
+
+                  return (
+                    <div key={position.id} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${
+                              position.side === 'LONG' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            }`}>
+                              {position.side}
+                            </span>
+                            <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs font-semibold">
+                              {position.leverage}x
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-1">{position.marketTitle}</h3>
+                          <p className="text-sm text-gray-600">{position.outcome}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className={`text-2xl font-bold mb-1 ${pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {pnl >= 0 ? '+' : ''}{pnl.toFixed(4)} SOL
+                          </div>
+                          <div className={`text-sm font-semibold ${pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {pnl >= 0 ? '+' : ''}{pnlPercent.toFixed(2)}%
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-4 gap-4 pt-4 border-t border-gray-100">
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1">Amount</div>
+                          <div className="text-sm font-semibold text-gray-900">{position.amount} SOL</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1">Entry Price</div>
+                          <div className="text-sm font-semibold text-gray-900">{(position.entryPrice * 100).toFixed(1)}¢</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1">Current Price</div>
+                          <div className={`text-sm font-semibold ${priceDiff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {(currentPrice * 100).toFixed(1)}¢
+                            {market && <span className="text-xs ml-1">● Live</span>}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1">Wallet</div>
+                          <div className="text-sm font-mono text-gray-900">{position.walletAddress.slice(0, 4)}...{position.walletAddress.slice(-4)}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <div className="text-xs text-gray-500">
+                          Opened: {new Date(position.timestamp).toLocaleString()}
+                        </div>
+                        <a 
+                          href={`https://solscan.io/tx/${position.signature}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:underline"
+                        >
+                          View Transaction →
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl p-12 border border-gray-200 text-center mb-8">
+                <Activity size={48} className="mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No Active Positions</h3>
+                <p className="text-gray-600 mb-6">Start trading to see your positions here</p>
+                <Button 
+                  onClick={() => window.location.href = '/markets'}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Browse Markets
+                </Button>
+              </div>
+            )}
           </TabsContent>
 
           {/* Open Orders */}
