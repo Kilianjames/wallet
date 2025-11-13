@@ -397,6 +397,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@app.on_event("startup")
+async def startup_db_client():
+    logging.info("Starting up...")
+    # Pre-warm the cache on startup
+    asyncio.create_task(warm_cache())
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
