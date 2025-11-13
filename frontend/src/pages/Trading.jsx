@@ -30,6 +30,8 @@ const Trading = () => {
   const [insights, setInsights] = useState(null);
   const [insightsLoading, setInsightsLoading] = useState(false);
   const [showInsights, setShowInsights] = useState(true);
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [checkingBalance, setCheckingBalance] = useState(false);
 
   useEffect(() => {
     loadMarkets();
