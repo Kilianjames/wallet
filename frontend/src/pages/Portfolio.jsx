@@ -51,7 +51,7 @@ const Portfolio = () => {
     const interval = setInterval(loadPositions, 30000);
     return () => clearInterval(interval);
   }, [isConnected, publicKey]);
-  const [positions, setPositions] = useState([]);
+  
   const [orders, setOrders] = useState([]);
 
   const totalPnL = positions.reduce((sum, pos) => sum + pos.pnl, 0);
