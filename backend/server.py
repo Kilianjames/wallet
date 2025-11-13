@@ -249,6 +249,7 @@ async def close_position_with_refund(
     """
     Close position and send SOL refund back to user
     This endpoint uses the backend wallet to sign and send the refund transaction
+    SECURITY: Private key never exposed, only transaction signatures returned
     """
     try:
         logging.info(f"Closing position {position_id} and refunding {amount_sol} SOL to {wallet_address}")
@@ -263,11 +264,12 @@ async def close_position_with_refund(
                 detail=f"Insufficient balance in backend wallet. Available: {balance} SOL, Required: {amount_sol} SOL"
             )
         
-        # Send SOL back to user
+        # Send SOL back to user (private key used internally, never exposed)
         result = solana_service.send_sol_to_user(wallet_address, amount_sol)
         
         if result["success"]:
             logging.info(f"Successfully refunded {amount_sol} SOL to {wallet_address}. Tx: {result['signature']}")
+            # SECURITY: Only return safe data - no private keys or sensitive info
             return {
                 "success": True,
                 "signature": result["signature"],
@@ -281,8 +283,8 @@ async def close_position_with_refund(
     except HTTPException:
         raise
     except Exception as e:
-        logging.error(f"Error in close_position_with_refund: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Failed to close position: {str(e)}")
+        logging.error(f"Error in close_position_with_refund (details hidden for security)")
+        raise HTTPException(status_code=500, detail="Failed to close position")
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
