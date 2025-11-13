@@ -16,13 +16,15 @@ class MarketService:
             
             # Use events API for active markets - fetch more to get variety
             events_data = self.client.get_events(limit=limit)
+            logger.info(f"DEBUG: Fetched {len(events_data)} events from Polymarket API")
             
             # Get current timestamp for filtering
             current_time = datetime.now(timezone.utc)
+            logger.info(f"DEBUG: Current time for filtering: {current_time}")
             
             # Transform event data to market format
             transformed_markets = []
-            for event in events_data:
+            for i, event in enumerate(events_data):
                 try:
                     # Get all markets from the event
                     markets = event.get('markets', [])
