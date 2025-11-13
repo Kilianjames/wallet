@@ -320,20 +320,51 @@ class PolyfluidBackendTester:
             return False
     
     def check_backend_logs(self):
-        """Check backend logs for API call evidence"""
-        logger.info("=== Checking Backend Logs ===")
+        """Check backend logs for filtering evidence - FOCUS: Expired market filtering"""
+        logger.info("=== Checking Backend Logs for Market Filtering ===")
         
         try:
-            # Check error log
+            # Check error log for filtering messages
             import subprocess
             result = subprocess.run(
-                ["tail", "-n", "100", "/var/log/supervisor/backend.err.log"],
+                ["tail", "-n", "200", "/var/log/supervisor/backend.err.log"],
                 capture_output=True, text=True, timeout=10
             )
+            
+            filtering_evidence = []
             
             if result.returncode == 0:
                 error_log = result.stdout
                 logger.info(f"Error log length: {len(error_log)} characters")
+                
+                # Look for specific filtering log messages
+                expired_filter_logs = error_log.count("Skipping EXPIRED market")
+                closed_filter_logs = error_log.count("Skipping CLOSED/ARCHIVED market")
+                orders_filter_logs = error_log.count("Skipping market NOT accepting orders")
+                
+                if expired_filter_logs > 0:
+                    filtering_evidence.append(f"✅ Found {expired_filter_logs} 'Skipping EXPIRED market' log entries")
+                    self.test_results["logs_check"]["details"].append(f"✅ Expired market filtering active: {expired_filter_logs} markets filtered")
+                
+                if closed_filter_logs > 0:
+                    filtering_evidence.append(f"✅ Found {closed_filter_logs} 'Skipping CLOSED/ARCHIVED market' log entries")
+                    self.test_results["logs_check"]["details"].append(f"✅ Closed/archived market filtering active: {closed_filter_logs} markets filtered")
+                
+                if orders_filter_logs > 0:
+                    filtering_evidence.append(f"✅ Found {orders_filter_logs} 'Skipping market NOT accepting orders' log entries")
+                    self.test_results["logs_check"]["details"].append(f"✅ Non-accepting orders filtering active: {orders_filter_logs} markets filtered")
+                
+                # Look for specific expired market examples
+                log_lines = error_log.split('\n')
+                expired_examples = []
+                for line in log_lines:
+                    if "Skipping EXPIRED market" in line:
+                        expired_examples.append(line.strip())
+                
+                if expired_examples:
+                    self.test_results["logs_check"]["details"].append("📋 Examples of filtered expired markets:")
+                    for example in expired_examples[-3:]:  # Show last 3 examples
+                        self.test_results["logs_check"]["details"].append(f"   {example}")
                 
                 # Look for API call indicators
                 polymarket_calls = []
@@ -344,18 +375,21 @@ class PolyfluidBackendTester:
                 
                 if polymarket_calls:
                     self.test_results["logs_check"]["details"].extend([f"✅ {call}" for call in polymarket_calls])
-                else:
-                    self.test_results["logs_check"]["details"].append("⚠️ No explicit Polymarket API call logs found in error log")
             
             # Check output log
             result = subprocess.run(
-                ["tail", "-n", "100", "/var/log/supervisor/backend.out.log"],
+                ["tail", "-n", "200", "/var/log/supervisor/backend.out.log"],
                 capture_output=True, text=True, timeout=10
             )
             
             if result.returncode == 0:
                 output_log = result.stdout
                 logger.info(f"Output log length: {len(output_log)} characters")
+                
+                # Look for filtering in output log too
+                if "Skipping EXPIRED market" in output_log:
+                    expired_count = output_log.count("Skipping EXPIRED market")
+                    self.test_results["logs_check"]["details"].append(f"✅ Additional expired market filtering in output log: {expired_count} entries")
                 
                 # Look for API call indicators
                 if "Calling Polymarket" in output_log:
@@ -366,8 +400,16 @@ class PolyfluidBackendTester:
                     error_lines = [line for line in output_log.split('\n') if 'Error' in line or 'Exception' in line]
                     if error_lines:
                         self.test_results["logs_check"]["details"].append(f"⚠️ Found {len(error_lines)} error/exception lines")
-                        for error_line in error_lines[-3:]:  # Show last 3 errors
+                        for error_line in error_lines[-2:]:  # Show last 2 errors
                             self.test_results["logs_check"]["details"].append(f"   {error_line.strip()}")
+            
+            # Summary of filtering evidence
+            if filtering_evidence:
+                self.test_results["logs_check"]["details"].insert(0, "🎯 FILTERING EVIDENCE FOUND:")
+                for evidence in filtering_evidence:
+                    self.test_results["logs_check"]["details"].insert(1, f"   {evidence}")
+            else:
+                self.test_results["logs_check"]["details"].append("⚠️ No filtering log messages found - may indicate no expired markets were encountered")
             
             self.test_results["logs_check"]["passed"] = True
             return True
