@@ -153,17 +153,13 @@ async def get_market_orderbook(market_id: str, token_id: str = Query(...)):
 async def get_market_chart(market_id: str, token_id: str = Query(...), interval: str = Query("1h")):
     """Get price chart data for a market"""
     try:
+        logging.info(f"Fetching chart data for token_id={token_id}, interval={interval}")
         chart_data = market_service.get_price_chart_data(token_id, interval)
+        logging.info(f"Chart data fetched successfully: {len(chart_data)} data points")
         return {"data": chart_data}
     except Exception as e:
         logging.error(f"Error fetching chart data: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch chart data")
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.error(f"Error fetching orderbook: {e}")
-        raise HTTPException(status_code=500, detail="Failed to fetch orderbook")
 
 @api_router.post("/positions")
 async def create_position(position: Position):
