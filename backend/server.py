@@ -32,8 +32,20 @@ insights_service = MarketInsightsService()
 markets_cache = {
     "data": None,
     "timestamp": None,
-    "cache_duration": 45  # Cache for 45 seconds
+    "cache_duration": 60  # Cache for 60 seconds
 }
+
+# Background task to pre-warm cache
+async def warm_cache():
+    """Pre-load markets cache on startup"""
+    try:
+        logging.info("Warming up markets cache...")
+        markets = market_service.get_trending_markets(limit=300)
+        markets_cache["data"] = markets
+        markets_cache["timestamp"] = datetime.now()
+        logging.info(f"Cache warmed with {len(markets)} markets")
+    except Exception as e:
+        logging.error(f"Failed to warm cache: {e}")
 
 # Create the main app without a prefix
 app = FastAPI()
