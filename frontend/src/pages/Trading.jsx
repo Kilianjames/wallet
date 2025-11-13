@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity, Loader2, Wallet } from 'lucide-react';
+import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity, Loader2, Wallet, CheckCircle } from 'lucide-react';
 import { marketService } from '../services/api';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
