@@ -76,8 +76,8 @@ const Trading = () => {
 
     fetchOrderbook();
     
-    // Refresh orderbook every 10 seconds
-    const interval = setInterval(fetchOrderbook, 10000);
+    // Refresh orderbook every 30 seconds (reduced from 10s for performance)
+    const interval = setInterval(fetchOrderbook, 30000);
     return () => clearInterval(interval);
   }, [selectedOutcome]);
 
