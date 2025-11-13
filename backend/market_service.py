@@ -299,22 +299,31 @@ class MarketService:
     def get_price_chart_data(self, token_id: str, interval: str = "1h") -> List[Dict]:
         """Get price history for chart"""
         try:
+            logger.info(f"Calling Polymarket CLOB API for price history: token_id={token_id}, interval={interval}")
             history = self.client.get_price_history(token_id, interval)
+            logger.info(f"Raw price history received: {len(history)} data points")
+            
             # Transform to chart-friendly format
             chart_data = []
             for item in history:
                 try:
-                    chart_data.append({
-                        'timestamp': item.get('t', 0),
-                        'price': float(item.get('p', 0)),
-                        'date': item.get('t', 0) * 1000  # Convert to milliseconds for JS
-                    })
+                    timestamp = item.get('t', 0)
+                    price = float(item.get('p', 0))
+                    
+                    if timestamp > 0 and price > 0:  # Only include valid data
+                        chart_data.append({
+                            'timestamp': timestamp,
+                            'price': price,
+                            'date': timestamp * 1000  # Convert to milliseconds for JS
+                        })
                 except (ValueError, TypeError) as e:
-                    logger.warning(f"Error parsing price data: {e}")
+                    logger.warning(f"Error parsing price data point: {e}")
                     continue
+            
+            logger.info(f"Transformed chart data: {len(chart_data)} valid points")
             return chart_data
         except Exception as e:
-            logger.error(f"Error getting price chart data: {e}")
+            logger.error(f"Error getting price chart data for token_id={token_id}: {e}", exc_info=True)
             return []
 
         except Exception as e:
