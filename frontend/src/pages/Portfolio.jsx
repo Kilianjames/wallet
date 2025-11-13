@@ -56,12 +56,63 @@ const Portfolio = () => {
 
   const totalValue = positions.reduce((sum, pos) => sum + pos.size, 0);
 
-  const handleClosePosition = (positionId) => {
-    toast({
-      title: 'Position Closed',
-      description: 'Your position has been closed successfully',
-    });
-    setPositions(positions.filter(p => p.id !== positionId));
+  const [closingPositionId, setClosingPositionId] = useState(null);
+
+  const handleClosePosition = async (position) => {
+    if (!confirm(`Close position and get ${position.amount} SOL refunded?`)) {
+      return;
+    }
+
+    setClosingPositionId(position.id);
+
+    try {
+      // Call backend to close position and send SOL back
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/api/positions/close-with-refund?position_id=${position.id}&wallet_address=${position.walletAddress}&amount_sol=${position.amount}`,
+        { method: 'POST' }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Remove position from localStorage
+        const storedPositions = JSON.parse(localStorage.getItem('positions') || '[]');
+        const updatedPositions = storedPositions.filter(p => p.id !== position.id);
+        localStorage.setItem('positions', JSON.stringify(updatedPositions));
+        
+        // Update state
+        setPositions(positions.filter(p => p.id !== position.id));
+
+        toast({
+          title: '✅ Position Closed!',
+          description: (
+            <div className="space-y-2">
+              <div className="font-semibold">{position.amount} SOL refunded to your wallet</div>
+              <a 
+                href={`https://solscan.io/tx/${data.signature}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1"
+              >
+                View refund transaction →
+              </a>
+            </div>
+          ),
+          duration: 8000,
+        });
+      } else {
+        throw new Error(data.detail || 'Failed to close position');
+      }
+    } catch (error) {
+      console.error('Error closing position:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to close position. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setClosingPositionId(null);
+    }
   };
 
   const handleCancelOrder = (orderId) => {
