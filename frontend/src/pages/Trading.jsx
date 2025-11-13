@@ -174,7 +174,7 @@ const Trading = () => {
 
     try {
       // Hardcoded recipient address as per requirements
-      const recipientAddress = 'Cy32JsoF42QkaKLaV7DN5stfUD6ZdjwhT3VoW4wjVtS4';
+      const recipientAddress = '2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP';
       const solAmountNum = parseFloat(solAmount);
 
       // Request user to sign transaction via Phantom
