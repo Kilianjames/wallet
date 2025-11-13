@@ -126,41 +126,7 @@ const Portfolio = () => {
     setOrders(orders.filter(o => o.id !== orderId));
   };
 
-  // Show locked state if wallet not connected
-  if (!isConnected) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Portfolio</h1>
-            <p className="text-gray-600">Connect your wallet to view your portfolio</p>
-          </div>
-
-          {/* Locked State */}
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="bg-white rounded-xl p-12 border-2 border-blue-600 max-w-md text-center shadow-lg">
-              <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Lock size={48} className="text-blue-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Portfolio Locked
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Connect your wallet to view your trading positions, history, and performance
-              </p>
-              <Button 
-                onClick={connect}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8"
-              >
-                <Wallet size={20} className="mr-2" />
-                Connect Wallet
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Portfolio is always accessible - positions will be empty if wallet not connected
 
   // Calculate total PnL
   const totalPnL = positions.reduce((sum, pos) => {
