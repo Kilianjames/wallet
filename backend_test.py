@@ -431,6 +431,10 @@ class PolyfluidBackendTester:
                     expired_count = output_log.count("Skipping EXPIRED market")
                     self.test_results["logs_check"]["details"].append(f"✅ Additional expired market filtering in output log: {expired_count} entries")
                 
+                if "Skipping ENDING-SOON market" in output_log:
+                    ending_soon_count = output_log.count("Skipping ENDING-SOON market")
+                    self.test_results["logs_check"]["details"].append(f"✅ Additional ending-soon market filtering in output log: {ending_soon_count} entries")
+                
                 # Look for API call indicators
                 if "Calling Polymarket" in output_log:
                     self.test_results["logs_check"]["details"].append("✅ Polymarket API calls found in output log")
