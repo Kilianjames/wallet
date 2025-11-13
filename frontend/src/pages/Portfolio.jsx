@@ -466,7 +466,7 @@ const Portfolio = () => {
                         Just placed a bet?
                       </p>
                       <p className="text-sm text-blue-700">
-                        Your position may take 5-10 minutes to appear here as it's being relayed to the Polymarket wallet. Please refresh this page after a few minutes.
+                        Your position may take 5-10 minutes to appear here as it's being relayed to the Polymarket wallet. Please refresh this page after a few minutes. Once it appears, you may close your position at anytime.
                       </p>
                     </div>
                   </div>
