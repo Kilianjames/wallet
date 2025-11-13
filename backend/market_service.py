@@ -14,8 +14,10 @@ class MarketService:
         try:
             from datetime import datetime, timezone
             
-            # Use events API for active markets - fetch more to get variety
-            events_data = self.client.get_events(limit=limit)
+            # Fetch MORE markets from API since filtering will reduce count significantly
+            # Request 2x the desired limit to account for filtering
+            fetch_limit = min(limit * 2, 400)
+            events_data = self.client.get_events(limit=fetch_limit)
             
             # Get current timestamp for filtering
             current_time = datetime.now(timezone.utc)
