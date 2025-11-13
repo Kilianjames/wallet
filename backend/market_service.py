@@ -12,7 +12,7 @@ class MarketService:
     def get_trending_markets(self, limit: int = 200) -> List[Dict]:
         """Get trending markets from Polymarket using Events API - ONLY ACTIVE/ONGOING"""
         try:
-            from datetime import datetime, timezone
+            from datetime import datetime, timezone, timedelta
             
             # Fetch MORE markets from API since filtering will reduce count significantly
             # Request 2x the desired limit to account for filtering
