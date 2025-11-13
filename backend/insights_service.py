@@ -19,6 +19,7 @@ class MarketInsightsService:
     async def get_market_insights(self, market_title: str, market_category: str, outcomes: list = None) -> dict:
         """
         Generate AI-powered insights for a prediction market
+        Uses real-time web search for accurate, up-to-date analysis
         
         Args:
             market_title: Title of the prediction market
@@ -29,40 +30,60 @@ class MarketInsightsService:
             dict with analysis, tips, and sentiment
         """
         try:
-            # Create chat instance with system message
+            # First, get real-time context using web search
+            search_context = await self._fetch_market_context(market_title, market_category)
+            
+            # Create chat instance with system message emphasizing data-driven analysis
             chat = LlmChat(
                 api_key=self.api_key,
                 session_id=f"insights_{market_title[:20]}",
-                system_message="""You are a prediction market analyst providing concise, data-driven insights. 
+                system_message="""You are an expert prediction market analyst. Use ONLY the provided real-time data and current probabilities to give accurate insights.
+                DO NOT make predictions without data. If data is limited, acknowledge uncertainty.
                 Focus on:
-                1. Key factors affecting the outcome
-                2. Recent relevant developments
-                3. Probability assessment
-                4. Risk factors
-                Keep responses under 150 words, bullet points preferred."""
+                1. What the DATA says (not speculation)
+                2. Current market sentiment from probabilities
+                3. Key known factors only
+                Keep under 150 words, bullet points preferred."""
             ).with_model("openai", "gpt-4o-mini")
             
-            # Build the analysis prompt
+            # Build the analysis prompt with real-time context
             if outcomes and len(outcomes) > 1:
-                outcomes_text = ", ".join([f"{o.get('title', 'Unknown')} ({int(o.get('price', 0)*100)}%)" for o in outcomes[:5]])
-                prompt = f"""Analyze this prediction market:
+                # Sort by probability for multi-outcome
+                sorted_outcomes = sorted(outcomes, key=lambda x: x.get('price', 0), reverse=True)
+                outcomes_text = "\n".join([f"- {o.get('title', 'Unknown')}: {int(o.get('price', 0)*100)}% probability" for o in sorted_outcomes[:8]])
+                
+                prompt = f"""Analyze this prediction market with REAL-TIME DATA:
+
 Market: {market_title}
 Category: {market_category}
-Current Probabilities: {outcomes_text}
 
-Provide:
-1. Key Analysis (2-3 points)
-2. Betting Tips (1-2 points)
-3. Risk Assessment"""
+CURRENT MARKET PROBABILITIES (from live trading):
+{outcomes_text}
+
+REAL-TIME CONTEXT:
+{search_context}
+
+Based on this DATA, provide:
+1. Key Insight (what the probabilities tell us)
+2. Best Value Bet (considering probability vs actual likelihood)
+3. Risk Note (1 sentence)
+
+Be specific and data-driven. Don't predict - analyze what the data shows."""
             else:
-                prompt = f"""Analyze this prediction market:
+                prompt = f"""Analyze this prediction market with REAL-TIME DATA:
+
 Market: {market_title}
 Category: {market_category}
 
-Provide:
-1. Key Analysis (2-3 points)
-2. Betting Tips (1-2 points)
-3. Risk Assessment"""
+REAL-TIME CONTEXT:
+{search_context}
+
+Based on this DATA, provide:
+1. Key Insight
+2. Betting Tip
+3. Risk Note
+
+Be specific and data-driven."""
             
             # Send message and get response
             user_message = UserMessage(text=prompt)
