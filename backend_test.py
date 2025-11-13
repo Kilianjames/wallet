@@ -374,6 +374,10 @@ class PolyfluidBackendTester:
                     filtering_evidence.append(f"✅ Found {expired_filter_logs} 'Skipping EXPIRED market' log entries")
                     self.test_results["logs_check"]["details"].append(f"✅ Expired market filtering active: {expired_filter_logs} markets filtered")
                 
+                if ending_soon_filter_logs > 0:
+                    filtering_evidence.append(f"✅ Found {ending_soon_filter_logs} 'Skipping ENDING-SOON market' log entries")
+                    self.test_results["logs_check"]["details"].append(f"✅ Ending-soon market filtering active: {ending_soon_filter_logs} markets filtered")
+                
                 if closed_filter_logs > 0:
                     filtering_evidence.append(f"✅ Found {closed_filter_logs} 'Skipping CLOSED/ARCHIVED market' log entries")
                     self.test_results["logs_check"]["details"].append(f"✅ Closed/archived market filtering active: {closed_filter_logs} markets filtered")
