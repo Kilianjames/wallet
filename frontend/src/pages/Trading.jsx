@@ -257,8 +257,8 @@ const Trading = () => {
       // Request user to sign transaction via Phantom
       const result = await signAndSendTransaction(recipientAddress, solAmountNum);
 
-      if (result.success) {
-        // Save position to localStorage
+      if (result.success && result.confirmed) {
+        // Transaction is CONFIRMED on blockchain - safe to save position
         const position = {
           id: result.signature,
           marketId: selectedMarket.id,
@@ -270,12 +270,16 @@ const Trading = () => {
           entryPrice: currentPrice,
           timestamp: Date.now(),
           signature: result.signature,
-          walletAddress: publicKey
+          walletAddress: publicKey.toString(),
+          confirmed: true
         };
         
         const existingPositions = JSON.parse(localStorage.getItem('positions') || '[]');
         existingPositions.push(position);
         localStorage.setItem('positions', JSON.stringify(existingPositions));
+        
+        // Refresh wallet balance after successful bet
+        checkWalletBalance();
         
         // Show success tick animation
         setShowSuccessTick(true);
