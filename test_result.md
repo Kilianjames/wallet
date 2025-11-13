@@ -165,6 +165,18 @@ backend:
         agent: "testing"
         comment: "NOT TESTED: Portfolio endpoints not tested as focus was on Polymarket API integration verification. Endpoints exist (/api/positions GET/POST) but require end-to-end user flow testing."
 
+  - task: "Backend Market Count Improvements"
+    implemented: true
+    working: true
+    file: "/app/backend/market_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: Market count improvement successful! /api/markets?limit=150 returns 150 active markets (6x improvement from previous 25). All markets have future end dates. Backend logs show proper filtering of 30+ expired markets (Warriors vs Spurs, Hawks vs Kings, etc.) and markets not accepting orders. Orderbook (10 bids/10 asks) and chart endpoints (25+ data points) working correctly with live Polymarket data."
+
 frontend:
   - task: "Orderbook Display with Live Data"
     implemented: true
