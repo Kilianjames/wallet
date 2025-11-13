@@ -32,17 +32,38 @@ const Navbar = () => {
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <img
-              src="/logo.png"
-              alt="Polyfluid Logo"
-              className="h-10 w-10 rounded-lg group-hover:scale-105 transition-transform"
-            />
-            <span className="text-2xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors">
-              Polyfluid
-            </span>
-          </Link>
+          {/* Logo & CA */}
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-3 group">
+              <img
+                src="/logo.png"
+                alt="Polyfluid Logo"
+                className="h-10 w-10 rounded-lg group-hover:scale-105 transition-transform"
+              />
+              <span className="text-2xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors">
+                Polyfluid
+              </span>
+            </Link>
+            
+            {/* Contract Address */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+              <span className="text-xs font-semibold text-purple-600">CA:</span>
+              <code className="text-xs font-mono text-gray-700">CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump</code>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText('CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump');
+                  alert('Contract address copied!');
+                }}
+                className="text-purple-600 hover:text-purple-700 transition-colors"
+                title="Copy CA"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           {/* Desktop Navigation - Clean & Modern */}
           <div className="hidden md:flex items-center gap-2">
