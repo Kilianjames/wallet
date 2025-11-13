@@ -14,7 +14,43 @@ import {
 } from '../components/ui/dialog';
 
 const Portfolio = () => {
-  const { isConnected, connect, address } = useWallet();
+  const { isConnected, connect, address, publicKey } = useWallet();
+  const [positions, setPositions] = useState([]);
+  const [markets, setMarkets] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  // Load positions and fetch live prices
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const loadPositions = async () => {
+      try {
+        const storedPositions = JSON.parse(localStorage.getItem('positions') || '[]');
+        // Filter positions for current wallet
+        const userPositions = storedPositions.filter(p => p.walletAddress === publicKey);
+        setPositions(userPositions);
+
+        // Fetch current market data for live prices
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/markets?limit=100`);
+        const data = await response.json();
+        const marketsMap = {};
+        data.markets.forEach(m => {
+          marketsMap[m.id] = m;
+        });
+        setMarkets(marketsMap);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading positions:', error);
+        setLoading(false);
+      }
+    };
+
+    loadPositions();
+    
+    // Refresh every 30 seconds
+    const interval = setInterval(loadPositions, 30000);
+    return () => clearInterval(interval);
+  }, [isConnected, publicKey]);
   const [positions, setPositions] = useState([]);
   const [orders, setOrders] = useState([]);
 
