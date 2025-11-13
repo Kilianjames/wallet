@@ -420,9 +420,17 @@ const Portfolio = () => {
                         </div>
                         <Button
                           onClick={() => handleClosePosition(position)}
-                          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold"
+                          disabled={closingPositionId === position.id}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold disabled:opacity-50"
                         >
-                          Close Position & Get Refund
+                          {closingPositionId === position.id ? (
+                            <>
+                              <Loader2 className="animate-spin mr-2" size={16} />
+                              Closing & Refunding...
+                            </>
+                          ) : (
+                            'Close Position & Get Refund'
+                          )}
                         </Button>
                       </div>
                     </div>
