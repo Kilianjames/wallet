@@ -54,7 +54,6 @@ const Portfolio = () => {
   
   const [orders, setOrders] = useState([]);
 
-  const totalPnL = positions.reduce((sum, pos) => sum + pos.pnl, 0);
   const totalValue = positions.reduce((sum, pos) => sum + pos.size, 0);
 
   const handleClosePosition = (positionId) => {
