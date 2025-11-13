@@ -107,15 +107,18 @@ user_problem_statement: "User wants to ensure ALL numbers and orderbook data are
 backend:
   - task: "Live Orderbook API Integration"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/market_service.py, /app/backend/polymarket_client.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Backend endpoints exist for orderbook (/api/markets/{market_id}/orderbook) and call Polymarket CLOB API. Need to verify it returns live data correctly."
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: Orderbook API working with live Polymarket CLOB data. Tested token_id=74018646712472971445258547247048869505144598783748525202442089895996249694683 - returned 10 bids and 10 asks with non-zero sizes. Backend logs show 'Calling Polymarket CLOB API' messages. No mock values detected."
 
   - task: "Live Price Chart Data API"
     implemented: true
