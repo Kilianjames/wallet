@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, TrendingUp, TrendingDown, ArrowUpRight, Loader2 } from 'lucide-react';
+import { Search, TrendingUp, TrendingDown, ArrowUpRight, Loader2, Activity } from 'lucide-react';
 import { marketService } from '../services/api';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
