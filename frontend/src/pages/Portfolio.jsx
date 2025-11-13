@@ -108,9 +108,10 @@ const Portfolio = () => {
       }
     } catch (error) {
       console.error('Error closing position:', error);
+      console.error('Error details:', error.message);
       toast({
-        title: 'Error',
-        description: error.message || 'Failed to close position. Please try again.',
+        title: 'Error Closing Position',
+        description: error.message || 'Failed to close position. Please try again. Check console for details.',
         variant: 'destructive'
       });
     } finally {
