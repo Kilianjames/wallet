@@ -34,13 +34,24 @@ class MarketService:
                     end_date_str = event.get('endDate', '')
                     if end_date_str:
                         try:
-                            # Parse end date - format is typically ISO8601 like "2025-12-10T00:00:00Z"
-                            end_date = datetime.fromisoformat(end_date_str.replace('Z', '+00:00'))
+                            # Parse end date - handle multiple formats
+                            if 'T' in end_date_str:
+                                # Full ISO8601 format like "2025-12-10T00:00:00Z"
+                                end_date = datetime.fromisoformat(end_date_str.replace('Z', '+00:00'))
+                            else:
+                                # Date only format like "2025-11-13" - assume end of day
+                                end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+                                # Add timezone info and set to end of day to be more restrictive
+                                end_date = end_date.replace(hour=23, minute=59, second=59, tzinfo=timezone.utc)
+                            
                             if end_date <= current_time:
                                 logger.info(f"Skipping EXPIRED market: {event.get('title', '')} (ended: {end_date_str})")
                                 continue
                         except (ValueError, AttributeError) as e:
                             logger.warning(f"Could not parse end date '{end_date_str}': {e}")
+                            # If we can't parse the date, skip the market to be safe
+                            logger.info(f"Skipping market with unparseable end date: {event.get('title', '')}")
+                            continue
                     
                     # Also check if market is marked as closed or accepting orders
                     if event.get('closed', False) or event.get('archived', False):
