@@ -109,6 +109,19 @@ const Portfolio = () => {
     );
   }
 
+  // Calculate total PnL
+  const totalPnL = positions.reduce((sum, pos) => {
+    const market = markets[pos.marketId];
+    if (!market) return sum;
+    
+    const currentPrice = market.price;
+    const priceDiff = currentPrice - pos.entryPrice;
+    const pnl = pos.side === 'LONG' 
+      ? priceDiff * pos.amount * pos.leverage
+      : -priceDiff * pos.amount * pos.leverage;
+    return sum + pnl;
+  }, 0);
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
