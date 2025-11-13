@@ -76,9 +76,10 @@ async def root():
     return {"message": "Polynator Perp DEX API"}
 
 @api_router.get("/markets")
-async def get_markets(limit: int = Query(100, ge=1, le=200)):
+async def get_markets(limit: int = Query(150, ge=1, le=300)):
     """Get trending markets from Polymarket"""
     try:
+        # Fetch with higher limit - filtering will reduce the count
         markets = market_service.get_trending_markets(limit=limit)
         return {"markets": markets, "count": len(markets)}
     except Exception as e:
