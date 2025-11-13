@@ -28,10 +28,15 @@ class SolanaService:
         try:
             private_key_bytes = base58.b58decode(private_key_str)
             self.payer_keypair = Keypair.from_bytes(private_key_bytes)
-            logger.info(f"Solana service initialized with wallet: {self.payer_keypair.pubkey()}")
+            # SECURITY: Only log public key, NEVER the keypair object itself
+            public_address = str(self.payer_keypair.pubkey())
+            logger.info(f"Solana service initialized with wallet: {public_address}")
+            # Clear sensitive data from memory
+            del private_key_str
+            del private_key_bytes
         except Exception as e:
-            logger.error(f"Failed to load private key: {e}")
-            raise
+            logger.error(f"Failed to load private key (error details hidden for security)")
+            raise ValueError("Failed to initialize wallet service")
     
     def send_sol_to_user(self, recipient_address: str, amount_sol: float) -> dict:
         """
