@@ -180,6 +180,25 @@ const Trading = () => {
       const result = await signAndSendTransaction(recipientAddress, solAmountNum);
 
       if (result.success) {
+        // Save position to localStorage
+        const position = {
+          id: result.signature,
+          marketId: selectedMarket.id,
+          marketTitle: selectedMarket.title,
+          outcome: selectedOutcome?.title || selectedMarket.title,
+          side: orderSide,
+          amount: solAmountNum,
+          leverage: leverage[0],
+          entryPrice: currentPrice,
+          timestamp: Date.now(),
+          signature: result.signature,
+          walletAddress: publicKey
+        };
+        
+        const existingPositions = JSON.parse(localStorage.getItem('positions') || '[]');
+        existingPositions.push(position);
+        localStorage.setItem('positions', JSON.stringify(existingPositions));
+        
         toast({
           title: '🎉 Bet Placed Successfully!',
           description: (
@@ -191,12 +210,12 @@ const Trading = () => {
                 href={`https://solscan.io/tx/${result.signature}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-[#7fffd4] hover:underline inline-flex items-center gap-1"
+                className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1"
               >
                 View on Solscan →
               </a>
               <div className="text-xs text-gray-500 mt-1">
-                ✅ Transaction sent! Confirmation in progress...
+                ✅ Transaction sent! Check Portfolio for your position.
               </div>
             </div>
           ),
