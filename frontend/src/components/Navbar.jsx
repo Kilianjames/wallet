@@ -96,10 +96,9 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
-            <div className="flex flex-col gap-2">
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg">
+            <div className="px-4 py-4 space-y-2">
               {navItems.map((item) => {
-                const Icon = item.icon;
                 const isActive = location.pathname === item.path;
                 
                 return (
@@ -107,23 +106,28 @@ const Navbar = () => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-all ${
+                    className={`flex items-center px-4 py-3 rounded-lg transition-all font-medium ${
                       isActive
-                        ? 'bg-blue-50 text-blue-600 font-semibold'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600 border-l-4 border-blue-600'
+                        : 'text-gray-600 hover:bg-gray-50'
                     }`}
                   >
-                    <Icon size={18} />
                     {item.label}
                   </Link>
                 );
               })}
+              
               <Button 
                 onClick={handleWalletClick}
                 disabled={!isReady}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold mt-2 disabled:opacity-50"
+                className={`w-full font-semibold mt-4 shadow-md ${
+                  isConnected 
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white'
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
+                }`}
               >
-                <Wallet size={18} className="mr-2" />
+                {isConnected && <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />}
+                <Zap size={16} className="mr-2" />
                 {!isReady ? 'Loading...' : isConnected ? formatAddress(address) : 'Connect Wallet'}
               </Button>
             </div>
