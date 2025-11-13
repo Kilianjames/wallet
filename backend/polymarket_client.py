@@ -86,8 +86,24 @@ class PolymarketClient:
             response.raise_for_status()
             return response.json()
         except Exception as e:
-            logger.error(f"Error fetching orderbook for {token_id}: {e}")
+            logger.error(f"Error fetching orderbook: {e}")
             return None
+    
+    def get_price_history(self, token_id: str, interval: str = "1h") -> List[Dict]:
+        """Fetch price history for a token"""
+        try:
+            params = {
+                "market": token_id,
+                "interval": interval,
+                "fidelity": "60"  # 60 data points
+            }
+            response = requests.get(f"{self.clob_base_url}/prices-history", params=params, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            return data.get('history', [])
+        except Exception as e:
+            logger.error(f"Error fetching price history: {e}")
+            return []
     
     def get_prices(self, token_ids: List[str]) -> Dict:
         """Fetch prices for multiple tokens"""
