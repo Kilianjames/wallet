@@ -128,6 +128,32 @@ async def get_orderbook(token_id: str):
         if not orderbook:
             raise HTTPException(status_code=404, detail="Orderbook not found")
         return orderbook
+
+
+@api_router.get("/markets/{market_id}/orderbook")
+async def get_market_orderbook(market_id: str, token_id: str = Query(...)):
+    """Get live orderbook for a market"""
+    try:
+        orderbook = market_service.get_live_orderbook(token_id)
+        if not orderbook:
+            raise HTTPException(status_code=404, detail="Orderbook not found")
+        return orderbook
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error fetching orderbook: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch orderbook")
+
+@api_router.get("/markets/{market_id}/chart")
+async def get_market_chart(market_id: str, token_id: str = Query(...), interval: str = Query("1h")):
+    """Get price chart data for a market"""
+    try:
+        chart_data = market_service.get_price_chart_data(token_id, interval)
+        return {"data": chart_data}
+    except Exception as e:
+        logging.error(f"Error fetching chart data: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch chart data")
+
     except HTTPException:
         raise
     except Exception as e:
