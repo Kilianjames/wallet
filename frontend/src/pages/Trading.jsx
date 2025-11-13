@@ -27,6 +27,9 @@ const Trading = () => {
   const [showSuccessTick, setShowSuccessTick] = useState(false);
   const [chartData, setChartData] = useState([]);
   const [chartInterval, setChartInterval] = useState('1h');
+  const [insights, setInsights] = useState(null);
+  const [insightsLoading, setInsightsLoading] = useState(false);
+  const [showInsights, setShowInsights] = useState(true);
 
   useEffect(() => {
     loadMarkets();
