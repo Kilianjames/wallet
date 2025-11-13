@@ -75,21 +75,32 @@ class PolyfluidBackendTester:
                         else:
                             end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
                         
-                        # Check if market has expired (end date in the past)
-                        if end_date.replace(tzinfo=None) <= current_date:
-                            expired_markets.append({
-                                'title': title,
-                                'end_date': end_date_str,
-                                'days_past': (current_date - end_date.replace(tzinfo=None)).days
-                            })
-                            logger.error(f"❌ EXPIRED MARKET FOUND: {title} ended on {end_date_str}")
+                        # Check if market ends before Nov 14, 2025
+                        end_date_clean = end_date.replace(tzinfo=None)
+                        
+                        if end_date_clean < nov_14_2025:
+                            # Check if it's expired (past) or ending soon (Nov 7, 13, etc.)
+                            if end_date_clean <= current_date:
+                                expired_markets.append({
+                                    'title': title,
+                                    'end_date': end_date_str,
+                                    'days_past': (current_date - end_date_clean).days
+                                })
+                                logger.error(f"❌ EXPIRED MARKET FOUND: {title} ended on {end_date_str}")
+                            else:
+                                ending_soon_markets.append({
+                                    'title': title,
+                                    'end_date': end_date_str,
+                                    'days_until': (end_date_clean - current_date).days
+                                })
+                                logger.error(f"❌ ENDING-SOON MARKET FOUND: {title} ends on {end_date_str} (before Nov 14)")
                         else:
                             future_markets.append({
                                 'title': title,
                                 'end_date': end_date_str,
-                                'days_future': (end_date.replace(tzinfo=None) - current_date).days
+                                'days_future': (end_date_clean - current_date).days
                             })
-                            logger.info(f"✅ Future market: {title} ends {end_date_str}")
+                            logger.info(f"✅ Valid market: {title} ends {end_date_str} (Nov 14+)")
                     except Exception as e:
                         logger.warning(f"Could not parse end date '{end_date_str}': {e}")
                 
