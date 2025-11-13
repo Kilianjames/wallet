@@ -39,10 +39,7 @@ class MarketService:
                                     outcome_prices = ["0.5", "0.5"]
                                 
                                 yes_price = float(outcome_prices[0]) if outcome_prices[0] not in ["0", "0.0"] else 0.01
-                            except (IndexError, ValueError, json.JSONDecodeError) as e:
-                                logger.warning(f"Error parsing outcome prices: {e}")
-                                yes_price = 0.5
-                            
+                                
                                 outcome_title = market.get('groupItemTitle', market.get('question', ''))
                                 if not outcome_title or outcome_title == "0":
                                     # Try to extract from question
@@ -68,7 +65,7 @@ class MarketService:
                                     'market_id': market.get('id', '')
                                 })
                             except Exception as e:
-                                logger.warning(f"Error parsing outcome: {e}")
+                                logger.warning(f"Error parsing outcome in multi-market: {e}")
                                 continue
                         
                         transformed_market = {
