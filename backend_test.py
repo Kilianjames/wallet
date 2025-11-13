@@ -135,16 +135,30 @@ class PolyfluidBackendTester:
             
             # Report results
             self.test_results["markets"]["details"].append(f"📊 Total markets analyzed: {len(markets)}")
-            self.test_results["markets"]["details"].append(f"✅ Future markets: {len(future_markets)}")
-            self.test_results["markets"]["details"].append(f"❌ Expired markets: {len(expired_markets)}")
+            self.test_results["markets"]["details"].append(f"✅ Valid markets (Nov 14+): {len(future_markets)}")
+            self.test_results["markets"]["details"].append(f"❌ Expired markets (past): {len(expired_markets)}")
+            self.test_results["markets"]["details"].append(f"❌ Ending-soon markets (Nov 7, 13, etc.): {len(ending_soon_markets)}")
             
-            if expired_markets:
-                self.test_results["markets"]["details"].append("❌ CRITICAL: Found expired markets that should be filtered:")
-                for expired in expired_markets:
-                    self.test_results["markets"]["details"].append(f"   - '{expired['title']}' ended {expired['end_date']} ({expired['days_past']} days ago)")
+            # Sample 5-10 markets and show their end dates
+            sample_markets = markets[:10] if len(markets) >= 10 else markets[:5]
+            self.test_results["markets"]["details"].append(f"📋 Sample of {len(sample_markets)} market end dates:")
+            for i, market in enumerate(sample_markets):
+                title = market.get('title', 'No title')[:50] + "..." if len(market.get('title', '')) > 50 else market.get('title', 'No title')
+                end_date = market.get('endDate', 'No date')
+                self.test_results["markets"]["details"].append(f"   {i+1}. {title} → {end_date}")
+            
+            # Check for violations
+            violations = expired_markets + ending_soon_markets
+            if violations:
+                self.test_results["markets"]["details"].append("❌ CRITICAL: Found markets that should be filtered out:")
+                for violation in violations:
+                    if violation in expired_markets:
+                        self.test_results["markets"]["details"].append(f"   - EXPIRED: '{violation['title']}' ended {violation['end_date']} ({violation['days_past']} days ago)")
+                    else:
+                        self.test_results["markets"]["details"].append(f"   - ENDING-SOON: '{violation['title']}' ends {violation['end_date']} (before Nov 14)")
                 return False
             else:
-                self.test_results["markets"]["details"].append("✅ EXCELLENT: All markets have future end dates")
+                self.test_results["markets"]["details"].append("✅ EXCELLENT: All markets end Nov 14, 2025 or later")
             
             if suspicious_titles:
                 self.test_results["markets"]["details"].append(f"⚠️ Found {len(suspicious_titles)} markets with suspicious titles:")
