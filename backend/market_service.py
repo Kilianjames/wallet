@@ -1,7 +1,7 @@
 from polymarket_client import PolymarketClient
-from typing import List, Dict, Optional
 import logging
 import json
+from typing import List, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -64,18 +64,18 @@ class MarketService:
                     
                     # Also check if market is marked as closed or accepting orders
                     if event.get('closed', False) or event.get('archived', False):
-                        logger.info(f"Skipping CLOSED/ARCHIVED market: {event.get('title', '')}")
+                        logger.info(f"Skipping CLOSED/ARCHIVED market: {event_title}")
                         continue
                     
                     # Check if first market in event has acceptingOrders flag
                     first_market = markets[0] if markets else {}
                     if not first_market.get('acceptingOrders', True):
-                        logger.info(f"Skipping market NOT accepting orders: {event.get('title', '')}")
+                        logger.info(f"Skipping market NOT accepting orders: {event_title}")
                         continue
                     
-                    # Check if this is a multi-outcome event (multiple markets)
-                    if len(markets) > 1:
-                        # Multi-outcome market - group all outcomes
+                    # Check if multi-outcome (event has multiple market groups)
+                    if len(markets) > 2:
+                        # Multi-outcome market
                         outcomes = []
                         for market in markets:
                             try:
@@ -88,14 +88,19 @@ class MarketService:
                                 
                                 yes_price = float(outcome_prices[0]) if outcome_prices[0] not in ["0", "0.0"] else 0.01
                                 
-                                outcome_title = market.get('groupItemTitle', market.get('question', ''))
-                                if not outcome_title or outcome_title == "0":
-                                    # Try to extract from question
+                                # IMPROVED: Get actual outcome title from market data
+                                # Polymarket stores candidate/option names in multiple fields
+                                outcome_title = (
+                                    market.get('groupItemTitle', '') or 
+                                    market.get('description', '') or
+                                    market.get('question', '')
+                                )
+                                
+                                # Clean up the title - remove market question if it's duplicated
+                                if outcome_title == "0" or not outcome_title.strip():
+                                    # Fallback: extract from question
                                     question = market.get('question', '')
-                                    if 'will' in question.lower() and '?' in question:
-                                        outcome_title = question.split('will')[1].split('?')[0].strip() if 'will' in question.lower() else question
-                                    else:
-                                        outcome_title = question
+                                    outcome_title = question
                                 
                                 try:
                                     token_ids_str = market.get('clobTokenIds', '[]')
@@ -107,7 +112,7 @@ class MarketService:
                                     token_ids = []
                                 
                                 outcomes.append({
-                                    'title': outcome_title,
+                                    'title': outcome_title.strip(),
                                     'price': yes_price,
                                     'token_id': token_ids[0] if token_ids and len(token_ids) > 0 else '',
                                     'market_id': market.get('id', '')
@@ -118,7 +123,7 @@ class MarketService:
                         
                         transformed_market = {
                             'id': str(event.get('id', '')),
-                            'title': event.get('title', ''),
+                            'title': event_title,
                             'category': self._get_category_from_event(event),
                             'is_multi_outcome': True,
                             'outcomes': outcomes,
@@ -200,14 +205,11 @@ class MarketService:
             return {
                 'id': str(market.get('id', '')),
                 'title': market.get('question', ''),
-                'category': self._get_category_from_market(market),
                 'yesPrice': yes_price,
                 'noPrice': 1 - yes_price,
-                'volume': float(market.get('volumeNum', 0)),
-                'liquidity': float(market.get('liquidityNum', 0)),
-                'endDate': market.get('endDateIso', '2025-12-31'),
-                'image': market.get('image', market.get('icon', '')),
-                'description': market.get('description', ''),
+                'volume': float(market.get('volume', 0)),
+                'liquidity': float(market.get('liquidity', 0)),
+                'endDate': market.get('endDate', '2025-12-31'),
                 'token_id': token_id
             }
         except Exception as e:
@@ -279,71 +281,6 @@ class MarketService:
             logger.error(f"Error getting orderbook for token_id={token_id}: {e}", exc_info=True)
             return None
     
-    def _get_category_from_event(self, event: Dict) -> str:
-        """Extract category from event data"""
-        category_raw = str(event.get('category', '')).lower()
-        tags_raw = event.get('tags', [])
-        
-        # Convert tags to list of strings
-        if isinstance(tags_raw, list):
-            tags = [str(t).lower() if not isinstance(t, dict) else str(t.get('label', '')).lower() for t in tags_raw]
-        else:
-            tags = []
-        
-        # Check category field first
-        if 'sports' in category_raw or any('sport' in t or 'nfl' in t or 'nba' in t or 'mlb' in t or 'soccer' in t or 'football' in t or 'baseball' in t or 'basketball' in t for t in tags):
-            return 'Sports'
-        elif 'crypto' in category_raw or any('crypto' in t or 'bitcoin' in t or 'ethereum' in t or 'blockchain' in t for t in tags):
-            return 'Crypto'
-        elif 'econom' in category_raw or any('econom' in t or 'fed' in t or 'rate' in t or 'gdp' in t or 'inflation' in t or 'recession' in t for t in tags):
-            return 'Economics'
-        elif 'politic' in category_raw or 'election' in category_raw or any('politic' in t or 'election' in t or 'president' in t or 'congress' in t or 'senate' in t for t in tags):
-            return 'Politics'
-        elif 'pop' in category_raw or 'culture' in category_raw or 'entertainment' in category_raw:
-            return 'Entertainment'
-        elif 'science' in category_raw or 'technology' in category_raw:
-            return 'Science'
-        
-        # Default based on common patterns in title
-        title_lower = str(event.get('title', '')).lower()
-        if any(word in title_lower for word in ['nfl', 'nba', 'mlb', 'super bowl', 'world series', 'championship', 'playoff', 'soccer', 'football']):
-            return 'Sports'
-        elif any(word in title_lower for word in ['bitcoin', 'ethereum', 'crypto', 'blockchain', 'btc', 'eth']):
-            return 'Crypto'
-        elif any(word in title_lower for word in ['fed', 'rate', 'recession', 'gdp', 'economy', 'inflation', 'jobs']):
-            return 'Economics'
-        
-        return 'Politics'  # Default
-    
-    def _get_category_from_market(self, market: Dict) -> str:
-        """Extract category from market data"""
-        category_raw = market.get('category', '')
-        
-    
-    def get_markets_by_category(self, category: str, limit: int = 100) -> List[Dict]:
-        """Get markets filtered by category"""
-        try:
-            # Fetch all markets first
-            all_markets = self.get_trending_markets(limit=200)
-            
-            # Filter by category
-            if category.lower() == 'all':
-                return all_markets[:limit]
-            
-            filtered = [m for m in all_markets if m.get('category', '').lower() == category.lower()]
-            return filtered[:limit]
-        except Exception as e:
-            logger.error(f"Error getting markets by category: {e}")
-            return []
-
-    def get_live_orderbook(self, token_id: str) -> Optional[Dict]:
-        """Get live orderbook data"""
-        try:
-            return self.client.get_orderbook(token_id)
-        except Exception as e:
-            logger.error(f"Error getting live orderbook: {e}")
-            return None
-    
     def get_price_chart_data(self, token_id: str, interval: str = "1h") -> List[Dict]:
         """Get price history for chart"""
         try:
@@ -373,45 +310,34 @@ class MarketService:
         except Exception as e:
             logger.error(f"Error getting price chart data for token_id={token_id}: {e}", exc_info=True)
             return []
-
-        except Exception as e:
-            logger.error(f"Error getting markets by category: {e}")
-            return []
     
-    def get_trending_only(self, limit: int = 50) -> List[Dict]:
-        """Get only the most trending markets by liquidity and volume"""
-        try:
-            events_data = self.client.get_trending_events(limit=limit)
-            return self.get_trending_markets(limit=limit)
-        except Exception as e:
-            logger.error(f"Error getting trending markets: {e}")
-            return []
-
-        category_map = {
-            'politics': 'Politics',
-            'crypto': 'Crypto',
-            'sports': 'Sports',
-            'economics': 'Economics',
-            'economy': 'Economics',
-            'pop-culture': 'Entertainment',
-            'entertainment': 'Entertainment',
-            'science': 'Science',
-            'technology': 'Crypto',
-            'us-current-affairs': 'Politics'
-        }
+    def _get_category_from_event(self, event: Dict) -> str:
+        """Extract category from event tags or description"""
+        tags = event.get('tags', [])
+        if not tags:
+            return 'Politics'
         
-        for key, value in category_map.items():
-            if key in category_raw.lower():
-                return value
+        tag_lower = tags[0].get('label', '').lower() if tags and len(tags) > 0 else ''
         
-        return 'Politics'
+        if 'crypto' in tag_lower or 'bitcoin' in tag_lower or 'ethereum' in tag_lower:
+            return 'Crypto'
+        elif 'sport' in tag_lower or 'nfl' in tag_lower or 'nba' in tag_lower:
+            return 'Sports'
+        elif 'econ' in tag_lower or 'fed' in tag_lower or 'rate' in tag_lower:
+            return 'Economics'
+        else:
+            return 'Politics'
     
-    def _calculate_change(self, data: Dict) -> float:
+    def _calculate_change(self, event: Dict) -> float:
         """Calculate 24h price change"""
         try:
-            change = data.get('oneDayPriceChange', 0)
-            if change:
-                return round(float(change) * 100, 2)
+            # Polymarket provides volume24hr - we can estimate change
+            volume = float(event.get('volume', 0))
+            volume24h = float(event.get('volume24hr', 0))
+            
+            if volume > 0 and volume24h > 0:
+                # Rough estimate of activity change
+                return min(max((volume24h / volume) * 10 - 5, -15), 15)
             return 0.0
         except:
             return 0.0
