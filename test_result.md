@@ -161,6 +161,9 @@ backend:
       - working: "NA"
         agent: "main"
         comment: "Endpoints exist for creating and retrieving positions. Currently stores in MongoDB. Need to test end-to-end flow."
+      - working: "NA"
+        agent: "testing"
+        comment: "NOT TESTED: Portfolio endpoints not tested as focus was on Polymarket API integration verification. Endpoints exist (/api/positions GET/POST) but require end-to-end user flow testing."
 
 frontend:
   - task: "Orderbook Display with Live Data"
