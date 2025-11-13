@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from market_service import MarketService
 from solana_service import SolanaService
 from insights_service import MarketInsightsService
+from datetime import datetime, timedelta
 
 
 ROOT_DIR = Path(__file__).parent
@@ -26,6 +27,13 @@ db = client[os.environ['DB_NAME']]
 market_service = MarketService()
 solana_service = SolanaService()
 insights_service = MarketInsightsService()
+
+# In-memory cache for markets (reduces load on Polymarket API)
+markets_cache = {
+    "data": None,
+    "timestamp": None,
+    "cache_duration": 45  # Cache for 45 seconds
+}
 
 # Create the main app without a prefix
 app = FastAPI()
