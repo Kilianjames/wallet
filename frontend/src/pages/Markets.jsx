@@ -43,40 +43,52 @@ const Markets = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Markets</h1>
-          <p className="text-gray-600">Explore and trade prediction markets</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50">
+      <div className="max-w-7xl mx-auto p-4 lg:p-6">
+        {/* Compact Header with Search */}
+        <div className="mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1">
+                Discover Markets
+              </h1>
+              <p className="text-sm text-gray-600">Live prediction markets • Updated real-time</p>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-full font-medium">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                {filteredMarkets.length} Active
+              </div>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Input
+              placeholder="Search markets by keyword..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 pr-4 h-12 bg-white border-gray-300 text-gray-900 rounded-xl shadow-sm"
+            />
+          </div>
         </div>
 
-        {/* Search and Filter */}
-        <div className="bg-white rounded-xl p-6 mb-6 border border-gray-200 shadow-sm">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-              <Input
-                placeholder="Search markets..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white border-gray-300 text-gray-900"
-              />
-            </div>
-            <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-              <TabsList className="bg-gray-100">
-                {categories.map((cat) => (
-                  <TabsTrigger 
-                    key={cat} 
-                    value={cat}
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    {cat}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          </div>
+        {/* Category Pills */}
+        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${
+                selectedCategory === cat
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
         {/* Loading State */}
