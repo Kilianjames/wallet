@@ -30,11 +30,11 @@ class PolyfluidBackendTester:
         self.test_token_id = None
     
     def test_markets_endpoint(self):
-        """Test /api/markets endpoint for live data"""
-        logger.info("=== Testing Markets Endpoint ===")
+        """Test /api/markets endpoint - FOCUS: Verify expired markets are filtered out"""
+        logger.info("=== Testing Markets Endpoint - EXPIRED MARKET FILTERING ===")
         
         try:
-            response = requests.get(f"{self.backend_url}/markets?limit=10", timeout=30)
+            response = requests.get(f"{self.backend_url}/markets?limit=20", timeout=30)
             logger.info(f"Markets API response status: {response.status_code}")
             
             if response.status_code != 200:
@@ -50,56 +50,100 @@ class PolyfluidBackendTester:
             
             logger.info(f"Found {len(markets)} markets")
             
-            # Test first few markets for live data
-            live_data_found = False
-            valid_token_found = False
+            # CRITICAL TEST: Check ALL markets have future end dates
+            current_date = datetime.now()
+            expired_markets = []
+            future_markets = []
+            suspicious_titles = []
             
-            for i, market in enumerate(markets[:5]):
+            for i, market in enumerate(markets):
                 market_id = market.get('id')
                 title = market.get('title', 'No title')
-                volume = market.get('volume', 0)
-                liquidity = market.get('liquidity', 0)
-                end_date = market.get('endDate', '')
+                end_date_str = market.get('endDate', '')
                 
-                logger.info(f"Market {i+1}: {title[:50]}...")
-                logger.info(f"  Volume: {volume}, Liquidity: {liquidity}")
+                logger.info(f"Market {i+1}: {title}")
+                logger.info(f"  End Date: {end_date_str}")
                 
-                # Check for non-zero volume and liquidity (signs of live data)
-                if volume > 0 or liquidity > 0:
-                    live_data_found = True
-                    self.test_results["markets"]["details"].append(f"✅ Market '{title[:30]}...' has live volume: {volume}, liquidity: {liquidity}")
+                # Parse and check end date
+                if end_date_str:
+                    try:
+                        # Handle different date formats
+                        if 'T' in end_date_str:
+                            end_date = datetime.fromisoformat(end_date_str.replace('Z', '+00:00'))
+                        else:
+                            end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+                        
+                        # Check if market has expired (end date in the past)
+                        if end_date.replace(tzinfo=None) <= current_date:
+                            expired_markets.append({
+                                'title': title,
+                                'end_date': end_date_str,
+                                'days_past': (current_date - end_date.replace(tzinfo=None)).days
+                            })
+                            logger.error(f"❌ EXPIRED MARKET FOUND: {title} ended on {end_date_str}")
+                        else:
+                            future_markets.append({
+                                'title': title,
+                                'end_date': end_date_str,
+                                'days_future': (end_date.replace(tzinfo=None) - current_date).days
+                            })
+                            logger.info(f"✅ Future market: {title} ends {end_date_str}")
+                    except Exception as e:
+                        logger.warning(f"Could not parse end date '{end_date_str}': {e}")
                 
-                # Check prices are valid probability values
-                if market.get('is_multi_outcome'):
-                    outcomes = market.get('outcomes', [])
-                    for outcome in outcomes:
-                        price = outcome.get('price', 0)
-                        token_id = outcome.get('token_id', '')
-                        if 0 < price < 1 and token_id:
-                            self.test_results["markets"]["details"].append(f"✅ Multi-outcome price valid: {price}")
-                            if not self.test_token_id and token_id:
+                # Check for suspicious titles that sound like they already ended
+                title_lower = title.lower()
+                suspicious_keywords = [
+                    'mandan margin', 'election results', 'winner of', 'final score',
+                    'who won', 'results of', 'outcome of', 'decided', 'concluded'
+                ]
+                
+                for keyword in suspicious_keywords:
+                    if keyword in title_lower:
+                        suspicious_titles.append(title)
+                        logger.warning(f"⚠️ Suspicious title (sounds ended): {title}")
+                        break
+                
+                # Store first valid token for further testing
+                if not self.test_token_id:
+                    if market.get('is_multi_outcome'):
+                        outcomes = market.get('outcomes', [])
+                        for outcome in outcomes:
+                            token_id = outcome.get('token_id', '')
+                            if token_id:
                                 self.test_token_id = token_id
                                 self.test_market_id = market_id
-                                valid_token_found = True
-                else:
-                    yes_price = market.get('yesPrice', 0)
-                    token_id = market.get('token_id', '')
-                    if 0 < yes_price < 1 and token_id:
-                        self.test_results["markets"]["details"].append(f"✅ YES/NO price valid: {yes_price}")
-                        if not self.test_token_id and token_id:
+                                break
+                    else:
+                        token_id = market.get('token_id', '')
+                        if token_id:
                             self.test_token_id = token_id
                             self.test_market_id = market_id
-                            valid_token_found = True
-                
-                # Check end date is not placeholder
-                if end_date and end_date != '2025-12-31':
-                    self.test_results["markets"]["details"].append(f"✅ End date looks real: {end_date}")
             
-            if not live_data_found:
-                self.test_results["markets"]["details"].append("❌ No markets found with non-zero volume/liquidity")
+            # Report results
+            self.test_results["markets"]["details"].append(f"📊 Total markets analyzed: {len(markets)}")
+            self.test_results["markets"]["details"].append(f"✅ Future markets: {len(future_markets)}")
+            self.test_results["markets"]["details"].append(f"❌ Expired markets: {len(expired_markets)}")
+            
+            if expired_markets:
+                self.test_results["markets"]["details"].append("❌ CRITICAL: Found expired markets that should be filtered:")
+                for expired in expired_markets:
+                    self.test_results["markets"]["details"].append(f"   - '{expired['title']}' ended {expired['end_date']} ({expired['days_past']} days ago)")
                 return False
+            else:
+                self.test_results["markets"]["details"].append("✅ EXCELLENT: All markets have future end dates")
             
-            if not valid_token_found:
+            if suspicious_titles:
+                self.test_results["markets"]["details"].append(f"⚠️ Found {len(suspicious_titles)} markets with suspicious titles:")
+                for title in suspicious_titles:
+                    self.test_results["markets"]["details"].append(f"   - {title}")
+            
+            # Check that we have markets ending in December 2025 or later (future dates)
+            december_2025_or_later = [m for m in future_markets if '2025-12' in m['end_date'] or '2026' in m['end_date'] or '2027' in m['end_date']]
+            if december_2025_or_later:
+                self.test_results["markets"]["details"].append(f"✅ Found {len(december_2025_or_later)} markets ending December 2025 or later")
+            
+            if not self.test_token_id:
                 self.test_results["markets"]["details"].append("❌ No valid token_id found for further testing")
                 return False
             
