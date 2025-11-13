@@ -67,10 +67,10 @@ const Navbar = () => {
             {/* Contract Address */}
             <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
               <span className="text-xs font-semibold text-purple-600">CA:</span>
-              <code className="text-xs font-mono text-gray-700">CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump</code>
+              <code className="text-xs font-mono text-gray-700">2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP</code>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText('CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump');
+                  navigator.clipboard.writeText('2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP');
                   alert('Contract address copied!');
                 }}
                 className="text-purple-600 hover:text-purple-700 transition-colors"
