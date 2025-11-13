@@ -29,13 +29,14 @@ class PolymarketClient:
             return []
     
     def get_events(self, limit: int = 100, offset: int = 0, tag: Optional[str] = None) -> List[Dict]:
-        """Fetch events from Polymarket - better for active markets"""
+        """Fetch events from Polymarket - ONLY active/ongoing markets"""
         try:
             params = {
                 "limit": limit,
                 "offset": offset,
-                "closed": "false",
-                "archived": "false",
+                "closed": "false",          # Must not be closed
+                "archived": "false",        # Must not be archived
+                "active": "true",           # Must be active
                 "order": "volume24hr",
                 "ascending": "false"
             }
