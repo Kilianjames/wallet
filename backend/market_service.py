@@ -29,11 +29,18 @@ class MarketService:
                         # Multi-outcome market - group all outcomes
                         outcomes = []
                         for market in markets:
-                            outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
-                            if isinstance(outcome_prices, str):
-                                outcome_prices = json.loads(outcome_prices)
-                            
-                            yes_price = float(outcome_prices[0]) if outcome_prices and outcome_prices[0] not in ["0", "0.0"] else 0.01
+                            try:
+                                outcome_prices = market.get('outcomePrices', '["0.5", "0.5"]')
+                                if isinstance(outcome_prices, str):
+                                    outcome_prices = json.loads(outcome_prices)
+                                
+                                if not outcome_prices or len(outcome_prices) == 0:
+                                    outcome_prices = ["0.5", "0.5"]
+                                
+                                yes_price = float(outcome_prices[0]) if outcome_prices[0] not in ["0", "0.0"] else 0.01
+                            except (IndexError, ValueError, json.JSONDecodeError) as e:
+                                logger.warning(f"Error parsing outcome prices: {e}")
+                                yes_price = 0.5
                             
                             outcome_title = market.get('groupItemTitle', market.get('question', ''))
                             if not outcome_title or outcome_title == "0":
