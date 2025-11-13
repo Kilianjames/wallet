@@ -73,6 +73,8 @@ const Portfolio = () => {
       );
 
       const data = await response.json();
+      
+      console.log('Close position response:', data);
 
       if (response.ok && data.success) {
         // Remove position from localStorage
