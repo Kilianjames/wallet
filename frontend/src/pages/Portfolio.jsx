@@ -282,7 +282,22 @@ const Portfolio = () => {
                 <h2 className="text-2xl font-bold text-gray-900">Active Positions</h2>
                 {positions.map((position) => {
                   const market = markets[position.marketId];
-                  const currentPrice = market?.price || position.entryPrice;
+                  
+                  // Get current price - handle both single outcome and multi-outcome markets
+                  let currentPrice = position.entryPrice; // fallback
+                  if (market) {
+                    if (market.is_multi_outcome && market.outcomes) {
+                      // Find the matching outcome
+                      const matchingOutcome = market.outcomes.find(o => o.title === position.outcome);
+                      if (matchingOutcome) {
+                        currentPrice = matchingOutcome.price;
+                      }
+                    } else {
+                      // Single outcome market
+                      currentPrice = market.yesPrice || position.entryPrice;
+                    }
+                  }
+                  
                   const priceDiff = currentPrice - position.entryPrice;
                   const pnl = position.side === 'LONG' 
                     ? priceDiff * position.amount * position.leverage
