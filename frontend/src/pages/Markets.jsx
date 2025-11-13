@@ -23,7 +23,8 @@ const Markets = () => {
   const loadMarkets = async () => {
     try {
       setLoading(true);
-      const data = await marketService.getMarkets(50);
+      // Fetch 150 markets to ensure we have plenty after filtering
+      const data = await marketService.getMarkets(150);
       setMarkets(data);
     } catch (error) {
       console.error('Error loading markets:', error);
@@ -62,161 +63,139 @@ const Markets = () => {
               </div>
             </div>
           </div>
-
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+          
+          {/* Search */}
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <Input
+              type="text"
               placeholder="Search markets by keyword..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 pr-4 h-12 bg-white border-gray-300 text-gray-900 rounded-xl shadow-sm"
+              className="pl-10 bg-white border-gray-200 text-gray-900 shadow-sm"
             />
           </div>
+
+          {/* Category Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
+                  selectedCategory === cat
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all ${
-                selectedCategory === cat
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Loading State */}
-        {loading && (
-          <div className="flex justify-center items-center py-20">
+        {/* Markets Grid */}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
             <Loader2 className="animate-spin text-blue-600" size={48} />
           </div>
-        )}
-
-        {/* Markets List - Horizontal Rectangle Cards */}
-        {!loading && filteredMarkets.length > 0 && (
-          <div className="space-y-3">
-            {filteredMarkets.map((market) => (
-              <div
-                key={market.id}
-                className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-200 hover:border-blue-500"
-                onClick={() => handleMarketClick(market)}
-              >
-                <div className="flex flex-col sm:flex-row">
-                  {/* Left: Small Thumbnail */}
-                  <div className="relative w-full sm:w-32 h-32 flex-shrink-0 overflow-hidden">
-                    <img
-                      src={market.image || `https://source.unsplash.com/300x300/?${encodeURIComponent(market.category)},prediction`}
-                      alt={market.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=300' }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    {market.is_multi_outcome && (
-                      <div className="absolute top-2 right-2">
-                        <span className="px-2 py-0.5 bg-purple-600 text-white rounded text-xs font-bold">
-                          {market.outcomes?.length}
-                        </span>
+        ) : filteredMarkets.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-600 text-lg">No markets found matching your search</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            {filteredMarkets.map((market) => {
+              // Get the top outcome for multi-outcome markets or use yesPrice
+              const topPrice = market.is_multi_outcome 
+                ? (market.outcomes && market.outcomes[0] ? market.outcomes[0].price : 0.5)
+                : (market.yesPrice || 0.5);
+              
+              return (
+                <div
+                  key={market.id}
+                  className="bg-white rounded-xl p-4 border border-gray-200 hover:shadow-lg transition-all cursor-pointer group"
+                  onClick={() => handleMarketClick(market)}
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Market Image */}
+                    {market.image && (
+                      <div className="relative flex-shrink-0">
+                        <img
+                          src={market.image}
+                          alt={market.title}
+                          className="w-20 h-20 rounded-lg object-cover"
+                          onError={(e) => e.target.style.display = 'none'}
+                        />
+                        {market.is_multi_outcome && (
+                          <div className="absolute -top-1 -right-1 bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                            {market.outcomes?.length || 0}
+                          </div>
+                        )}
                       </div>
                     )}
-                  </div>
-
-                  {/* Right: Content */}
-                  <div className="flex-1 p-4 flex flex-col">
-                    {/* Top: Title and Category */}
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1 min-w-0 mr-4">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs font-semibold">
-                            {market.category}
-                          </span>
-                          <div className={`flex items-center gap-1 text-xs font-semibold ${
+                    
+                    {/* Market Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs font-semibold">
+                          {market.category}
+                        </span>
+                        {market.change24h !== 0 && (
+                          <span className={`flex items-center gap-1 text-xs font-medium ${
                             market.change24h >= 0 ? 'text-green-600' : 'text-red-600'
                           }`}>
                             {market.change24h >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
                             {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(1)}%
-                          </div>
-                        </div>
-                        <h3 className="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                          {market.title}
-                        </h3>
+                          </span>
+                        )}
                       </div>
-
-                      {/* Probability Display - Right Side */}
-                      {market.is_multi_outcome ? (
-                        <div className="text-right">
-                          <div className="text-xs text-gray-500 mb-1">Top outcome</div>
-                          <div className="text-2xl font-bold text-blue-600">
-                            {market.outcomes?.[0] ? (market.outcomes[0].price * 100).toFixed(0) : '0'}%
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex gap-3">
-                          <div className="text-center">
-                            <div className="text-xs text-gray-500 mb-1">YES</div>
-                            <div className="text-xl font-bold text-green-600">
-                              {((market.yesPrice || market.price) * 100).toFixed(0)}%
-                            </div>
-                          </div>
-                          <div className="w-px bg-gray-200" />
-                          <div className="text-center">
-                            <div className="text-xs text-gray-500 mb-1">NO</div>
-                            <div className="text-xl font-bold text-red-600">
-                              {((market.noPrice || (1 - market.price)) * 100).toFixed(0)}%
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Bottom: Stats Columns */}
-                    <div className="flex items-center justify-between pt-3 mt-auto border-t border-gray-100">
-                      <div className="flex items-center gap-6 text-xs">
+                      
+                      <h3 className="text-base font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                        {market.title}
+                      </h3>
+                      
+                      <div className="flex items-center gap-4 text-xs text-gray-600">
                         <div>
-                          <div className="text-gray-500 mb-0.5">Volume</div>
-                          <div className="font-bold text-gray-900">{formatCurrency(market.volume)}</div>
+                          <span className="font-medium">Volume</span>
+                          <div className="text-gray-900 font-semibold">${formatCurrency(market.volume)}</div>
                         </div>
-                        <div className="w-px h-8 bg-gray-200" />
                         <div>
-                          <div className="text-gray-500 mb-0.5">Liquidity</div>
-                          <div className="font-bold text-gray-900">{formatCurrency(market.liquidity)}</div>
+                          <span className="font-medium">Liquidity</span>
+                          <div className="text-gray-900 font-semibold">${formatCurrency(market.liquidity)}</div>
                         </div>
-                        <div className="w-px h-8 bg-gray-200" />
                         <div>
-                          <div className="text-gray-500 mb-0.5">Ends</div>
-                          <div className="font-bold text-gray-900">
+                          <span className="font-medium">Ends</span>
+                          <div className="text-gray-900 font-semibold">
                             {new Date(market.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </div>
                         </div>
                       </div>
-                      
-                      <button
+                    </div>
+                    
+                    {/* Price & Trade Button */}
+                    <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                      <div className="text-right">
+                        <div className="text-xs text-gray-500 mb-0.5">Top outcome</div>
+                        <div className="text-3xl font-bold text-blue-600">
+                          {(topPrice * 100).toFixed(0)}%
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleMarketClick(market);
                         }}
-                        className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all flex items-center gap-1.5 shadow-sm hover:shadow-md"
                       >
-                        Trade
-                        <ArrowUpRight size={14} />
-                      </button>
+                        Trade <ArrowUpRight size={14} className="ml-1" />
+                      </Button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!loading && filteredMarkets.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-gray-600 text-lg">No markets found matching your criteria</p>
+              );
+            })}
           </div>
         )}
       </div>
