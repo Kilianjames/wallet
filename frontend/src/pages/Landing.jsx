@@ -169,9 +169,9 @@ const Landing = () => {
                 alt="Polyflux Logo"
                 className="h-8 w-8 rounded"
               />
-              <span className="text-[#7fffd4] font-semibold">Polyflux</span>
+              <span className="text-[#7fffd4] font-semibold">Polyfluid</span>
             </div>
-            <p className="text-gray-400 text-sm">© 2025 Polyflux. All rights reserved.</p>
+            <p className="text-gray-400 text-sm">© 2025 Polyfluid. All rights reserved.</p>
           </div>
         </div>
       </div>
