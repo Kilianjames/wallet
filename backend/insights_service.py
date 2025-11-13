@@ -113,22 +113,57 @@ Be specific and data-driven."""
     
     async def _fetch_market_context(self, market_title: str, category: str) -> str:
         """
-        Fetch real-time context about the market using web search
+        Fetch real-time context about the market using DuckDuckGo search
         """
         try:
-            # Use a simple web search API (you can use any search API here)
-            # For now, we'll use a basic approach - in production, you'd use proper search API
+            # Clean the market title for better search results
+            # Remove special characters and question marks
+            clean_title = market_title.replace("?", "").strip()
             
-            # Extract key terms from market title for search
-            search_query = f"{market_title} latest news {category}"
+            # Build search query based on category
+            if "election" in clean_title.lower() or "presidential" in clean_title.lower():
+                search_query = f"{clean_title} polls latest 2025"
+            elif "price" in clean_title.lower() or "crypto" in category.lower():
+                search_query = f"{clean_title} price prediction latest"
+            elif "sport" in category.lower() or "nfl" in clean_title.lower() or "nba" in clean_title.lower():
+                search_query = f"{clean_title} odds betting latest"
+            else:
+                search_query = f"{clean_title} latest news"
             
-            # Note: In production, integrate with a proper search API
-            # For now, return a placeholder that prompts careful analysis
-            return f"Recent search for '{market_title}': Use current probabilities as primary data source. Market is live and actively trading."
+            # Use httpx to make a simple search request
+            # Note: Using DuckDuckGo Instant Answer API (no key required)
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                response = await client.get(
+                    "https://api.duckduckgo.com/",
+                    params={
+                        "q": search_query,
+                        "format": "json",
+                        "no_html": 1
+                    }
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    abstract = data.get("Abstract", "")
+                    related_topics = data.get("RelatedTopics", [])
+                    
+                    context_parts = []
+                    if abstract:
+                        context_parts.append(f"Latest info: {abstract[:200]}")
+                    
+                    # Add related context if available
+                    for topic in related_topics[:2]:
+                        if isinstance(topic, dict) and "Text" in topic:
+                            context_parts.append(topic["Text"][:150])
+                    
+                    if context_parts:
+                        return " | ".join(context_parts)
+            
+            return "Limited external data. Focus on current market probabilities and known factors."
             
         except Exception as e:
-            logger.error(f"Error fetching market context: {e}")
-            return "Limited external data available. Analyze based on current market probabilities."
+            logger.warning(f"Could not fetch external context: {e}")
+            return "Analyze based on current market probabilities and general knowledge."
     
     def _extract_sentiment(self, text: str) -> str:
         """Extract sentiment from analysis text"""
