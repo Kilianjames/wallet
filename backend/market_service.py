@@ -10,10 +10,15 @@ class MarketService:
         self.client = PolymarketClient()
     
     def get_trending_markets(self, limit: int = 200) -> List[Dict]:
-        """Get trending markets from Polymarket using Events API"""
+        """Get trending markets from Polymarket using Events API - ONLY ACTIVE/ONGOING"""
         try:
+            from datetime import datetime, timezone
+            
             # Use events API for active markets - fetch more to get variety
             events_data = self.client.get_events(limit=limit)
+            
+            # Get current timestamp for filtering
+            current_time = datetime.now(timezone.utc)
             
             # Transform event data to market format
             transformed_markets = []
