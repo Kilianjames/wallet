@@ -98,87 +98,96 @@ const Markets = () => {
           </div>
         )}
 
-        {/* Markets Grid - Medium Cards with Images */}
+        {/* Markets Grid - Creative Card Design */}
         {!loading && filteredMarkets.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredMarkets.map((market) => (
               <div
                 key={market.id}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-blue-500 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+                className="group relative bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100"
                 onClick={() => handleMarketClick(market)}
               >
-                {/* Image */}
-                <div className="relative h-40 overflow-hidden bg-gradient-to-br from-blue-100 to-blue-50">
+                {/* Image with Overlay */}
+                <div className="relative h-48 overflow-hidden">
                   <img
-                    src={market.image || `https://source.unsplash.com/400x300/?${encodeURIComponent(market.category)}`}
+                    src={market.image || `https://source.unsplash.com/600x400/?${encodeURIComponent(market.category)},prediction`}
                     alt={market.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400' }}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                   
-                  {/* Category Badge */}
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2 py-1 bg-white/90 backdrop-blur-sm text-gray-900 rounded-md text-xs font-semibold">
+                  {/* Category & Status Badges */}
+                  <div className="absolute top-3 left-3 right-3 flex items-start justify-between">
+                    <span className="px-3 py-1.5 bg-white/95 backdrop-blur-md text-gray-900 rounded-lg text-xs font-bold shadow-lg">
                       {market.category}
                     </span>
-                  </div>
-                  
-                  {/* Multi Badge */}
-                  {market.is_multi_outcome && (
-                    <div className="absolute top-3 right-3">
-                      <span className="px-2 py-1 bg-purple-600 text-white rounded-md text-xs font-semibold">
-                        {market.outcomes?.length || 0} Options
+                    {market.is_multi_outcome && (
+                      <span className="px-3 py-1.5 bg-purple-600/95 backdrop-blur-md text-white rounded-lg text-xs font-bold shadow-lg">
+                        {market.outcomes?.length} Options
                       </span>
-                    </div>
-                  )}
+                    )}
+                  </div>
+
+                  {/* Title Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="text-lg font-bold text-white leading-tight line-clamp-2 drop-shadow-lg">
+                      {market.title}
+                    </h3>
+                  </div>
                 </div>
 
-                {/* Content */}
+                {/* Content Area */}
                 <div className="p-4">
-                  {/* Title */}
-                  <h3 className="text-base font-semibold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    {market.title}
-                  </h3>
-
-                  {/* Probability Section */}
+                  {/* Probability Display */}
                   {market.is_multi_outcome ? (
-                    <div className="mb-3">
-                      <div className="text-xs text-gray-500 mb-2">Top Outcomes</div>
-                      <div className="space-y-1">
-                        {market.outcomes?.slice(0, 2).map((outcome, idx) => (
-                          <div key={idx} className="flex justify-between text-sm">
-                            <span className="text-gray-700 truncate">{outcome.title}</span>
-                            <span className="text-blue-600 font-semibold ml-2">{(outcome.price * 100).toFixed(0)}%</span>
+                    <div className="mb-4">
+                      <div className="text-xs text-gray-500 mb-2 font-medium">Top Outcomes:</div>
+                      <div className="space-y-2">
+                        {market.outcomes?.slice(0, 3).map((outcome, idx) => (
+                          <div key={idx} className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700 truncate flex-1">{outcome.title}</span>
+                            <div className="flex items-center gap-2 ml-2">
+                              <div className="h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                                  style={{ width: `${(outcome.price * 100)}%` }}
+                                />
+                              </div>
+                              <span className="text-sm font-bold text-blue-600 min-w-[3rem] text-right">
+                                {(outcome.price * 100).toFixed(0)}%
+                              </span>
+                            </div>
                           </div>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <div className="mb-3">
-                      <div className="text-xs text-gray-500 mb-2">Probability</div>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1">
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="text-green-600 font-semibold">YES</span>
-                            <span className="text-green-600 font-bold">{((market.yesPrice || market.price) * 100).toFixed(0)}%</span>
+                    <div className="mb-4">
+                      <div className="flex items-stretch gap-2 h-20">
+                        {/* YES Card */}
+                        <div className="flex-1 bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-3 border-2 border-green-200">
+                          <div className="text-xs text-green-700 font-semibold mb-1">YES</div>
+                          <div className="text-2xl font-bold text-green-700 mb-1">
+                            {((market.yesPrice || market.price) * 100).toFixed(0)}%
                           </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="h-1.5 bg-green-200 rounded-full overflow-hidden">
                             <div 
-                              className="h-full bg-gradient-to-r from-green-500 to-green-600 rounded-full transition-all"
+                              className="h-full bg-green-600 rounded-full transition-all"
                               style={{ width: `${((market.yesPrice || market.price) * 100)}%` }}
                             />
                           </div>
                         </div>
-                        <div className="text-gray-400">|</div>
-                        <div className="flex-1">
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="text-red-600 font-semibold">NO</span>
-                            <span className="text-red-600 font-bold">{((market.noPrice || (1 - market.price)) * 100).toFixed(0)}%</span>
+                        
+                        {/* NO Card */}
+                        <div className="flex-1 bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-3 border-2 border-red-200">
+                          <div className="text-xs text-red-700 font-semibold mb-1">NO</div>
+                          <div className="text-2xl font-bold text-red-700 mb-1">
+                            {((market.noPrice || (1 - market.price)) * 100).toFixed(0)}%
                           </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div className="h-1.5 bg-red-200 rounded-full overflow-hidden">
                             <div 
-                              className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all"
+                              className="h-full bg-red-600 rounded-full transition-all"
                               style={{ width: `${((market.noPrice || (1 - market.price)) * 100)}%` }}
                             />
                           </div>
@@ -187,38 +196,31 @@ const Markets = () => {
                     </div>
                   )}
 
-                  {/* Stats Footer */}
+                  {/* Footer Stats & Action */}
                   <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <div className="flex items-center gap-3 text-xs text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <span>Vol</span>
-                        <span className="font-medium text-gray-700">${(market.volume / 1000).toFixed(0)}K</span>
+                    <div className="flex items-center gap-3 text-xs">
+                      <div className="flex items-center gap-1 text-gray-600">
+                        <Activity size={12} />
+                        <span className="font-semibold text-gray-900">${(market.volume / 1000).toFixed(0)}K</span>
                       </div>
-                      <div className="w-px h-3 bg-gray-300" />
-                      <div className="flex items-center gap-1">
-                        <span>Liq</span>
-                        <span className="font-medium text-gray-700">${(market.liquidity / 1000).toFixed(0)}K</span>
+                      <div className={`flex items-center gap-1 font-bold ${
+                        market.change24h >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {market.change24h >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                        {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(1)}%
                       </div>
                     </div>
-                    <div className={`flex items-center gap-1 text-xs font-semibold ${
-                      market.change24h >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {market.change24h >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                      {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(1)}%
-                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMarketClick(market);
+                      }}
+                      className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 shadow-sm hover:shadow-md"
+                    >
+                      Trade
+                      <ArrowUpRight size={12} />
+                    </button>
                   </div>
-
-                  {/* Trade Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleMarketClick(market);
-                    }}
-                    className="w-full mt-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                  >
-                    Trade Now
-                    <ArrowUpRight size={14} />
-                  </button>
                 </div>
               </div>
             ))}
