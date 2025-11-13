@@ -392,44 +392,74 @@ const Trading = () => {
                 ))}
               </div>
             </div>
-            <div className="h-64 border border-gray-200 rounded-lg bg-gray-50 p-4">
+            <div className="h-64 border border-gray-200 rounded-lg bg-white p-4">
               {chartData.length > 0 ? (
-                <div className="h-full flex flex-col justify-between">
-                  {/* Simple line chart visualization */}
-                  <div className="flex-1 flex items-end gap-1">
-                    {chartData.map((point, idx) => {
-                      const maxPrice = Math.max(...chartData.map(p => p.price));
-                      const minPrice = Math.min(...chartData.map(p => p.price));
-                      const range = maxPrice - minPrice || 1;
-                      const height = ((point.price - minPrice) / range) * 100;
-                      
-                      return (
-                        <div 
-                          key={idx} 
-                          className="flex-1 bg-blue-600 rounded-t hover:bg-blue-700 transition-all relative group"
-                          style={{ height: `${height || 5}%`, minHeight: '2px' }}
-                          title={`$${point.price.toFixed(4)} at ${new Date(point.date).toLocaleTimeString()}`}
-                        >
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                            ${point.price.toFixed(4)}
+                <div className="h-full flex flex-col">
+                  {/* Probability Chart - Shows % over time */}
+                  <div className="flex-1 relative">
+                    {/* Y-axis labels */}
+                    <div className="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-500 pr-2">
+                      <span>100%</span>
+                      <span>75%</span>
+                      <span>50%</span>
+                      <span>25%</span>
+                      <span>0%</span>
+                    </div>
+                    
+                    {/* Chart area */}
+                    <div className="ml-10 h-full flex items-end gap-0.5 border-l border-b border-gray-300">
+                      {chartData.map((point, idx) => {
+                        const probability = point.price * 100;
+                        const height = probability;
+                        const isRecent = idx > chartData.length - 10;
+                        
+                        return (
+                          <div 
+                            key={idx} 
+                            className="flex-1 relative group cursor-pointer"
+                          >
+                            <div 
+                              className={`w-full rounded-t transition-all ${
+                                isRecent ? 'bg-blue-600' : 'bg-blue-400'
+                              } hover:bg-blue-700`}
+                              style={{ height: `${height}%`, minHeight: '2px' }}
+                            />
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
+                              <div>{probability.toFixed(1)}%</div>
+                              <div className="text-[10px] text-gray-400">
+                                {new Date(point.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="flex justify-between text-xs text-gray-600 mt-2 pt-2 border-t">
-                    <span>${Math.min(...chartData.map(p => p.price)).toFixed(4)}</span>
-                    <span className="text-blue-600 font-semibold">
-                      ${chartData[chartData.length - 1]?.price.toFixed(4) || '0'}
+                  
+                  {/* X-axis with time range */}
+                  <div className="flex justify-between text-xs text-gray-600 mt-2 pt-2 ml-10">
+                    <span>
+                      {new Date(chartData[0]?.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
-                    <span>${Math.max(...chartData.map(p => p.price)).toFixed(4)}</span>
+                    <span className="font-semibold">
+                      {chartData[chartData.length - 1] && (
+                        <>
+                          {(chartData[chartData.length - 1].price * 100).toFixed(1)}% 
+                          <span className="text-blue-600 ml-1">Current</span>
+                        </>
+                      )}
+                    </span>
+                    <span>
+                      {new Date(chartData[chartData.length - 1]?.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </span>
                   </div>
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-gray-500">
                   <div className="text-center">
                     <Loader2 className="mx-auto mb-2 text-blue-600 animate-spin" size={32} />
-                    <p>Loading live chart data...</p>
+                    <p className="text-sm">Loading probability chart...</p>
+                    <p className="text-xs text-gray-400 mt-1">Fetching historical data from Polymarket</p>
                   </div>
                 </div>
               )}
