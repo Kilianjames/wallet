@@ -173,6 +173,30 @@ async def get_market_chart(market_id: str, token_id: str = Query(...), interval:
         logging.error(f"Error fetching chart data: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch chart data")
 
+@api_router.get("/markets/{market_id}/insights")
+async def get_market_insights(market_id: str, market_title: str = Query(...), category: str = Query("Politics")):
+    """Get AI-powered insights and tips for a market"""
+    try:
+        logging.info(f"Generating insights for market: {market_title}")
+        
+        # Get market data to include outcomes
+        markets = market_service.get_trending_markets(200)
+        market_data = next((m for m in markets if m['id'] == market_id), None)
+        
+        outcomes = market_data.get('outcomes', []) if market_data and market_data.get('is_multi_outcome') else None
+        
+        # Generate insights using AI
+        insights = await insights_service.get_market_insights(
+            market_title=market_title,
+            market_category=category,
+            outcomes=outcomes
+        )
+        
+        return insights
+    except Exception as e:
+        logging.error(f"Error generating insights: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to generate insights")
+
 @api_router.post("/positions")
 async def create_position(position: Position):
     """Create a new position (mock for now)"""
