@@ -112,6 +112,30 @@ const Trading = () => {
     }
   }, [selectedMarket]);
 
+  // Check wallet balance when wallet connects
+  useEffect(() => {
+    if (isConnected && publicKey) {
+      checkWalletBalance();
+    }
+  }, [isConnected, publicKey]);
+
+  const checkWalletBalance = async () => {
+    if (!publicKey) return;
+    
+    try {
+      setCheckingBalance(true);
+      const connection = new Connection('https://api.mainnet-beta.solana.com');
+      const balance = await connection.getBalance(publicKey);
+      const balanceInSol = balance / 1_000_000_000;
+      setWalletBalance(balanceInSol);
+      console.log('Wallet balance:', balanceInSol, 'SOL');
+    } catch (error) {
+      console.error('Error checking balance:', error);
+    } finally {
+      setCheckingBalance(false);
+    }
+  };
+
   const fetchInsights = async () => {
     if (!selectedMarket) return;
     
