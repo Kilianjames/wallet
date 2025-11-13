@@ -28,7 +28,7 @@ class PolymarketClient:
             logger.error(f"Error fetching markets: {e}")
             return []
     
-    def get_events(self, limit: int = 50, offset: int = 0) -> List[Dict]:
+    def get_events(self, limit: int = 100, offset: int = 0, tag: Optional[str] = None) -> List[Dict]:
         """Fetch events from Polymarket - better for active markets"""
         try:
             params = {
@@ -40,11 +40,33 @@ class PolymarketClient:
                 "ascending": "false"
             }
             
+            # Add tag filter if provided (for categories)
+            if tag:
+                params["tag"] = tag
+            
             response = requests.get(f"{self.gamma_base_url}/events", params=params, timeout=10)
             response.raise_for_status()
             return response.json()
         except Exception as e:
             logger.error(f"Error fetching events: {e}")
+            return []
+    
+    def get_trending_events(self, limit: int = 50) -> List[Dict]:
+        """Fetch trending events from Polymarket"""
+        try:
+            params = {
+                "limit": limit,
+                "closed": "false",
+                "archived": "false",
+                "order": "liquidity",
+                "ascending": "false"
+            }
+            
+            response = requests.get(f"{self.gamma_base_url}/events", params=params, timeout=10)
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            logger.error(f"Error fetching trending events: {e}")
             return []
     
     def get_market_by_slug(self, slug: str) -> Optional[Dict]:
