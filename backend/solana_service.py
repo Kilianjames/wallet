@@ -5,11 +5,11 @@ SECURITY: Private key is stored in .env and never exposed
 import os
 import logging
 from solana.rpc.api import Client
-from solana.transaction import Transaction
 from solders.keypair import Keypair
-from solders.pubkey import Pubkey
+from solders.pubkey import Pubkey as PublicKey
 from solders.system_program import transfer, TransferParams
-from solders.message import Message
+from solders.transaction import VersionedTransaction
+from solders.message import MessageV0
 import base58
 
 logger = logging.getLogger(__name__)
