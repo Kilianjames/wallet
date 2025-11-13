@@ -92,6 +92,9 @@ Be specific and data-driven."""
             # Parse response into structured format
             analysis_text = response if isinstance(response, str) else str(response)
             
+            # Clean up formatting - remove asterisks and extra formatting
+            analysis_text = analysis_text.replace("**", "").replace("*", "")
+            
             # Extract sentiment from analysis
             sentiment = self._extract_sentiment(analysis_text)
             
