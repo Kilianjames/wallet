@@ -89,13 +89,36 @@ async def root():
 
 @api_router.get("/markets")
 async def get_markets(limit: int = Query(150, ge=1, le=300)):
-    """Get trending markets from Polymarket"""
+    """Get trending markets from Polymarket with caching for high traffic"""
     try:
-        # Fetch with higher limit - filtering will reduce the count
-        markets = market_service.get_trending_markets(limit=limit)
-        return {"markets": markets, "count": len(markets)}
+        # Check cache first
+        current_time = datetime.now()
+        
+        if markets_cache["data"] is not None and markets_cache["timestamp"] is not None:
+            cache_age = (current_time - markets_cache["timestamp"]).total_seconds()
+            
+            if cache_age < markets_cache["cache_duration"]:
+                logging.info(f"Returning cached markets (age: {cache_age:.1f}s)")
+                cached_markets = markets_cache["data"][:limit]  # Apply limit
+                return {"markets": cached_markets, "count": len(cached_markets), "cached": True}
+        
+        # Cache miss or expired - fetch fresh data
+        logging.info("Cache miss or expired - fetching fresh markets from Polymarket")
+        markets = market_service.get_trending_markets(limit=300)  # Fetch max, cache it
+        
+        # Update cache
+        markets_cache["data"] = markets
+        markets_cache["timestamp"] = current_time
+        
+        # Return requested limit
+        return {"markets": markets[:limit], "count": len(markets[:limit]), "cached": False}
     except Exception as e:
         logging.error(f"Error fetching markets: {e}")
+        # If error but cache exists, return stale cache
+        if markets_cache["data"] is not None:
+            logging.warning("Returning stale cache due to error")
+            stale_markets = markets_cache["data"][:limit]
+            return {"markets": stale_markets, "count": len(stale_markets), "cached": True, "stale": True}
         raise HTTPException(status_code=500, detail="Failed to fetch markets")
 
 @api_router.get("/markets/{market_id}")
