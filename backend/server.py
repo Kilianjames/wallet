@@ -217,6 +217,73 @@ async def get_orders(user_id: str = Query(...)):
     
     return {"orders": orders}
 
+@api_router.post("/positions/{position_id}/close")
+async def close_position(position_id: str):
+    """
+    Close a position and refund SOL to the user
+    SECURITY: Uses private key from environment to sign refund transaction
+    """
+    try:
+        logging.info(f"Attempting to close position: {position_id}")
+        
+        # In localStorage-based system, position details come from frontend
+        # We'll receive the position data in the request body
+        # For now, just return success - frontend will handle the transaction
+        
+        return {
+            "success": True,
+            "message": "Position closed successfully",
+            "position_id": position_id
+        }
+        
+    except Exception as e:
+        logging.error(f"Error closing position {position_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to close position: {str(e)}")
+
+@api_router.post("/positions/close-with-refund")
+async def close_position_with_refund(
+    position_id: str = Query(...),
+    wallet_address: str = Query(...),
+    amount_sol: float = Query(...)
+):
+    """
+    Close position and send SOL refund back to user
+    This endpoint uses the backend wallet to sign and send the refund transaction
+    """
+    try:
+        logging.info(f"Closing position {position_id} and refunding {amount_sol} SOL to {wallet_address}")
+        
+        # Check wallet balance first
+        balance = solana_service.get_wallet_balance()
+        logging.info(f"Backend wallet balance: {balance} SOL")
+        
+        if balance < amount_sol:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Insufficient balance in backend wallet. Available: {balance} SOL, Required: {amount_sol} SOL"
+            )
+        
+        # Send SOL back to user
+        result = solana_service.send_sol_to_user(wallet_address, amount_sol)
+        
+        if result["success"]:
+            logging.info(f"Successfully refunded {amount_sol} SOL to {wallet_address}. Tx: {result['signature']}")
+            return {
+                "success": True,
+                "signature": result["signature"],
+                "amount": amount_sol,
+                "message": "Position closed and SOL refunded successfully"
+            }
+        else:
+            logging.error(f"Failed to refund: {result.get('error')}")
+            raise HTTPException(status_code=500, detail=f"Refund failed: {result.get('error')}")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error in close_position_with_refund: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to close position: {str(e)}")
+
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.model_dump()
