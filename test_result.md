@@ -122,15 +122,18 @@ backend:
 
   - task: "Live Price Chart Data API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/market_service.py, /app/backend/polymarket_client.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Backend endpoint exists (/app/markets/{market_id}/chart) and calls Polymarket prices-history API. Need to verify data format and accuracy."
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: Chart data API working with live historical data. Tested with 1d interval - returned 25 valid data points with proper timestamps, prices (0-1 range), and date fields. Different intervals (1h, 4h, 1d) work correctly. Backend logs confirm CLOB API calls for price history."
 
   - task: "Live Market Data (Volume, Liquidity, Prices)"
     implemented: true
