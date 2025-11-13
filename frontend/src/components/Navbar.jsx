@@ -68,14 +68,19 @@ const Navbar = () => {
             })}
           </div>
 
-          {/* Connect Wallet Button */}
+          {/* Connect Wallet Button - Enhanced Design */}
           <div className="hidden md:block">
             <Button 
               onClick={handleWalletClick}
               disabled={!isReady}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 transition-all disabled:opacity-50 shadow-sm"
+              className={`font-semibold px-5 py-2 transition-all disabled:opacity-50 shadow-md ${
+                isConnected 
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white'
+                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
+              }`}
             >
-              <Wallet size={18} className="mr-2" />
+              {isConnected && <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />}
+              <Zap size={16} className="mr-2" />
               {!isReady ? 'Loading...' : isConnected ? formatAddress(address) : 'Connect Wallet'}
             </Button>
           </div>
