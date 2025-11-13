@@ -422,15 +422,15 @@ const Portfolio = () => {
                       </div>
                       
                       <div className="mt-4 pt-4 border-t border-gray-100">
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                           <div className="text-xs text-gray-500">
-                            Opened: {new Date(position.timestamp).toLocaleString()}
+                            Opened: {new Date(position.timestamp).toLocaleDateString()}
                           </div>
                           <a 
                             href={`https://solscan.io/tx/${position.signature}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:underline"
+                            className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1"
                           >
                             View Transaction →
                           </a>
@@ -438,7 +438,8 @@ const Portfolio = () => {
                         <Button
                           onClick={() => handleClosePosition(position)}
                           disabled={closingPositionId === position.id}
-                          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold disabled:opacity-50"
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold disabled:opacity-50 py-3"
+                          size="lg"
                         >
                           {closingPositionId === position.id ? (
                             <>
