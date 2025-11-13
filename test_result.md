@@ -258,7 +258,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Backend Market Count Improvements"
     - "Portfolio Positions Storage"
   stuck_tasks: []
   test_all: false
