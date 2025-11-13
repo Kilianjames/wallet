@@ -239,6 +239,32 @@ class MarketService:
         """Extract category from market data"""
         category_raw = market.get('category', '')
         
+    
+    def get_markets_by_category(self, category: str, limit: int = 100) -> List[Dict]:
+        """Get markets filtered by category"""
+        try:
+            # Fetch all markets first
+            all_markets = self.get_trending_markets(limit=200)
+            
+            # Filter by category
+            if category.lower() == 'all':
+                return all_markets[:limit]
+            
+            filtered = [m for m in all_markets if m.get('category', '').lower() == category.lower()]
+            return filtered[:limit]
+        except Exception as e:
+            logger.error(f"Error getting markets by category: {e}")
+            return []
+    
+    def get_trending_only(self, limit: int = 50) -> List[Dict]:
+        """Get only the most trending markets by liquidity and volume"""
+        try:
+            events_data = self.client.get_trending_events(limit=limit)
+            return self.get_trending_markets(limit=limit)
+        except Exception as e:
+            logger.error(f"Error getting trending markets: {e}")
+            return []
+
         category_map = {
             'politics': 'Politics',
             'crypto': 'Crypto',
