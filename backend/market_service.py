@@ -169,27 +169,45 @@ class MarketService:
     def get_orderbook(self, token_id: str) -> Optional[Dict]:
         """Get orderbook for a market"""
         try:
+            logger.info(f"Calling Polymarket CLOB API for orderbook: token_id={token_id}")
             orderbook = self.client.get_orderbook(token_id)
             if not orderbook:
+                logger.warning(f"Polymarket returned no orderbook data for token_id={token_id}")
                 return None
+            
+            logger.info(f"Raw orderbook received: {len(orderbook.get('bids', []))} bids, {len(orderbook.get('asks', []))} asks")
             
             # Transform orderbook to our format
             bids = []
             asks = []
             
             for bid in orderbook.get('bids', [])[:10]:
-                bids.append({
-                    'price': float(bid.get('price', 0)),
-                    'size': float(bid.get('size', 0)),
-                    'total': 0
-                })
+                try:
+                    price = float(bid.get('price', 0))
+                    size = float(bid.get('size', 0))
+                    if price > 0 and size > 0:  # Only include valid orders
+                        bids.append({
+                            'price': price,
+                            'size': size,
+                            'total': 0
+                        })
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Error parsing bid: {e}")
+                    continue
             
             for ask in orderbook.get('asks', [])[:10]:
-                asks.append({
-                    'price': float(ask.get('price', 0)),
-                    'size': float(ask.get('size', 0)),
-                    'total': 0
-                })
+                try:
+                    price = float(ask.get('price', 0))
+                    size = float(ask.get('size', 0))
+                    if price > 0 and size > 0:  # Only include valid orders
+                        asks.append({
+                            'price': price,
+                            'size': size,
+                            'total': 0
+                        })
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Error parsing ask: {e}")
+                    continue
             
             # Calculate cumulative totals
             cumulative = 0
@@ -202,12 +220,15 @@ class MarketService:
                 cumulative += ask['size']
                 ask['total'] = cumulative
             
+            logger.info(f"Transformed orderbook: {len(bids)} bids, {len(asks)} asks")
+            
             return {
                 'bids': bids,
-                'asks': asks
+                'asks': asks,
+                'timestamp': orderbook.get('timestamp', None)  # Include API timestamp if available
             }
         except Exception as e:
-            logger.error(f"Error getting orderbook: {e}")
+            logger.error(f"Error getting orderbook for token_id={token_id}: {e}", exc_info=True)
             return None
     
     def _get_category_from_event(self, event: Dict) -> str:
