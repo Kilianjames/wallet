@@ -366,6 +366,7 @@ class PolyfluidBackendTester:
                 
                 # Look for specific filtering log messages
                 expired_filter_logs = error_log.count("Skipping EXPIRED market")
+                ending_soon_filter_logs = error_log.count("Skipping ENDING-SOON market")
                 closed_filter_logs = error_log.count("Skipping CLOSED/ARCHIVED market")
                 orders_filter_logs = error_log.count("Skipping market NOT accepting orders")
                 
