@@ -376,8 +376,8 @@ const Portfolio = () => {
                   const pnlPercent = ((priceDiff / position.entryPrice) * 100 * position.leverage) * (position.side === 'LONG' ? 1 : -1);
 
                   return (
-                    <div key={position.id} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all">
-                      <div className="flex items-start justify-between mb-4">
+                    <div key={position.id} className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <span className={`px-2 py-1 rounded text-xs font-bold ${
