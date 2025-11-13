@@ -99,7 +99,7 @@ const Landing = () => {
       {/* Features Section */}
       <div className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-[#7fffd4] mb-4">Why Polyflux?</h2>
+          <h2 className="text-5xl font-bold text-[#7fffd4] mb-4">Why Polyfluid?</h2>
           <p className="text-xl text-gray-400">The most advanced perp DEX for prediction markets</p>
         </div>
 
