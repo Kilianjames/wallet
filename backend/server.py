@@ -9,11 +9,10 @@ from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from market_service import MarketService
 from solana_service import SolanaService
 from insights_service import MarketInsightsService
-from datetime import datetime, timedelta
 
 
 ROOT_DIR = Path(__file__).parent
