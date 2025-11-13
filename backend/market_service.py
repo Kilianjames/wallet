@@ -121,7 +121,7 @@ class MarketService:
                         transformed_markets.append(transformed_market)
                         
                 except Exception as e:
-                    logger.error(f"Error transforming event: {e}")
+                    logger.error(f"Error transforming event {event.get('id', 'unknown')}: {e}", exc_info=True)
                     continue
             
             return transformed_markets[:limit]
