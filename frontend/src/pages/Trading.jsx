@@ -121,17 +121,35 @@ const Trading = () => {
   }, [isConnected, publicKey]);
 
   const checkWalletBalance = async () => {
-    if (!publicKey) return;
+    if (!publicKey) {
+      console.log('No public key available');
+      return;
+    }
     
     try {
       setCheckingBalance(true);
       const connection = new Connection('https://api.mainnet-beta.solana.com');
-      const balance = await connection.getBalance(publicKey);
+      
+      // Convert publicKey to PublicKey instance if it's a string
+      let pubKeyInstance;
+      if (typeof publicKey === 'string') {
+        pubKeyInstance = new PublicKey(publicKey);
+      } else if (publicKey.toBase58) {
+        // Already a PublicKey instance
+        pubKeyInstance = publicKey;
+      } else {
+        // It's an object, get the actual public key
+        pubKeyInstance = new PublicKey(publicKey.toString());
+      }
+      
+      console.log('Checking balance for:', pubKeyInstance.toString());
+      const balance = await connection.getBalance(pubKeyInstance);
       const balanceInSol = balance / 1_000_000_000;
       setWalletBalance(balanceInSol);
-      console.log('Wallet balance:', balanceInSol, 'SOL');
+      console.log('✅ Wallet balance loaded:', balanceInSol, 'SOL');
     } catch (error) {
-      console.error('Error checking balance:', error);
+      console.error('❌ Error checking balance:', error);
+      setWalletBalance(0);
     } finally {
       setCheckingBalance(false);
     }
