@@ -52,7 +52,7 @@ const Landing = () => {
               />
             </div>
             <h1 className="text-6xl md:text-7xl font-bold mb-6 text-gray-900">
-              Polyflux
+              Polyfluid
             </h1>
             <p className="text-xl text-gray-700 mb-4 max-w-2xl mx-auto">
               Trade perpetual positions on Polymarket prediction markets
