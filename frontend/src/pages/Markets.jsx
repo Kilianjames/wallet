@@ -24,12 +24,18 @@ const Markets = () => {
     try {
       setLoading(true);
       
-      // Quick initial load with fewer markets
-      const initialData = await marketService.getMarkets(50);
+      // ULTRA FAST: Load just 20 markets immediately
+      const initialData = await marketService.getMarkets(20);
       setMarkets(initialData);
       setLoading(false);
       
-      // Load remaining markets in background
+      // Load more in waves
+      setTimeout(async () => {
+        const moreData = await marketService.getMarkets(80);
+        setMarkets(moreData);
+      }, 50);
+      
+      // Load all remaining in background
       setTimeout(async () => {
         try {
           const fullData = await marketService.getMarkets(150);
@@ -37,7 +43,7 @@ const Markets = () => {
         } catch (error) {
           console.error('Error loading additional markets:', error);
         }
-      }, 100);
+      }, 200);
       
     } catch (error) {
       console.error('Error loading markets:', error);
