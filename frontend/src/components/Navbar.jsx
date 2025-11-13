@@ -35,7 +35,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <img
-              src="https://customer-assets.emergentagent.com/job_d5c149cb-8bda-4095-b402-80a5f60716e4/artifacts/3mwtxpba_Untitled.jpeg"
+              src="/logo.png"
               alt="Polyfluid Logo"
               className="h-10 w-10 rounded-lg group-hover:scale-105 transition-transform"
             />
