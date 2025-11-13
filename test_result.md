@@ -176,6 +176,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ VERIFIED: Market count improvement successful! /api/markets?limit=150 returns 150 active markets (6x improvement from previous 25). All markets have future end dates. Backend logs show proper filtering of 30+ expired markets (Warriors vs Spurs, Hawks vs Kings, etc.) and markets not accepting orders. Orderbook (10 bids/10 asks) and chart endpoints (25+ data points) working correctly with live Polymarket data."
+      - working: true
+        agent: "testing"
+        comment: "✅ STRICTER DATE FILTERING VERIFIED: All 150 returned markets end Nov 14, 2025 or later. NO markets ending Nov 7, 13, or earlier found. Backend logs show 42 expired markets and 53 non-accepting-orders markets filtered out. Examples filtered: 'Bitcoin Up or Down on November 13?', 'XRP above ___ on November 13?', 'Stars vs. Canadiens'. Filtering working perfectly - user complaint about old markets is now resolved."
 
 frontend:
   - task: "Orderbook Display with Live Data"
