@@ -103,17 +103,27 @@ class PolymarketClient:
     def get_price_history(self, token_id: str, interval: str = "1h") -> List[Dict]:
         """Fetch price history for a token"""
         try:
+            url = f"{self.clob_base_url}/prices-history"
             params = {
                 "market": token_id,
                 "interval": interval,
                 "fidelity": "60"  # 60 data points
             }
-            response = requests.get(f"{self.clob_base_url}/prices-history", params=params, timeout=10)
+            logger.info(f"GET {url} with params: {params}")
+            
+            response = requests.get(url, params=params, timeout=10)
+            logger.info(f"Price history API response status: {response.status_code}")
             response.raise_for_status()
+            
             data = response.json()
-            return data.get('history', [])
+            history = data.get('history', [])
+            logger.info(f"Price history API response: {len(history)} data points")
+            return history
+        except requests.exceptions.RequestException as e:
+            logger.error(f"HTTP error fetching price history for token_id={token_id}: {e}")
+            return []
         except Exception as e:
-            logger.error(f"Error fetching price history: {e}")
+            logger.error(f"Error fetching price history for token_id={token_id}: {e}", exc_info=True)
             return []
     
     def get_prices(self, token_ids: List[str]) -> Dict:
