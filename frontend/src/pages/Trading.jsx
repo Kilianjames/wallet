@@ -872,9 +872,13 @@ const Trading = () => {
               />
               <div className="text-xs text-gray-500 mt-1">
                 {isConnected ? (
-                  walletBalance > 0 ? 
-                    `Available: ${(walletBalance - 0.001).toFixed(4)} SOL (after fees)` : 
-                    '⚠️ No SOL available. Please add funds to your wallet.'
+                  checkingBalance ? (
+                    'Checking balance...'
+                  ) : walletBalance > 0 ? (
+                    `Available: ${(walletBalance - 0.001).toFixed(4)} SOL (after fees)`
+                  ) : (
+                    <span className="text-orange-600">⚠️ Low balance. Please add SOL to place bets.</span>
+                  )
                 ) : 'Connect wallet to place bets'}
               </div>
             </div>
