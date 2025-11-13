@@ -314,10 +314,27 @@ const Trading = () => {
       }
     } catch (error) {
       console.error('Transaction error:', error);
+      
+      let errorTitle = 'Transaction Failed';
+      let errorDescription = error?.message || 'Failed to process transaction. Please try again.';
+      
+      // Provide helpful error messages
+      if (error?.message?.includes('User rejected')) {
+        errorTitle = 'Transaction Cancelled';
+        errorDescription = 'You cancelled the transaction in your wallet.';
+      } else if (error?.message?.includes('Insufficient')) {
+        errorTitle = 'Insufficient Balance';
+        errorDescription = 'You don\'t have enough SOL. Please add funds to your wallet.';
+      } else if (error?.message?.includes('timeout') || error?.message?.includes('confirm')) {
+        errorTitle = 'Confirmation Timeout';
+        errorDescription = 'Transaction sent but confirmation timed out. Check Solscan to verify if it succeeded. Your position will NOT be saved until confirmed.';
+      }
+      
       toast({
-        title: 'Transaction Failed',
-        description: error?.message || 'Failed to process transaction. Please try again.',
-        variant: 'destructive'
+        title: errorTitle,
+        description: errorDescription,
+        variant: 'destructive',
+        duration: 6000
       });
     } finally {
       setIsProcessingTx(false);
