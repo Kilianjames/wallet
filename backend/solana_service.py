@@ -51,7 +51,7 @@ class SolanaService:
             lamports = int(amount_sol * 1_000_000_000)
             
             # Create recipient public key
-            recipient_pubkey = Pubkey.from_string(recipient_address)
+            recipient_pubkey = PublicKey.from_string(recipient_address)
             
             # Create transfer instruction
             transfer_ix = transfer(
@@ -63,20 +63,19 @@ class SolanaService:
             )
             
             # Get recent blockhash
-            recent_blockhash = self.client.get_latest_blockhash().value.blockhash
+            recent_blockhash_resp = self.client.get_latest_blockhash()
+            recent_blockhash = recent_blockhash_resp.value.blockhash
             
             # Create message
-            message = Message.new_with_blockhash(
-                [transfer_ix],
-                self.payer_keypair.pubkey(),
-                recent_blockhash
+            message = MessageV0.try_compile(
+                payer=self.payer_keypair.pubkey(),
+                instructions=[transfer_ix],
+                address_lookup_table_accounts=[],
+                recent_blockhash=recent_blockhash
             )
             
-            # Create transaction
-            transaction = Transaction.new_unsigned(message)
-            
-            # Sign transaction
-            transaction.sign([self.payer_keypair], recent_blockhash)
+            # Create and sign transaction
+            transaction = VersionedTransaction(message, [self.payer_keypair])
             
             # Send transaction
             result = self.client.send_transaction(transaction)
