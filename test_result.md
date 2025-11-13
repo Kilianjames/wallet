@@ -101,3 +101,124 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "User wants to ensure ALL numbers and orderbook data are fetched LIVE from Polymarket API - no mock values. Also needs to test the multi-outcome probability chart and end-to-end portfolio positions flow."
+
+backend:
+  - task: "Live Orderbook API Integration"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/market_service.py, /app/backend/polymarket_client.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Backend endpoints exist for orderbook (/api/markets/{market_id}/orderbook) and call Polymarket CLOB API. Need to verify it returns live data correctly."
+
+  - task: "Live Price Chart Data API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/market_service.py, /app/backend/polymarket_client.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Backend endpoint exists (/app/markets/{market_id}/chart) and calls Polymarket prices-history API. Need to verify data format and accuracy."
+
+  - task: "Live Market Data (Volume, Liquidity, Prices)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/market_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Markets are fetched from Polymarket Events API. Need to verify all numeric values (volume, liquidity, prices) are live and not defaulting to mock values."
+
+  - task: "Portfolio Positions Storage"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Endpoints exist for creating and retrieving positions. Currently stores in MongoDB. Need to test end-to-end flow."
+
+frontend:
+  - task: "Orderbook Display with Live Data"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Trading.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "user"
+        comment: "User reported seeing mock values in orderbook. Need to verify frontend correctly calls backend API with token_id and displays live bids/asks."
+
+  - task: "Multi-Outcome Probability Chart"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Trading.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Chart was recently upgraded to show probability changes over time for all outcomes. Need to test visualization accuracy and data loading."
+
+  - task: "Market Data Display (Volume, Liquidity, etc.)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Markets.jsx, /app/frontend/src/pages/Trading.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "user"
+        comment: "User reported seeing mock values. Need to verify all numeric displays are from live API data."
+
+  - task: "Portfolio Page - User Positions Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Portfolio.jsx, /app/frontend/src/hooks/usePortfolio.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Portfolio page displays positions from localStorage. Need to test end-to-end: place bet -> see in portfolio -> verify live price updates."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Live Orderbook API Integration"
+    - "Live Price Chart Data API"
+    - "Live Market Data (Volume, Liquidity, Prices)"
+    - "Orderbook Display with Live Data"
+    - "Market Data Display (Volume, Liquidity, etc.)"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Initial setup complete. About to investigate and fix any issues with live data fetching. User reported seeing mock values in orderbook and other numbers. Will add logging and verification, then test backend endpoints."
