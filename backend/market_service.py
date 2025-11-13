@@ -33,6 +33,7 @@ class MarketService:
                         continue
                     
                     # CRITICAL: Filter out expired markets - only show ACTIVE/ONGOING
+                    # Filter markets ending TODAY or earlier (more strict filtering)
                     end_date_str = event.get('endDate', '')
                     event_title = event.get('title', '')
                     
@@ -45,11 +46,15 @@ class MarketService:
                             else:
                                 # Date only format like "2025-11-13" - assume end of day
                                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
-                                # Add timezone info and set to end of day to be more restrictive
+                                # Add timezone info and set to end of day
                                 end_date = end_date.replace(hour=23, minute=59, second=59, tzinfo=timezone.utc)
                             
-                            if end_date <= current_time:
-                                logger.info(f"Skipping EXPIRED market: {event_title} (ended: {end_date_str})")
+                            # MORE STRICT: Filter out markets ending in the next 24 hours
+                            # Only show markets ending TOMORROW or later (Nov 14+)
+                            cutoff_time = current_time + timedelta(days=1)
+                            
+                            if end_date <= cutoff_time:
+                                logger.info(f"Skipping EXPIRED/ENDING-SOON market: {event_title} (ends: {end_date_str})")
                                 continue
                         except (ValueError, AttributeError) as e:
                             logger.warning(f"Could not parse end date '{end_date_str}' for event '{event_title}': {e}")
