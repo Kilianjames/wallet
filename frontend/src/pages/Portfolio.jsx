@@ -402,25 +402,22 @@ const Portfolio = () => {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-4 gap-4 pt-4 border-t border-gray-100">
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Amount</div>
-                          <div className="text-sm font-semibold text-gray-900">{position.amount} SOL</div>
+                      <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4">
+                        <div className="bg-gray-50 rounded-lg p-2.5 md:p-3">
+                          <div className="text-xs text-gray-500 mb-0.5">Entry Price</div>
+                          <div className="text-sm md:text-base font-semibold text-gray-900">${(position.entryPrice * 100).toFixed(1)}¢</div>
                         </div>
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Entry Price</div>
-                          <div className="text-sm font-semibold text-gray-900">{(position.entryPrice * 100).toFixed(1)}¢</div>
+                        <div className="bg-gray-50 rounded-lg p-2.5 md:p-3">
+                          <div className="text-xs text-gray-500 mb-0.5">Current Price</div>
+                          <div className="text-sm md:text-base font-semibold text-gray-900">${(currentPrice * 100).toFixed(1)}¢</div>
                         </div>
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Current Price</div>
-                          <div className={`text-sm font-semibold ${priceDiff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {(currentPrice * 100).toFixed(1)}¢
-                            {market && <span className="text-xs ml-1">● Live</span>}
-                          </div>
+                        <div className="bg-gray-50 rounded-lg p-2.5 md:p-3">
+                          <div className="text-xs text-gray-500 mb-0.5">Amount</div>
+                          <div className="text-sm md:text-base font-semibold text-gray-900">{position.amount} SOL</div>
                         </div>
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Wallet</div>
-                          <div className="text-sm font-mono text-gray-900">{position.walletAddress.slice(0, 4)}...{position.walletAddress.slice(-4)}</div>
+                        <div className="bg-gray-50 rounded-lg p-2.5 md:p-3">
+                          <div className="text-xs text-gray-500 mb-0.5">Leverage</div>
+                          <div className="text-sm md:text-base font-semibold text-gray-900">{position.leverage}x</div>
                         </div>
                       </div>
                       
