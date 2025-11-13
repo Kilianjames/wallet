@@ -809,7 +809,6 @@ const Trading = () => {
                 className="bg-white border-gray-300 text-gray-900 text-lg"
                 step="0.01"
                 min="0"
-                max={walletBalance > 0.001 ? walletBalance - 0.001 : 0}
                 disabled={!isConnected}
               />
               <div className="text-xs text-gray-500 mt-1">
