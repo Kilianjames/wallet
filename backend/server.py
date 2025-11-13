@@ -76,7 +76,7 @@ async def root():
     return {"message": "Polynator Perp DEX API"}
 
 @api_router.get("/markets")
-async def get_markets(limit: int = Query(30, ge=1, le=100)):
+async def get_markets(limit: int = Query(100, ge=1, le=200)):
     """Get trending markets from Polymarket"""
     try:
         markets = market_service.get_trending_markets(limit=limit)
