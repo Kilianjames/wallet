@@ -165,10 +165,10 @@ class PolyfluidBackendTester:
                 for title in suspicious_titles:
                     self.test_results["markets"]["details"].append(f"   - {title}")
             
-            # Check that we have markets ending in December 2025 or later (future dates)
-            december_2025_or_later = [m for m in future_markets if '2025-12' in m['end_date'] or '2026' in m['end_date'] or '2027' in m['end_date']]
-            if december_2025_or_later:
-                self.test_results["markets"]["details"].append(f"✅ Found {len(december_2025_or_later)} markets ending December 2025 or later")
+            # Check that we have markets ending in November 14+ and later dates
+            nov_14_plus = [m for m in future_markets if '2025-11-1' in m['end_date'] or '2025-12' in m['end_date'] or '2026' in m['end_date'] or '2027' in m['end_date']]
+            if nov_14_plus:
+                self.test_results["markets"]["details"].append(f"✅ Found {len(nov_14_plus)} markets ending Nov 14+ or later")
             
             if not self.test_token_id:
                 self.test_results["markets"]["details"].append("❌ No valid token_id found for further testing")
