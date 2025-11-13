@@ -518,15 +518,15 @@ class PolyfluidBackendTester:
         logs_passed = self.test_results["logs_check"]["passed"]
         
         if markets_passed and logs_passed:
-            logger.info("🎉 EXPIRED MARKET FILTERING WORKING CORRECTLY!")
-            logger.info("   ✅ All returned markets have future end dates")
+            logger.info("🎉 STRICTER DATE FILTERING WORKING CORRECTLY!")
+            logger.info("   ✅ All returned markets end Nov 14, 2025 or later")
             logger.info("   ✅ Backend logs show filtering is active")
         elif markets_passed:
-            logger.info("✅ MARKETS FILTERING WORKING - No expired markets in results")
+            logger.info("✅ STRICTER FILTERING WORKING - No Nov 7/13 or earlier markets in results")
             logger.info("⚠️ Log evidence unclear - but results are correct")
         else:
-            logger.info("❌ CRITICAL ISSUE - Expired markets found in API response!")
-            logger.info("   User complaint about old markets is VALID")
+            logger.info("❌ CRITICAL ISSUE - Markets ending before Nov 14 found in API response!")
+            logger.info("   Markets ending Nov 7, 13, or earlier should be filtered out")
 
 if __name__ == "__main__":
     tester = PolyfluidBackendTester()
