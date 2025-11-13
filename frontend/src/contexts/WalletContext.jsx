@@ -179,9 +179,11 @@ export const WalletProvider = ({ children }) => {
     }
 
     try {
-      // Single fast Solana RPC endpoint for production
+      // Multiple Solana RPC endpoints for failover reliability
       const RPC_ENDPOINTS = [
-        'https://api.mainnet-beta.solana.com'
+        'https://api.mainnet-beta.solana.com',
+        'https://solana-rpc.publicnode.com',
+        'https://solana-mainnet.rpc.extrnode.com',
       ];
 
       let connection = null;
