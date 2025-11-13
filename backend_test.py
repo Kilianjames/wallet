@@ -401,6 +401,11 @@ class PolyfluidBackendTester:
                     for example in expired_examples[-3:]:  # Show last 3 examples
                         self.test_results["logs_check"]["details"].append(f"   {example}")
                 
+                if ending_soon_examples:
+                    self.test_results["logs_check"]["details"].append("📋 Examples of filtered ending-soon markets:")
+                    for example in ending_soon_examples[-3:]:  # Show last 3 examples
+                        self.test_results["logs_check"]["details"].append(f"   {example}")
+                
                 # Look for API call indicators
                 polymarket_calls = []
                 if "Calling Polymarket CLOB API" in error_log:
