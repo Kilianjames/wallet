@@ -5,6 +5,7 @@ import os
 import logging
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 import asyncio
+import httpx
 
 logger = logging.getLogger(__name__)
 
