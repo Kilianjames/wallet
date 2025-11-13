@@ -1,0 +1,395 @@
+#!/usr/bin/env python3
+"""
+Backend API Testing for Polyfluid - Polymarket Integration
+Tests all backend endpoints to verify LIVE data from Polymarket APIs
+"""
+
+import requests
+import json
+import time
+from datetime import datetime, timedelta
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Get backend URL from environment
+BACKEND_URL = "https://betfluid.preview.emergentagent.com/api"
+
+class PolyfluidBackendTester:
+    def __init__(self):
+        self.backend_url = BACKEND_URL
+        self.test_results = {
+            "markets": {"passed": False, "details": []},
+            "orderbook": {"passed": False, "details": []},
+            "chart_data": {"passed": False, "details": []},
+            "logs_check": {"passed": False, "details": []}
+        }
+        self.test_market_id = None
+        self.test_token_id = None
+    
+    def test_markets_endpoint(self):
+        """Test /api/markets endpoint for live data"""
+        logger.info("=== Testing Markets Endpoint ===")
+        
+        try:
+            response = requests.get(f"{self.backend_url}/markets?limit=10", timeout=30)
+            logger.info(f"Markets API response status: {response.status_code}")
+            
+            if response.status_code != 200:
+                self.test_results["markets"]["details"].append(f"❌ API returned status {response.status_code}")
+                return False
+            
+            data = response.json()
+            markets = data.get("markets", [])
+            
+            if not markets:
+                self.test_results["markets"]["details"].append("❌ No markets returned")
+                return False
+            
+            logger.info(f"Found {len(markets)} markets")
+            
+            # Test first few markets for live data
+            live_data_found = False
+            valid_token_found = False
+            
+            for i, market in enumerate(markets[:5]):
+                market_id = market.get('id')
+                title = market.get('title', 'No title')
+                volume = market.get('volume', 0)
+                liquidity = market.get('liquidity', 0)
+                end_date = market.get('endDate', '')
+                
+                logger.info(f"Market {i+1}: {title[:50]}...")
+                logger.info(f"  Volume: {volume}, Liquidity: {liquidity}")
+                
+                # Check for non-zero volume and liquidity (signs of live data)
+                if volume > 0 or liquidity > 0:
+                    live_data_found = True
+                    self.test_results["markets"]["details"].append(f"✅ Market '{title[:30]}...' has live volume: {volume}, liquidity: {liquidity}")
+                
+                # Check prices are valid probability values
+                if market.get('is_multi_outcome'):
+                    outcomes = market.get('outcomes', [])
+                    for outcome in outcomes:
+                        price = outcome.get('price', 0)
+                        token_id = outcome.get('token_id', '')
+                        if 0 < price < 1 and token_id:
+                            self.test_results["markets"]["details"].append(f"✅ Multi-outcome price valid: {price}")
+                            if not self.test_token_id and token_id:
+                                self.test_token_id = token_id
+                                self.test_market_id = market_id
+                                valid_token_found = True
+                else:
+                    yes_price = market.get('yesPrice', 0)
+                    token_id = market.get('token_id', '')
+                    if 0 < yes_price < 1 and token_id:
+                        self.test_results["markets"]["details"].append(f"✅ YES/NO price valid: {yes_price}")
+                        if not self.test_token_id and token_id:
+                            self.test_token_id = token_id
+                            self.test_market_id = market_id
+                            valid_token_found = True
+                
+                # Check end date is not placeholder
+                if end_date and end_date != '2025-12-31':
+                    self.test_results["markets"]["details"].append(f"✅ End date looks real: {end_date}")
+            
+            if not live_data_found:
+                self.test_results["markets"]["details"].append("❌ No markets found with non-zero volume/liquidity")
+                return False
+            
+            if not valid_token_found:
+                self.test_results["markets"]["details"].append("❌ No valid token_id found for further testing")
+                return False
+            
+            logger.info(f"Selected for further testing: market_id={self.test_market_id}, token_id={self.test_token_id}")
+            self.test_results["markets"]["passed"] = True
+            return True
+            
+        except Exception as e:
+            logger.error(f"Markets test failed: {e}")
+            self.test_results["markets"]["details"].append(f"❌ Exception: {str(e)}")
+            return False
+    
+    def test_orderbook_endpoint(self):
+        """Test /api/markets/{market_id}/orderbook endpoint"""
+        logger.info("=== Testing Orderbook Endpoint ===")
+        
+        if not self.test_token_id or not self.test_market_id:
+            self.test_results["orderbook"]["details"].append("❌ No valid token_id from markets test")
+            return False
+        
+        try:
+            url = f"{self.backend_url}/markets/{self.test_market_id}/orderbook?token_id={self.test_token_id}"
+            logger.info(f"Testing orderbook URL: {url}")
+            
+            response = requests.get(url, timeout=30)
+            logger.info(f"Orderbook API response status: {response.status_code}")
+            
+            if response.status_code != 200:
+                self.test_results["orderbook"]["details"].append(f"❌ API returned status {response.status_code}")
+                return False
+            
+            data = response.json()
+            bids = data.get("bids", [])
+            asks = data.get("asks", [])
+            
+            logger.info(f"Orderbook data: {len(bids)} bids, {len(asks)} asks")
+            
+            # Check for real orderbook data
+            if not bids and not asks:
+                self.test_results["orderbook"]["details"].append("❌ Empty orderbook - no bids or asks")
+                return False
+            
+            # Verify bids have decreasing prices
+            if bids:
+                bid_prices = [bid.get('price', 0) for bid in bids]
+                if len(bid_prices) > 1:
+                    is_decreasing = all(bid_prices[i] >= bid_prices[i+1] for i in range(len(bid_prices)-1))
+                    if is_decreasing:
+                        self.test_results["orderbook"]["details"].append("✅ Bids are properly ordered (decreasing prices)")
+                    else:
+                        self.test_results["orderbook"]["details"].append("⚠️ Bids not properly ordered")
+                
+                # Check for non-zero sizes
+                non_zero_bids = [bid for bid in bids if bid.get('size', 0) > 0]
+                if non_zero_bids:
+                    self.test_results["orderbook"]["details"].append(f"✅ Found {len(non_zero_bids)} bids with non-zero size")
+                else:
+                    self.test_results["orderbook"]["details"].append("❌ All bids have zero size")
+            
+            # Verify asks have increasing prices
+            if asks:
+                ask_prices = [ask.get('price', 0) for ask in asks]
+                if len(ask_prices) > 1:
+                    is_increasing = all(ask_prices[i] <= ask_prices[i+1] for i in range(len(ask_prices)-1))
+                    if is_increasing:
+                        self.test_results["orderbook"]["details"].append("✅ Asks are properly ordered (increasing prices)")
+                    else:
+                        self.test_results["orderbook"]["details"].append("⚠️ Asks not properly ordered")
+                
+                # Check for non-zero sizes
+                non_zero_asks = [ask for ask in asks if ask.get('size', 0) > 0]
+                if non_zero_asks:
+                    self.test_results["orderbook"]["details"].append(f"✅ Found {len(non_zero_asks)} asks with non-zero size")
+                else:
+                    self.test_results["orderbook"]["details"].append("❌ All asks have zero size")
+            
+            # Check for mock/placeholder values
+            mock_indicators = ["No bids", "No asks", "mock", "placeholder", "test"]
+            has_mock = False
+            for bid in bids:
+                for key, value in bid.items():
+                    if any(indicator in str(value).lower() for indicator in mock_indicators):
+                        has_mock = True
+                        break
+            
+            for ask in asks:
+                for key, value in ask.items():
+                    if any(indicator in str(value).lower() for indicator in mock_indicators):
+                        has_mock = True
+                        break
+            
+            if has_mock:
+                self.test_results["orderbook"]["details"].append("❌ Found mock/placeholder values in orderbook")
+                return False
+            else:
+                self.test_results["orderbook"]["details"].append("✅ No mock/placeholder values detected")
+            
+            self.test_results["orderbook"]["passed"] = True
+            return True
+            
+        except Exception as e:
+            logger.error(f"Orderbook test failed: {e}")
+            self.test_results["orderbook"]["details"].append(f"❌ Exception: {str(e)}")
+            return False
+    
+    def test_chart_data_endpoint(self):
+        """Test /api/markets/{market_id}/chart endpoint"""
+        logger.info("=== Testing Chart Data Endpoint ===")
+        
+        if not self.test_token_id or not self.test_market_id:
+            self.test_results["chart_data"]["details"].append("❌ No valid token_id from markets test")
+            return False
+        
+        try:
+            url = f"{self.backend_url}/markets/{self.test_market_id}/chart?token_id={self.test_token_id}&interval=1h"
+            logger.info(f"Testing chart URL: {url}")
+            
+            response = requests.get(url, timeout=30)
+            logger.info(f"Chart API response status: {response.status_code}")
+            
+            if response.status_code != 200:
+                self.test_results["chart_data"]["details"].append(f"❌ API returned status {response.status_code}")
+                return False
+            
+            data = response.json()
+            chart_data = data.get("data", [])
+            
+            logger.info(f"Chart data: {len(chart_data)} data points")
+            
+            if len(chart_data) < 5:
+                self.test_results["chart_data"]["details"].append(f"❌ Too few data points: {len(chart_data)} (expected at least 5)")
+                return False
+            
+            # Check data point structure and validity
+            valid_points = 0
+            recent_points = 0
+            one_week_ago = (datetime.now() - timedelta(days=7)).timestamp()
+            
+            for point in chart_data[:10]:  # Check first 10 points
+                timestamp = point.get('timestamp', 0)
+                price = point.get('price', 0)
+                date_field = point.get('date', 0)
+                
+                # Check required fields
+                if timestamp > 0 and price > 0 and date_field > 0:
+                    valid_points += 1
+                
+                # Check if timestamp is recent (within last week)
+                if timestamp > one_week_ago:
+                    recent_points += 1
+                
+                # Check price is valid probability (0-1 range)
+                if not (0 <= price <= 1):
+                    self.test_results["chart_data"]["details"].append(f"❌ Invalid price value: {price} (should be 0-1)")
+                    return False
+            
+            if valid_points >= 5:
+                self.test_results["chart_data"]["details"].append(f"✅ Found {valid_points} valid data points with timestamp, price, and date")
+            else:
+                self.test_results["chart_data"]["details"].append(f"❌ Only {valid_points} valid data points (need at least 5)")
+                return False
+            
+            if recent_points > 0:
+                self.test_results["chart_data"]["details"].append(f"✅ Found {recent_points} recent data points (within last week)")
+            else:
+                self.test_results["chart_data"]["details"].append("⚠️ No recent data points found (all older than 1 week)")
+            
+            self.test_results["chart_data"]["passed"] = True
+            return True
+            
+        except Exception as e:
+            logger.error(f"Chart data test failed: {e}")
+            self.test_results["chart_data"]["details"].append(f"❌ Exception: {str(e)}")
+            return False
+    
+    def check_backend_logs(self):
+        """Check backend logs for API call evidence"""
+        logger.info("=== Checking Backend Logs ===")
+        
+        try:
+            # Check error log
+            import subprocess
+            result = subprocess.run(
+                ["tail", "-n", "100", "/var/log/supervisor/backend.err.log"],
+                capture_output=True, text=True, timeout=10
+            )
+            
+            if result.returncode == 0:
+                error_log = result.stdout
+                logger.info(f"Error log length: {len(error_log)} characters")
+                
+                # Look for API call indicators
+                polymarket_calls = []
+                if "Calling Polymarket CLOB API" in error_log:
+                    polymarket_calls.append("CLOB API calls found")
+                if "Calling Polymarket Gamma API" in error_log:
+                    polymarket_calls.append("Gamma API calls found")
+                
+                if polymarket_calls:
+                    self.test_results["logs_check"]["details"].extend([f"✅ {call}" for call in polymarket_calls])
+                else:
+                    self.test_results["logs_check"]["details"].append("⚠️ No explicit Polymarket API call logs found in error log")
+            
+            # Check output log
+            result = subprocess.run(
+                ["tail", "-n", "100", "/var/log/supervisor/backend.out.log"],
+                capture_output=True, text=True, timeout=10
+            )
+            
+            if result.returncode == 0:
+                output_log = result.stdout
+                logger.info(f"Output log length: {len(output_log)} characters")
+                
+                # Look for API call indicators
+                if "Calling Polymarket" in output_log:
+                    self.test_results["logs_check"]["details"].append("✅ Polymarket API calls found in output log")
+                
+                # Look for errors
+                if "Error" in output_log or "Exception" in output_log:
+                    error_lines = [line for line in output_log.split('\n') if 'Error' in line or 'Exception' in line]
+                    if error_lines:
+                        self.test_results["logs_check"]["details"].append(f"⚠️ Found {len(error_lines)} error/exception lines")
+                        for error_line in error_lines[-3:]:  # Show last 3 errors
+                            self.test_results["logs_check"]["details"].append(f"   {error_line.strip()}")
+            
+            self.test_results["logs_check"]["passed"] = True
+            return True
+            
+        except Exception as e:
+            logger.error(f"Log check failed: {e}")
+            self.test_results["logs_check"]["details"].append(f"❌ Exception checking logs: {str(e)}")
+            return False
+    
+    def run_all_tests(self):
+        """Run all backend tests in sequence"""
+        logger.info("🚀 Starting Polyfluid Backend API Tests")
+        logger.info(f"Backend URL: {self.backend_url}")
+        
+        # Test 1: Markets endpoint
+        markets_passed = self.test_markets_endpoint()
+        
+        # Test 2: Orderbook endpoint (depends on markets test)
+        orderbook_passed = False
+        if markets_passed:
+            orderbook_passed = self.test_orderbook_endpoint()
+        
+        # Test 3: Chart data endpoint (depends on markets test)
+        chart_passed = False
+        if markets_passed:
+            chart_passed = self.test_chart_data_endpoint()
+        
+        # Test 4: Backend logs
+        logs_passed = self.check_backend_logs()
+        
+        # Generate summary
+        self.print_summary()
+        
+        return {
+            "markets": markets_passed,
+            "orderbook": orderbook_passed,
+            "chart_data": chart_passed,
+            "logs": logs_passed
+        }
+    
+    def print_summary(self):
+        """Print detailed test summary"""
+        logger.info("\n" + "="*60)
+        logger.info("🔍 POLYFLUID BACKEND TEST RESULTS")
+        logger.info("="*60)
+        
+        for test_name, result in self.test_results.items():
+            status = "✅ PASSED" if result["passed"] else "❌ FAILED"
+            logger.info(f"\n{test_name.upper().replace('_', ' ')}: {status}")
+            
+            for detail in result["details"]:
+                logger.info(f"  {detail}")
+        
+        # Overall assessment
+        total_tests = len(self.test_results)
+        passed_tests = sum(1 for result in self.test_results.values() if result["passed"])
+        
+        logger.info(f"\n📊 OVERALL: {passed_tests}/{total_tests} tests passed")
+        
+        if passed_tests == total_tests:
+            logger.info("🎉 ALL TESTS PASSED - Live Polymarket data confirmed!")
+        elif passed_tests >= total_tests - 1:
+            logger.info("⚠️ MOSTLY WORKING - Minor issues detected")
+        else:
+            logger.info("❌ SIGNIFICANT ISSUES - Multiple tests failed")
+
+if __name__ == "__main__":
+    tester = PolyfluidBackendTester()
+    results = tester.run_all_tests()
