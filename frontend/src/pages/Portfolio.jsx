@@ -346,7 +346,7 @@ const Portfolio = () => {
                         Processing Time Notice
                       </p>
                       <p className="text-sm text-blue-700">
-                        Your bet may take 5-10 minutes to appear here as it's being relayed to the Polymarket wallet. Please be patient.
+                        Your bet may take 5-10 minutes to appear here as it's being relayed to the Polymarket wallet. You may close your position at anytime using the "Close Position" button below.
                       </p>
                     </div>
                   </div>
