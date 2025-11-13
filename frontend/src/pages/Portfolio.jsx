@@ -113,7 +113,19 @@ const Portfolio = () => {
     const market = markets[pos.marketId];
     if (!market) return sum;
     
-    const currentPrice = market.price;
+    // Get current price - handle both single outcome and multi-outcome markets
+    let currentPrice = pos.entryPrice; // fallback
+    if (market.is_multi_outcome && market.outcomes) {
+      // Find the matching outcome
+      const matchingOutcome = market.outcomes.find(o => o.title === pos.outcome);
+      if (matchingOutcome) {
+        currentPrice = matchingOutcome.price;
+      }
+    } else {
+      // Single outcome market
+      currentPrice = market.yesPrice || pos.entryPrice;
+    }
+    
     const priceDiff = currentPrice - pos.entryPrice;
     const pnl = pos.side === 'LONG' 
       ? priceDiff * pos.amount * pos.leverage
