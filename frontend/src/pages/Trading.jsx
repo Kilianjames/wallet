@@ -259,18 +259,18 @@ const Trading = () => {
             </div>
             
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/20">
-              <div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-4 pt-4 border-t border-white/20">
+              <div className="min-w-0">
                 <div className="text-xs opacity-80 mb-1">Volume</div>
-                <div className="text-lg font-bold">${selectedMarket.volume.toLocaleString()}</div>
+                <div className="text-base sm:text-lg font-bold truncate">${(selectedMarket.volume / 1000000).toFixed(1)}M</div>
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="text-xs opacity-80 mb-1">Liquidity</div>
-                <div className="text-lg font-bold">${selectedMarket.liquidity.toLocaleString()}</div>
+                <div className="text-base sm:text-lg font-bold truncate">${(selectedMarket.liquidity / 1000000).toFixed(1)}M</div>
               </div>
-              <div>
+              <div className="min-w-0 col-span-2 sm:col-span-1">
                 <div className="text-xs opacity-80 mb-1">Ends</div>
-                <div className="text-lg font-bold">{new Date(selectedMarket.endDate).toLocaleDateString()}</div>
+                <div className="text-base sm:text-lg font-bold truncate">{new Date(selectedMarket.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
               </div>
             </div>
           </div>
