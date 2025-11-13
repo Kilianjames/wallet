@@ -9,11 +9,11 @@ class MarketService:
     def __init__(self):
         self.client = PolymarketClient()
     
-    def get_trending_markets(self, limit: int = 100) -> List[Dict]:
+    def get_trending_markets(self, limit: int = 200) -> List[Dict]:
         """Get trending markets from Polymarket using Events API"""
         try:
-            # Use events API for active markets
-            events_data = self.client.get_events(limit=limit * 2)
+            # Use events API for active markets - fetch more to get variety
+            events_data = self.client.get_events(limit=limit)
             
             # Transform event data to market format
             transformed_markets = []
