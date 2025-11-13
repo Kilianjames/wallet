@@ -128,6 +128,11 @@ async def get_orderbook(token_id: str):
         if not orderbook:
             raise HTTPException(status_code=404, detail="Orderbook not found")
         return orderbook
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error fetching orderbook: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch orderbook")
 
 
 @api_router.get("/markets/{market_id}/orderbook")
