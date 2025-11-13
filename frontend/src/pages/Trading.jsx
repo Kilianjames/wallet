@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Connection } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Activity, Loader2, Wallet, CheckCircle, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import { marketService } from '../services/api';
 import { Button } from '../components/ui/button';
