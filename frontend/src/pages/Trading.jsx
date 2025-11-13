@@ -798,31 +798,6 @@ const Trading = () => {
               </div>
             </div>
 
-            {/* Wallet Balance Display */}
-            {isConnected && (
-              <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-xs text-blue-600 font-medium mb-0.5">Wallet Balance</div>
-                    <div className="text-lg font-bold text-gray-900">
-                      {checkingBalance ? (
-                        <span className="text-sm">Checking...</span>
-                      ) : (
-                        <>{walletBalance.toFixed(4)} SOL</>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    onClick={checkWalletBalance}
-                    disabled={checkingBalance}
-                    className="text-xs text-blue-600 hover:text-blue-700 font-medium disabled:opacity-50"
-                  >
-                    {checkingBalance ? 'Checking...' : 'Refresh'}
-                  </button>
-                </div>
-              </div>
-            )}
-
             {/* SOL Bet Amount */}
             <div className="mb-4">
               <label className="text-sm text-gray-600 mb-2 block font-medium">Bet Amount (SOL)</label>
