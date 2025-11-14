@@ -778,7 +778,7 @@ const Trading = () => {
                       <Activity size={12} />
                       You're betting on:
                     </div>
-                    <div className="text-base font-bold text-gray-900 mb-2">{selectedOutcome.title}</div>
+                    <div className="text-base font-bold text-gray-900 dark:text-white mb-2">{selectedOutcome.title}</div>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <div className="text-xs text-gray-600 mb-0.5">Current Odds</div>
