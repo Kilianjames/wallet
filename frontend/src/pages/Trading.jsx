@@ -765,8 +765,8 @@ const Trading = () => {
           <div className="max-w-md mx-auto">
             {/* Header */}
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Place Trade</h2>
-              <p className="text-sm text-gray-600">Configure your position below</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Place Trade</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Configure your position below</p>
             </div>
 
             {/* Selected Outcome Display */}
