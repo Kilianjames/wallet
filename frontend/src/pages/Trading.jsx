@@ -123,7 +123,7 @@ const Trading = () => {
   const checkWalletBalance = async () => {
     if (!publicKey) {
       console.log('No public key available');
-      return;
+      return 0;
     }
     
     try {
@@ -147,9 +147,11 @@ const Trading = () => {
       const balanceInSol = balance / 1_000_000_000;
       setWalletBalance(balanceInSol);
       console.log('✅ Wallet balance loaded:', balanceInSol, 'SOL');
+      return balanceInSol;
     } catch (error) {
       console.error('❌ Error checking balance:', error);
       setWalletBalance(0);
+      return 0;
     } finally {
       setCheckingBalance(false);
     }
