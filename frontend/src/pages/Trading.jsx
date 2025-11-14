@@ -518,14 +518,14 @@ const Trading = () => {
                     </div>
                     <div className="flex items-end justify-between">
                       <div>
-                        <div className="text-xs text-gray-500 mb-0.5">Probability</div>
-                        <div className="text-2xl font-bold text-blue-600">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Probability</div>
+                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                           {(outcome.price * 100).toFixed(0)}%
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs text-gray-500 mb-0.5">Price</div>
-                        <div className="text-sm font-semibold text-gray-700">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Price</div>
+                        <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                           ${(outcome.price * 100).toFixed(1)}¢
                         </div>
                       </div>
