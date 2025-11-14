@@ -172,7 +172,7 @@ const Markets = () => {
                     {/* Market Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs font-semibold">
+                        <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-xs font-semibold">
                           {market.category}
                         </span>
                         {market.change24h !== 0 && (
