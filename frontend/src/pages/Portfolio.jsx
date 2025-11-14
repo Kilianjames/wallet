@@ -328,7 +328,7 @@ const Portfolio = () => {
             ) : positions.length > 0 ? (
               <div className="space-y-4 mb-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-2xl font-bold text-gray-900">Active Positions</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Active Positions</h2>
                 </div>
                 
                 {/* Info Note */}
