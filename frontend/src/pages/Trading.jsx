@@ -544,7 +544,7 @@ const Trading = () => {
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="text-purple-600" size={20} />
-                <h2 className="text-lg font-bold text-gray-900">AI Market Insights</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">AI Market Insights</h2>
                 {insights?.sentiment && (
                   <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                     insights.sentiment === 'bullish' ? 'bg-green-100 text-green-700' :
