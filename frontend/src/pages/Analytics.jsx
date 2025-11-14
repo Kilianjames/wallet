@@ -52,10 +52,23 @@ const Analytics = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
-            Market Analytics
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">Real-time insights from Polymarket</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
+                Market Analytics
+              </h1>
+              <p className="text-gray-600 dark:text-gray-300">Real-time insights from Polymarket</p>
+            </div>
+            <div className="text-right">
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                Live
+              </div>
+              <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                Updated {lastUpdate.toLocaleTimeString()}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Timeframe Selector */}
