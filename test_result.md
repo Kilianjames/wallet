@@ -300,7 +300,7 @@ frontend:
     implemented: true
     working: true
     file: "/app/frontend/src/contexts/WalletContext.jsx, /app/frontend/src/pages/Trading.jsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "critical"
     needs_retesting: true
     status_history:
@@ -310,6 +310,12 @@ frontend:
       - working: true
         agent: "main"
         comment: "CRITICAL BUG FIXED - Root cause identified: (1) WalletContext.jsx was returning 'confirmed: true' immediately after sending transaction, WITHOUT actually waiting for on-chain confirmation. (2) No balance validation before transaction attempt. FIXES APPLIED: (1) Modified signAndSendTransaction to WAIT for transaction confirmation (30s timeout) before returning success. Only returns confirmed:true if transaction succeeds on-chain. (2) Added pre-transaction wallet balance check in Trading.jsx - validates user has sufficient SOL + fees before attempting transaction. (3) Enhanced error handling for timeout scenarios - warns user to check Solscan instead of falsely showing success. (4) Positions only added to portfolio if transaction is CONFIRMED on blockchain. Both frontend and backend restarted."
+      - working: false
+        agent: "user"
+        comment: "User reports 'insufficient balance' error when placing bets even though they have balance in wallet."
+      - working: true
+        agent: "main"
+        comment: "BALANCE CHECK BUG FIXED - Root cause: React state updates are asynchronous. After calling checkWalletBalance(), the code was checking the OLD walletBalance state value instead of the fresh balance. FIX: Modified checkWalletBalance() to RETURN the balance value, then use that returned value directly for validation instead of relying on state. Frontend restarted. Balance check now uses fresh balance value immediately."
 
 metadata:
   created_by: "main_agent"
