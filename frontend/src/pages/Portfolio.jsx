@@ -387,10 +387,10 @@ const Portfolio = () => {
                           <p className="text-sm text-gray-600 dark:text-gray-300">{position.outcome}</p>
                         </div>
                         <div className="text-right">
-                          <div className={`text-2xl font-bold mb-1 ${pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          <div className={`text-2xl font-bold mb-1 ${pnl >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                             {pnl >= 0 ? '+' : ''}{pnl.toFixed(4)} SOL
                           </div>
-                          <div className={`text-sm font-semibold ${pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          <div className={`text-sm font-semibold ${pnl >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                             {pnl >= 0 ? '+' : ''}{pnlPercent.toFixed(2)}%
                           </div>
                         </div>
