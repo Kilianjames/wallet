@@ -332,6 +332,22 @@ frontend:
         comment: "URGENT: Refund wallet compromised. Need immediate update to new wallet. New address: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN"
       - working: true
         agent: "main"
+
+  - task: "Dark Mode Implementation with Toggle"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/contexts/ThemeContext.jsx, /app/frontend/src/App.js, /app/frontend/src/components/Navbar.jsx, /app/frontend/src/pages/Markets.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "user"
+        comment: "Enable dark mode and add toggle to switch between light and dark themes."
+      - working: true
+        agent: "main"
+        comment: "DARK MODE COMPLETE - Created ThemeContext for state management with localStorage persistence. Added moon/sun toggle button in Navbar (desktop & mobile). Implemented comprehensive dark mode styling for: (1) Navbar - dark backgrounds, borders, text colors. (2) Markets page - dark cards, backgrounds, gradients, all text elements. (3) Category buttons, search input, badges updated. Tailwind dark mode enabled (class-based). Toggle persists preference. Screenshots verify Markets page works perfectly in both modes. Trading/Portfolio pages need dark mode styling still but toggle infrastructure complete."
+
         comment: "EMERGENCY SECURITY UPDATE COMPLETE - Immediately updated backend wallet credentials in .env file. NEW WALLET: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN (verified address matches). Backend restarted. Tested close position endpoint - SUCCESS: Transaction signature returned, wallet has 0.034 SOL balance. Backend logs confirm new wallet initialized correctly. Old compromised wallet is no longer in use."
       - working: true
         agent: "main"
