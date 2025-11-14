@@ -148,7 +148,7 @@ const Markets = () => {
               return (
                 <div
                   key={market.id}
-                  className="bg-white rounded-xl p-4 border border-gray-200 hover:shadow-lg transition-all cursor-pointer group"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all cursor-pointer group"
                   onClick={() => handleMarketClick(market)}
                 >
                   <div className="flex items-start gap-4">
