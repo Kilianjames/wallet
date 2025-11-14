@@ -5,9 +5,18 @@ const Analytics = () => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState('24h');
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
   useEffect(() => {
     fetchAnalytics();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchAnalytics();
+      setLastUpdate(new Date());
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, [timeframe]);
 
   const fetchAnalytics = async () => {
