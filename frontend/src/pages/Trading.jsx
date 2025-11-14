@@ -500,7 +500,10 @@ const Trading = () => {
           {/* Multi-outcome selector */}
           {selectedMarket.is_multi_outcome && selectedMarket.outcomes && (
             <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Select Outcome</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-900">Select Outcome</h2>
+                <div className="text-xs text-gray-500">Click to bet on an outcome</div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
                 {selectedMarket.outcomes.map((outcome, idx) => (
                   <button
@@ -512,13 +515,24 @@ const Trading = () => {
                         : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow'
                     }`}
                   >
-                    <div className="text-sm text-gray-900 mb-2 font-medium line-clamp-2">{outcome.title}</div>
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <div className="text-sm text-gray-900 font-medium line-clamp-2 flex-1">{outcome.title}</div>
+                      {selectedOutcome?.market_id === outcome.market_id && (
+                        <div className="flex-shrink-0 w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+                      )}
+                    </div>
                     <div className="flex items-end justify-between">
-                      <div className="text-2xl font-bold text-blue-600">
-                        {(outcome.price * 100).toFixed(0)}%
+                      <div>
+                        <div className="text-xs text-gray-500 mb-0.5">Probability</div>
+                        <div className="text-2xl font-bold text-blue-600">
+                          {(outcome.price * 100).toFixed(0)}%
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500">
-                        ${(outcome.price * 100).toFixed(1)}¢
+                      <div className="text-right">
+                        <div className="text-xs text-gray-500 mb-0.5">Price</div>
+                        <div className="text-sm font-semibold text-gray-700">
+                          ${(outcome.price * 100).toFixed(1)}¢
+                        </div>
                       </div>
                     </div>
                   </button>
