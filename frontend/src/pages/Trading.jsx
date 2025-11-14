@@ -572,7 +572,7 @@ const Trading = () => {
                   <div className="space-y-3">
                     <div className="bg-white dark:bg-gray-700 rounded-lg p-4 border border-purple-100 dark:border-purple-800">
                       <div className="prose prose-sm max-w-none">
-                        <div className="text-gray-700 whitespace-pre-line text-sm leading-relaxed">
+                        <div className="text-gray-700 dark:text-gray-300 whitespace-pre-line text-sm leading-relaxed">
                           {insights.analysis}
                         </div>
                       </div>
