@@ -488,7 +488,7 @@ const Trading = () => {
               {/* Info note for markets with bps terminology */}
               {selectedMarket.title.toLowerCase().includes('bps') || 
                selectedMarket.outcomes.some(o => o.title.toLowerCase().includes('bps')) ? (
-                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                   <div className="flex items-start gap-2">
                     <div className="text-blue-600 text-xs mt-0.5">ℹ️</div>
                     <div className="text-xs text-blue-900">
