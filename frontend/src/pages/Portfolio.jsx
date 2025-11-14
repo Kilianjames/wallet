@@ -492,10 +492,10 @@ const Portfolio = () => {
 
           {/* Trade History */}
           <TabsContent value="history">
-            <div className="bg-white rounded-xl p-12 border border-gray-200 text-center shadow-sm">
-              <CheckCircle size={48} className="mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-700 text-lg mb-2">No trade history</p>
-              <p className="text-gray-500 text-sm">Your completed trades will be shown here</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center shadow-sm">
+              <CheckCircle size={48} className="mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+              <p className="text-gray-700 dark:text-gray-200 text-lg mb-2">No trade history</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Your completed trades will be shown here</p>
             </div>
           </TabsContent>
         </Tabs>
