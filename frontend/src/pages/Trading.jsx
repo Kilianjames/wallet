@@ -479,7 +479,7 @@ const Trading = () => {
 
           {/* Multi-outcome selector */}
           {selectedMarket.is_multi_outcome && selectedMarket.outcomes && (
-            <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-gray-900">Select Outcome</h2>
                 <div className="text-xs text-gray-500">Click to bet on an outcome</div>
