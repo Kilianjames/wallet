@@ -777,12 +777,19 @@ const Trading = () => {
             {/* Selected Outcome Display */}
             {selectedMarket.is_multi_outcome && selectedOutcome && (
               <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
-                <div className="text-xs text-gray-600 mb-1 flex items-center gap-1">
-                  <Activity size={12} />
-                  Trading on:
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="text-xs text-gray-600 mb-1 flex items-center gap-1">
+                      <Activity size={12} />
+                      You're betting on:
+                    </div>
+                    <div className="text-base font-bold text-gray-900 mb-2">{selectedOutcome.title}</div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-xs text-gray-600 mb-0.5">Current Odds</div>
+                    <div className="text-2xl font-bold text-blue-600">{(selectedOutcome.price * 100).toFixed(0)}%</div>
+                  </div>
                 </div>
-                <div className="text-base font-bold text-gray-900 mb-1">{selectedOutcome.title}</div>
-                <div className="text-2xl font-bold text-blue-600">{(selectedOutcome.price * 100).toFixed(0)}%</div>
               </div>
             )}
             
