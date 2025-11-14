@@ -466,10 +466,10 @@ const Portfolio = () => {
                   </div>
                 </div>
                 
-                <div className="bg-white rounded-xl p-12 border border-gray-200 text-center mb-8">
-                  <Activity size={48} className="mx-auto mb-4 text-gray-400" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No Active Positions</h3>
-                  <p className="text-gray-600 mb-6">Start trading to see your positions here</p>
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center mb-8">
+                  <Activity size={48} className="mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Active Positions</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">Start trading to see your positions here</p>
                   <Button 
                     onClick={() => window.location.href = '/markets'}
                     className="bg-blue-600 hover:bg-blue-700 text-white"
