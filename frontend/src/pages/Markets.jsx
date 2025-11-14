@@ -210,8 +210,8 @@ const Markets = () => {
                     {/* Price & Trade Button */}
                     <div className="flex flex-col items-end gap-2 flex-shrink-0">
                       <div className="text-right">
-                        <div className="text-xs text-gray-500 mb-0.5">Top outcome</div>
-                        <div className="text-3xl font-bold text-blue-600">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Top outcome</div>
+                        <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                           {(topPrice * 100).toFixed(0)}%
                         </div>
                       </div>
