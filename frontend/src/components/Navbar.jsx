@@ -75,7 +75,7 @@ const Navbar = () => {
                   navigator.clipboard.writeText('CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump');
                   alert('Contract address copied!');
                 }}
-                className="text-purple-600 hover:text-purple-700 transition-colors"
+                className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
                 title="Copy CA"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
