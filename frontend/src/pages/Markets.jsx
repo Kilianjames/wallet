@@ -103,7 +103,7 @@ const Markets = () => {
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
                   selectedCategory === cat
                     ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
                 }`}
               >
                 {cat}
