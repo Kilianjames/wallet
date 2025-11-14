@@ -274,35 +274,49 @@ export const WalletProvider = ({ children }) => {
       // - An object with { signature: string }
       const txSignature = typeof signature === 'string' ? signature : signature.signature;
 
-      // Return success immediately - transaction was sent!
-      // Confirmation happens in background for better UX
-      console.log('✅ Transaction broadcast successful!');
+      console.log('⏳ Waiting for transaction confirmation...');
       console.log(`🔗 View on Solana Explorer: https://solscan.io/tx/${txSignature}`);
       
-      // Start confirmation check in background (non-blocking)
-      setTimeout(async () => {
-        try {
-          console.log('⏳ Background confirmation check started...');
-          const confirmation = await connection.confirmTransaction(
+      // Wait for confirmation with timeout
+      try {
+        const confirmation = await Promise.race([
+          connection.confirmTransaction(
             {
               signature: txSignature,
               blockhash,
               lastValidBlockHeight,
             },
             'confirmed'
-          );
+          ),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Confirmation timeout')), 30000)
+          )
+        ]);
 
-          if (confirmation.value.err) {
-            console.error(`❌ Transaction failed on-chain: ${JSON.stringify(confirmation.value.err)}`);
-          } else {
-            console.log('✅ Transaction confirmed on blockchain!');
-          }
-        } catch (err) {
-          console.warn('Background confirmation check error:', err.message);
+        if (confirmation.value.err) {
+          console.error(`❌ Transaction failed on-chain:`, confirmation.value.err);
+          throw new Error('Transaction failed on blockchain');
         }
-      }, 0);
-
-      return { signature: txSignature, success: true, confirmed: true };
+        
+        console.log('✅ Transaction confirmed on blockchain!');
+        return { signature: txSignature, success: true, confirmed: true };
+      } catch (confirmError) {
+        // Transaction was sent but confirmation failed/timed out
+        console.warn('⚠️ Confirmation issue:', confirmError.message);
+        
+        // For timeout, we still return the signature but mark as unconfirmed
+        if (confirmError.message?.includes('timeout')) {
+          return { 
+            signature: txSignature, 
+            success: true, 
+            confirmed: false,
+            warning: 'Transaction sent but confirmation timed out. Check Solscan to verify.'
+          };
+        }
+        
+        // For actual failures, throw error
+        throw confirmError;
+      }
     } catch (err) {
       console.error('❌ Transaction error:', err);
       
