@@ -221,12 +221,12 @@ const Portfolio = () => {
               </DialogHeader>
               
               <div className="space-y-4 mt-4">
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h3 className="text-lg font-bold text-green-600 mb-2">📈 LONG Position (Buy YES)</h3>
-                  <p className="text-gray-700 mb-2">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                  <h3 className="text-lg font-bold text-green-600 dark:text-green-400 mb-2">📈 LONG Position (Buy YES)</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mb-2">
                     You believe the event WILL happen. Buy YES tokens at current price (e.g., $0.70).
                   </p>
-                  <ul className="list-disc list-inside text-gray-600 space-y-1">
+                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
                     <li>If event happens: Each YES token = $1.00 USDC</li>
                     <li>If event doesn't happen: Token = $0.00</li>
                     <li>Profit: $1.00 - purchase price</li>
@@ -234,12 +234,12 @@ const Portfolio = () => {
                   </ul>
                 </div>
                 
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h3 className="text-lg font-bold text-red-600 mb-2">📉 SHORT Position (Buy NO)</h3>
-                  <p className="text-gray-700 mb-2">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                  <h3 className="text-lg font-bold text-red-600 dark:text-red-400 mb-2">📉 SHORT Position (Buy NO)</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mb-2">
                     You believe the event WON'T happen. Buy NO tokens at current price (e.g., $0.30).
                   </p>
-                  <ul className="list-disc list-inside text-gray-600 space-y-1">
+                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
                     <li>If event doesn't happen: Each NO token = $1.00 USDC</li>
                     <li>If event happens: Token = $0.00</li>
                     <li>Profit: $1.00 - purchase price</li>
@@ -247,27 +247,27 @@ const Portfolio = () => {
                   </ul>
                 </div>
                 
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h3 className="text-lg font-bold text-blue-600 mb-2">💡 Example Trade</h3>
-                  <p className="text-gray-700 mb-2">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                  <h3 className="text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">💡 Example Trade</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mb-2">
                     Market: "Will Bitcoin hit $120k in 2025?"<br/>
                     YES price: $0.70 | NO price: $0.30
                   </p>
                   <div className="grid grid-cols-2 gap-4 mt-2">
-                    <div className="border border-green-500/30 rounded p-2 bg-green-50">
-                      <div className="text-green-600 font-bold">Buy YES ($0.70)</div>
-                      <div className="text-sm text-gray-600">If YES: Profit $0.30/token</div>
-                      <div className="text-sm text-gray-600">If NO: Lose $0.70/token</div>
+                    <div className="border border-green-500/30 dark:border-green-400/30 rounded p-2 bg-green-50 dark:bg-green-900/20">
+                      <div className="text-green-600 dark:text-green-400 font-bold">Buy YES ($0.70)</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">If YES: Profit $0.30/token</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">If NO: Lose $0.70/token</div>
                     </div>
-                    <div className="border border-red-500/30 rounded p-2 bg-red-50">
-                      <div className="text-red-600 font-bold">Buy NO ($0.30)</div>
-                      <div className="text-sm text-gray-600">If NO: Profit $0.70/token</div>
-                      <div className="text-sm text-gray-600">If YES: Lose $0.30/token</div>
+                    <div className="border border-red-500/30 dark:border-red-400/30 rounded p-2 bg-red-50 dark:bg-red-900/20">
+                      <div className="text-red-600 dark:text-red-400 font-bold">Buy NO ($0.30)</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">If NO: Profit $0.70/token</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">If YES: Lose $0.30/token</div>
                     </div>
                   </div>
                 </div>
                 
-                <div className="text-xs text-gray-500 mt-4">
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-4">
                   Note: YES + NO prices always equal $1.00. This is a prediction market, not a perpetual DEX. 
                   "Leverage" in our interface simulates position sizing, but actual Polymarket trading is 1:1.
                 </div>
