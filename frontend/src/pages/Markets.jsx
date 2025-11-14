@@ -185,7 +185,7 @@ const Markets = () => {
                         )}
                       </div>
                       
-                      <h3 className="text-base font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                         {market.title}
                       </h3>
                       
