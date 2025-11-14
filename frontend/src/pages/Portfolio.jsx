@@ -415,9 +415,9 @@ const Portfolio = () => {
                         </div>
                       </div>
                       
-                      <div className="mt-4 pt-4 border-t border-gray-100">
+                      <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
                             Opened: {new Date(position.timestamp).toLocaleDateString()}
                           </div>
                           <a 
