@@ -347,6 +347,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "DARK MODE COMPLETE - Created ThemeContext for state management with localStorage persistence. Added moon/sun toggle button in Navbar (desktop & mobile). Implemented comprehensive dark mode styling for: (1) Navbar - dark backgrounds, borders, text colors. (2) Markets page - dark cards, backgrounds, gradients, all text elements. (3) Category buttons, search input, badges updated. Tailwind dark mode enabled (class-based). Toggle persists preference. Screenshots verify Markets page works perfectly in both modes. Trading/Portfolio pages need dark mode styling still but toggle infrastructure complete."
+      - working: true
+        agent: "main"
+        comment: "DARK MODE COMPLETE FOR ALL PAGES - Extended dark mode styling to Trading.jsx and Portfolio.jsx. Updated: (1) Trading page - main containers, header, outcome selector cards, info boxes, chart section, orderbook, side panel, all text elements. (2) Portfolio page - main container, header, stats cards, position cards, dialog modals, tabs, empty states, all text with proper contrast. (3) All three pages (Markets, Trading, Portfolio) now fully functional in both light and dark modes. Screenshots confirm perfect dark theme across entire app. Toggle button works seamlessly on all pages."
 
         comment: "EMERGENCY SECURITY UPDATE COMPLETE - Immediately updated backend wallet credentials in .env file. NEW WALLET: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN (verified address matches). Backend restarted. Tested close position endpoint - SUCCESS: Transaction signature returned, wallet has 0.034 SOL balance. Backend logs confirm new wallet initialized correctly. Old compromised wallet is no longer in use."
       - working: true
