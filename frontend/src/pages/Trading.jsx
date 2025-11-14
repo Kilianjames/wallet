@@ -426,7 +426,7 @@ const Trading = () => {
 
       <div className="flex flex-col-reverse lg:flex-row min-h-[calc(100vh-80px)]">
         {/* Left Side - Market Info & Chart (60%) - Shows SECOND on mobile */}
-        <div className="flex-1 lg:w-3/5 p-4 lg:p-6 space-y-4 bg-gray-50">
+        <div className="flex-1 lg:w-3/5 p-4 lg:p-6 space-y-4 bg-gray-50 dark:bg-gray-900">
           {/* Hero Market Card */}
           <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-white shadow-xl">
             <div className="flex items-start justify-between mb-4">
