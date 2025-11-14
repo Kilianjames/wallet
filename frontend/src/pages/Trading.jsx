@@ -703,7 +703,7 @@ const Trading = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Bids */}
               <div className="overflow-x-auto">
-                <div className="grid grid-cols-3 gap-1 lg:gap-2 text-xs text-gray-600 mb-2 px-2 min-w-[200px]">
+                <div className="grid grid-cols-3 gap-1 lg:gap-2 text-xs text-gray-600 dark:text-gray-400 mb-2 px-2 min-w-[200px]">
                   <div className="truncate">Price</div>
                   <div className="text-right truncate">Size</div>
                   <div className="text-right truncate">Total</div>
