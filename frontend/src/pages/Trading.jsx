@@ -275,60 +275,88 @@ const Trading = () => {
       // Request user to sign transaction via Phantom
       const result = await signAndSendTransaction(recipientAddress, solAmountNum);
 
-      if (result.success && result.confirmed) {
-        // Transaction is CONFIRMED on blockchain - safe to save position
-        const position = {
-          id: result.signature,
-          marketId: selectedMarket.id,
-          marketTitle: selectedMarket.title,
-          outcome: selectedOutcome?.title || selectedMarket.title,
-          side: orderSide,
-          amount: solAmountNum,
-          leverage: leverage[0],
-          entryPrice: currentPrice,
-          timestamp: Date.now(),
-          signature: result.signature,
-          walletAddress: publicKey.toString(),
-          confirmed: true
-        };
-        
-        const existingPositions = JSON.parse(localStorage.getItem('positions') || '[]');
-        existingPositions.push(position);
-        localStorage.setItem('positions', JSON.stringify(existingPositions));
-        
-        // Refresh wallet balance after successful bet
-        checkWalletBalance();
-        
-        // Show success tick animation
-        setShowSuccessTick(true);
-        setTimeout(() => setShowSuccessTick(false), 3000);
-        
-        toast({
-          title: '🎉 Bet Placed Successfully!',
-          description: (
-            <div className="space-y-2">
-              <div className="font-semibold">{orderSide} position on {selectedOutcome?.title || selectedMarket.title}</div>
-              <div className="text-xs text-gray-400">Amount: {solAmountNum} SOL</div>
-              <div className="text-xs text-gray-400">Tx: {result.signature.slice(0, 8)}...{result.signature.slice(-8)}</div>
-              <a 
-                href={`https://solscan.io/tx/${result.signature}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1"
-              >
-                View on Solscan →
-              </a>
-              <div className="text-xs text-gray-500 mt-1">
-                ✅ Transaction sent! Check Portfolio for your position.
+      if (result.success) {
+        // Only add to portfolio if transaction was confirmed
+        if (result.confirmed) {
+          const position = {
+            id: result.signature,
+            marketId: selectedMarket.id,
+            marketTitle: selectedMarket.title,
+            outcome: selectedOutcome?.title || selectedMarket.title,
+            side: orderSide,
+            amount: solAmountNum,
+            leverage: leverage[0],
+            entryPrice: currentPrice,
+            timestamp: Date.now(),
+            signature: result.signature,
+            walletAddress: publicKey.toString(),
+            confirmed: true
+          };
+          
+          const existingPositions = JSON.parse(localStorage.getItem('positions') || '[]');
+          existingPositions.push(position);
+          localStorage.setItem('positions', JSON.stringify(existingPositions));
+          
+          // Refresh wallet balance after successful bet
+          checkWalletBalance();
+          
+          // Show success tick animation
+          setShowSuccessTick(true);
+          setTimeout(() => setShowSuccessTick(false), 3000);
+          
+          toast({
+            title: '🎉 Bet Placed Successfully!',
+            description: (
+              <div className="space-y-2">
+                <div className="font-semibold">{orderSide} position on {selectedOutcome?.title || selectedMarket.title}</div>
+                <div className="text-xs text-gray-400">Amount: {solAmountNum} SOL</div>
+                <div className="text-xs text-gray-400">Tx: {result.signature.slice(0, 8)}...{result.signature.slice(-8)}</div>
+                <a 
+                  href={`https://solscan.io/tx/${result.signature}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1"
+                >
+                  View on Solscan →
+                </a>
+                <div className="text-xs text-gray-500 mt-1">
+                  ✅ Transaction confirmed! Check Portfolio for your position.
+                </div>
               </div>
-            </div>
-          ),
-          duration: 8000,
-        });
+            ),
+            duration: 8000,
+          });
 
-        // Reset form
-        setSolAmount('');
-        setAmount('');
+          // Reset form
+          setSolAmount('');
+          setAmount('');
+        } else if (result.warning) {
+          // Transaction sent but confirmation timed out
+          toast({
+            title: '⚠️ Transaction Status Unknown',
+            description: (
+              <div className="space-y-2">
+                <div className="text-sm">{result.warning}</div>
+                <a 
+                  href={`https://solscan.io/tx/${result.signature}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1"
+                >
+                  Check transaction status on Solscan →
+                </a>
+                <div className="text-xs text-gray-500 mt-2">
+                  Your bet will appear in Portfolio once confirmed on-chain.
+                </div>
+              </div>
+            ),
+            duration: 10000,
+          });
+          
+          // Reset form
+          setSolAmount('');
+          setAmount('');
+        }
       }
     } catch (error) {
       console.error('Transaction error:', error);
