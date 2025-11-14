@@ -392,8 +392,8 @@ const Trading = () => {
             <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-in zoom-in">
               <CheckCircle size={60} className="text-white" strokeWidth={3} />
             </div>
-            <p className="text-2xl font-bold text-gray-900 text-center">Bet Placed!</p>
-            <p className="text-sm text-gray-600 text-center mt-2">Check your portfolio</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white text-center">Bet Placed!</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 text-center mt-2">Check your portfolio</p>
           </div>
         </div>
       )}
