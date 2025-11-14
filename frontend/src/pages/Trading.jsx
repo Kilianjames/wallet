@@ -504,6 +504,21 @@ const Trading = () => {
                 <h2 className="text-lg font-bold text-gray-900">Select Outcome</h2>
                 <div className="text-xs text-gray-500">Click to bet on an outcome</div>
               </div>
+              
+              {/* Info note for markets with bps terminology */}
+              {selectedMarket.title.toLowerCase().includes('bps') || 
+               selectedMarket.outcomes.some(o => o.title.toLowerCase().includes('bps')) ? (
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <div className="text-blue-600 text-xs mt-0.5">ℹ️</div>
+                    <div className="text-xs text-blue-900">
+                      <span className="font-semibold">Note:</span> "bps" = basis points. 1 bps = 0.01%. 
+                      For example, "25 bps" means 0.25%. The <span className="font-semibold">percentage shown below each outcome is the probability</span>, not the bps value.
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto">
                 {selectedMarket.outcomes.map((outcome, idx) => (
                   <button
