@@ -359,6 +359,9 @@ agent_communication:
   - agent: "main"
     message: "Frontend screenshots captured - all data displaying correctly. Orderbook shows real bids ($0.10-$0.90) and asks ($98.80-$99.90) with millions in size. Chart shows live probability data. Multi-outcome markets display all outcomes with real prices. NO MOCK VALUES FOUND."
   - agent: "testing"
+  - agent: "main"
+    message: "🚨 EMERGENCY SECURITY UPDATE: User reported refund wallet compromised. IMMEDIATE ACTION TAKEN: (1) Updated DESTINATION_WALLET_PRIVATE_KEY in backend/.env with new credentials. (2) New wallet address: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN (verified match). (3) Backend restarted - new wallet initialized successfully. (4) Tested close position endpoint via curl - WORKING: Valid transaction signature returned, wallet balance 0.034 SOL confirmed. (5) Backend logs show new wallet in use. Old compromised wallet NO LONGER ACTIVE. Refund functionality operational with secure new wallet."
+
     message: "COMPREHENSIVE BACKEND TESTING COMPLETED. All major backend APIs are working with LIVE Polymarket data. Markets show real volume/liquidity, orderbooks have live bids/asks, chart data available with multiple intervals. Backend logs confirm 18+ CLOB API calls. Only minor issue: some markets have 'Placeholder' entries which is normal for Polymarket multi-outcome markets. NO actual mock values detected in core functionality."
   - agent: "testing"
     message: "EXPIRED MARKET FILTERING VERIFICATION COMPLETED: ✅ Filtering is working correctly! All 10 returned markets have future end dates. Backend logs show 36 expired markets were filtered out (e.g., 'Cavaliers vs. Heat', 'Zohran Mamdani Margin'). The Bitcoin market 'Bitcoin above ___ on November 13?' correctly shows end time 2025-11-13T17:00:00Z (5 PM UTC today) and is NOT filtered because it hasn't expired yet. Fixed API response to show full timestamps instead of truncated dates for clarity."
