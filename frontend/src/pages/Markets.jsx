@@ -135,7 +135,7 @@ const Markets = () => {
           </div>
         ) : filteredMarkets.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-600 text-lg">No markets found matching your search</p>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">No markets found matching your search</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
