@@ -699,7 +699,7 @@ const Trading = () => {
 
           {/* Orderbook */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
-            <h2 className="text-base lg:text-lg font-semibold text-gray-900 mb-3 lg:mb-4">Order Book {orderbook ? '(Live)' : '(Loading...)'}</h2>
+            <h2 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white mb-3 lg:mb-4">Order Book {orderbook ? '(Live)' : '(Loading...)'}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Bids */}
               <div className="overflow-x-auto">
