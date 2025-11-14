@@ -1,0 +1,24 @@
+{
+  "short_name": "Polyfluid",
+  "name": "Polyfluid - Prediction Market Trading",
+  "description": "Trade on prediction markets with live data from Polymarket",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#3b82f6",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary"
+}
