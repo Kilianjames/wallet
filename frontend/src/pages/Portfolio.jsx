@@ -197,8 +197,8 @@ const Portfolio = () => {
           </div>
           {isConnected && (
             <div className="text-right">
-              <div className="text-sm text-gray-600 mb-1">Total P&L</div>
-              <div className={`text-3xl font-bold ${totalPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <div className="text-sm text-gray-600 dark:text-gray-300 mb-1">Total P&L</div>
+              <div className={`text-3xl font-bold ${totalPnL >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                 {totalPnL >= 0 ? '+' : ''}{totalPnL.toFixed(4)} SOL
               </div>
             </div>
