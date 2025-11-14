@@ -384,11 +384,11 @@ const Trading = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Success Tick Overlay */}
       {showSuccessTick && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-2xl p-8 shadow-2xl animate-in zoom-in">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl animate-in zoom-in">
             <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-in zoom-in">
               <CheckCircle size={60} className="text-white" strokeWidth={3} />
             </div>
