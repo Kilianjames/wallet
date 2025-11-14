@@ -379,7 +379,7 @@ const Portfolio = () => {
                             }`}>
                               {position.side}
                             </span>
-                            <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs font-semibold">
+                            <span className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-xs font-semibold">
                               {position.leverage}x
                             </span>
                           </div>
