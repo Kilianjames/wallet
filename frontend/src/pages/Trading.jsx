@@ -599,8 +599,8 @@ const Trading = () => {
           {/* Chart */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Price Chart {chartData.length > 0 && <span className="text-sm text-green-600">● Live</span>}
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Price Chart {chartData.length > 0 && <span className="text-sm text-green-600 dark:text-green-400">● Live</span>}
               </h2>
               <div className="flex gap-2">
                 {[
