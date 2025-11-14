@@ -97,8 +97,8 @@ const Navbar = () => {
                   to={item.path}
                   className={`relative px-6 py-2 text-sm font-semibold transition-all ${
                     isActive
-                      ? 'text-blue-600'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   {item.label}
