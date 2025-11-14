@@ -506,8 +506,8 @@ const Trading = () => {
                     onClick={() => handleOutcomeChange(outcome)}
                     className={`p-4 rounded-xl border-2 transition-all text-left ${
                       selectedOutcome?.market_id === outcome.market_id
-                        ? 'border-blue-600 bg-blue-50 shadow-md'
-                        : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow'
+                        ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/30 shadow-md'
+                        : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 bg-white dark:bg-gray-800 hover:shadow'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-3">
