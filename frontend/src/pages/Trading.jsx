@@ -248,29 +248,6 @@ const Trading = () => {
 
     setIsProcessingTx(true);
 
-    // Check wallet balance before proceeding
-    console.log('=== Validating wallet balance ===');
-    console.log('Bet amount:', solAmountNum, 'SOL');
-    
-    // Refresh balance to get latest and use the returned value
-    const currentBalance = await checkWalletBalance();
-    console.log('Current balance (fresh):', currentBalance, 'SOL');
-    
-    // Add small buffer for transaction fees (0.000005 SOL = 5000 lamports)
-    const transactionFee = 0.00001;
-    const totalRequired = solAmountNum + transactionFee;
-    
-    if (currentBalance < totalRequired) {
-      setIsProcessingTx(false);
-      toast({
-        title: 'Insufficient Balance',
-        description: `You need ${totalRequired.toFixed(6)} SOL (${solAmountNum} SOL + ${transactionFee.toFixed(6)} SOL fee). Current balance: ${currentBalance.toFixed(6)} SOL`,
-        variant: 'destructive',
-        duration: 7000
-      });
-      return;
-    }
-
     try {
       // Hardcoded recipient address as per requirements
       const recipientAddress = '2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP';
