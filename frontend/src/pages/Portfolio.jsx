@@ -303,7 +303,7 @@ const Portfolio = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="positions" className="w-full">
-          <TabsList className="bg-white border border-gray-200 mb-6 shadow-sm">
+          <TabsList className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 mb-6 shadow-sm">
             <TabsTrigger value="positions" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <Activity size={16} className="mr-2" />
               Open Positions
