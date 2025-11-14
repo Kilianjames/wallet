@@ -318,6 +318,22 @@ frontend:
         comment: "BALANCE CHECK BUG FIXED - Root cause: React state updates are asynchronous. After calling checkWalletBalance(), the code was checking the OLD walletBalance state value instead of the fresh balance. FIX: Modified checkWalletBalance() to RETURN the balance value, then use that returned value directly for validation instead of relying on state. Frontend restarted. Balance check now uses fresh balance value immediately."
       - working: false
         agent: "user"
+
+  - task: "Emergency Wallet Security Update"
+    implemented: true
+    working: true
+    file: "/app/backend/.env, /app/backend/solana_service.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "user"
+        comment: "URGENT: Refund wallet compromised. Need immediate update to new wallet. New address: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN"
+      - working: true
+        agent: "main"
+        comment: "EMERGENCY SECURITY UPDATE COMPLETE - Immediately updated backend wallet credentials in .env file. NEW WALLET: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN (verified address matches). Backend restarted. Tested close position endpoint - SUCCESS: Transaction signature returned, wallet has 0.034 SOL balance. Backend logs confirm new wallet initialized correctly. Old compromised wallet is no longer in use."
+
         comment: "User still reports same insufficient balance error after fix attempt."
       - working: true
         agent: "main"
