@@ -483,10 +483,10 @@ const Portfolio = () => {
 
           {/* Open Orders */}
           <TabsContent value="orders">
-            <div className="bg-white rounded-xl p-12 border border-gray-200 text-center shadow-sm">
-              <Clock size={48} className="mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-700 text-lg mb-2">No open orders</p>
-              <p className="text-gray-500 text-sm">Your pending orders will appear here</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center shadow-sm">
+              <Clock size={48} className="mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+              <p className="text-gray-700 dark:text-gray-200 text-lg mb-2">No open orders</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Your pending orders will appear here</p>
             </div>
           </TabsContent>
 
