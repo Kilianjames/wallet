@@ -278,26 +278,26 @@ const Portfolio = () => {
 
         {/* Portfolio Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-            <div className="text-gray-600 text-sm mb-2">Total Balance</div>
-            <div className="text-3xl font-bold text-blue-600">$0.00</div>
-            <div className="text-xs text-gray-500 mt-1">Connected: {address?.slice(0, 6)}...{address?.slice(-4)}</div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="text-gray-600 dark:text-gray-300 text-sm mb-2">Total Balance</div>
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">$0.00</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Connected: {address?.slice(0, 6)}...{address?.slice(-4)}</div>
           </div>
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-            <div className="text-gray-600 text-sm mb-2">Total PnL</div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="text-gray-600 dark:text-gray-300 text-sm mb-2">Total PnL</div>
             <div className={`text-3xl font-bold ${
-              totalPnL >= 0 ? 'text-green-600' : 'text-red-600'
+              totalPnL >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
             }`}>
               {totalPnL >= 0 ? '+' : ''}${totalPnL.toFixed(2)}
             </div>
           </div>
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-            <div className="text-gray-600 text-sm mb-2">Open Positions</div>
-            <div className="text-3xl font-bold text-blue-600">{positions.length}</div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="text-gray-600 dark:text-gray-300 text-sm mb-2">Open Positions</div>
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{positions.length}</div>
           </div>
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-            <div className="text-gray-600 text-sm mb-2">Position Value</div>
-            <div className="text-3xl font-bold text-blue-600">${totalValue.toFixed(2)}</div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="text-gray-600 dark:text-gray-300 text-sm mb-2">Position Value</div>
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">${totalValue.toFixed(2)}</div>
           </div>
         </div>
 
