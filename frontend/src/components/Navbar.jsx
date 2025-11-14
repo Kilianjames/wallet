@@ -61,15 +61,15 @@ const Navbar = () => {
                 alt="Polyfluid Logo"
                 className="h-10 w-10 rounded-lg group-hover:scale-105 transition-transform"
               />
-              <span className="text-2xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors">
+              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
                 Polyfluid
               </span>
             </Link>
             
             {/* Contract Address */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
-              <span className="text-xs font-semibold text-purple-600">CA:</span>
-              <code className="text-xs font-mono text-gray-700">CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump</code>
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+              <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">CA:</span>
+              <code className="text-xs font-mono text-gray-700 dark:text-gray-300">CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump</code>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText('CAurDj4T1jzsbPssynZKNYPYaB42m2wLxkjqjkHCpump');
