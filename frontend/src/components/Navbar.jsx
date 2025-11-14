@@ -15,6 +15,7 @@ const Navbar = () => {
     { path: '/markets', label: 'Markets' },
     { path: '/trade', label: 'Trade' },
     { path: '/portfolio', label: 'Portfolio' },
+    { path: '/analytics', label: 'Analytics' },
   ];
 
   const formatAddress = (addr) => {
