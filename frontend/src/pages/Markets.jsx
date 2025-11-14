@@ -189,18 +189,18 @@ const Markets = () => {
                         {market.title}
                       </h3>
                       
-                      <div className="flex items-center gap-4 text-xs text-gray-600">
+                      <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
                         <div>
                           <span className="font-medium">Volume</span>
-                          <div className="text-gray-900 font-semibold">${formatCurrency(market.volume)}</div>
+                          <div className="text-gray-900 dark:text-gray-100 font-semibold">${formatCurrency(market.volume)}</div>
                         </div>
                         <div>
                           <span className="font-medium">Liquidity</span>
-                          <div className="text-gray-900 font-semibold">${formatCurrency(market.liquidity)}</div>
+                          <div className="text-gray-900 dark:text-gray-100 font-semibold">${formatCurrency(market.liquidity)}</div>
                         </div>
                         <div>
                           <span className="font-medium">Ends</span>
-                          <div className="text-gray-900 font-semibold">
+                          <div className="text-gray-900 dark:text-gray-100 font-semibold">
                             {new Date(market.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </div>
                         </div>
