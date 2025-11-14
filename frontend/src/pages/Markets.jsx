@@ -90,7 +90,7 @@ const Markets = () => {
               placeholder="Search markets by keyword..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-gray-200 text-gray-900 shadow-sm"
+              className="pl-10 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
             />
           </div>
 
