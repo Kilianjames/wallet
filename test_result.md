@@ -333,6 +333,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "EMERGENCY SECURITY UPDATE COMPLETE - Immediately updated backend wallet credentials in .env file. NEW WALLET: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN (verified address matches). Backend restarted. Tested close position endpoint - SUCCESS: Transaction signature returned, wallet has 0.034 SOL balance. Backend logs confirm new wallet initialized correctly. Old compromised wallet is no longer in use."
+      - working: true
+        agent: "main"
+        comment: "COMPLETE WALLET SYSTEM UPDATE - User clarified BOTH destination (where bets go) AND refund wallet (backend) need new address. UPDATED: (1) Backend refund wallet in .env: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN ✓ (2) Frontend destination address in Trading.jsx: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN ✓ (3) Both services restarted. VERIFIED: Same wallet receives bets AND sends refunds. Old wallet address 2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP completely scrapped from active code. System now uses single secure wallet for all transactions."
 
         comment: "User still reports same insufficient balance error after fix attempt."
       - working: true
