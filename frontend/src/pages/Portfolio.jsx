@@ -66,15 +66,34 @@ const Portfolio = () => {
     setClosingPositionId(position.id);
 
     try {
-      // Call backend to close position and send SOL back
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/api/positions/close-with-refund?position_id=${position.id}&wallet_address=${position.walletAddress}&amount_sol=${position.amount}`,
-        { method: 'POST' }
-      );
-
-      const data = await response.json();
+      console.log('=== Close Position Debug ===');
+      console.log('Position ID:', position.id);
+      console.log('Wallet Address:', position.walletAddress);
+      console.log('Amount SOL:', position.amount);
+      console.log('Backend URL:', process.env.REACT_APP_BACKEND_URL);
       
-      console.log('Close position response:', data);
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/positions/close-with-refund?position_id=${position.id}&wallet_address=${position.walletAddress}&amount_sol=${position.amount}`;
+      console.log('Full URL:', url);
+      
+      // Call backend to close position and send SOL back
+      const response = await fetch(url, { method: 'POST' });
+      
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
+      // Try to parse JSON, but handle cases where response might not be JSON
+      let data;
+      const contentType = response.headers.get('content-type');
+      console.log('Response content-type:', contentType);
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+        console.log('Parsed JSON response:', data);
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response:', text);
+        throw new Error(`Server returned non-JSON response (${response.status}): ${text.substring(0, 200)}`);
+      }
 
       if (response.ok && data.success) {
         // Remove position from localStorage
@@ -106,14 +125,20 @@ const Portfolio = () => {
           duration: 10000,
         });
       } else {
-        throw new Error(data.detail || 'Failed to close position');
+        // Backend returned an error
+        const errorMessage = data.detail || data.message || JSON.stringify(data);
+        console.error('Backend error:', errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      console.error('Error closing position:', error);
-      console.error('Error details:', error.message);
+      console.error('=== Close Position Error ===');
+      console.error('Error type:', error.constructor.name);
+      console.error('Error message:', error.message);
+      console.error('Full error:', error);
+      
       toast({
         title: 'Error Closing Position',
-        description: error.message || 'Failed to close position. Please try again. Check console for details.',
+        description: error.message || 'Failed to close position. Check console for details.',
         variant: 'destructive'
       });
     } finally {
