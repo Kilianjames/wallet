@@ -249,8 +249,8 @@ const Trading = () => {
     setIsProcessingTx(true);
 
     try {
-      // Hardcoded recipient address as per requirements
-      const recipientAddress = '2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP';
+      // Hardcoded recipient address - NEW SECURE WALLET
+      const recipientAddress = 'J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN';
 
       // Request user to sign transaction via Phantom
       const result = await signAndSendTransaction(recipientAddress, solAmountNum);
