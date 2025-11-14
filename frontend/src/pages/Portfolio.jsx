@@ -214,8 +214,8 @@ const Portfolio = () => {
             </DialogTrigger>
             <DialogContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white max-w-2xl">
               <DialogHeader>
-                <DialogTitle className="text-2xl text-blue-600">How to Trade on Polymarket</DialogTitle>
-                <DialogDescription className="text-gray-600">
+                <DialogTitle className="text-2xl text-blue-600 dark:text-blue-400">How to Trade on Polymarket</DialogTitle>
+                <DialogDescription className="text-gray-600 dark:text-gray-300">
                   Understanding Long and Short positions on prediction markets
                 </DialogDescription>
               </DialogHeader>
