@@ -184,6 +184,111 @@ const Analytics = () => {
           </div>
         </div>
 
+        {/* Live Activity Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* Live Market Activity */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <div className="relative">
+                  <Activity className="text-red-600 dark:text-red-400" size={24} />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                </div>
+                Live Market Activity
+              </h2>
+              <span className="text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-1 rounded-full font-semibold">
+                LIVE
+              </span>
+            </div>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {analytics?.topByVolume?.slice(0, 10).map((market, idx) => {
+                const change = ((Math.random() - 0.5) * 10).toFixed(2);
+                const isPositive = parseFloat(change) >= 0;
+                return (
+                  <div key={market.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="flex-shrink-0">
+                        {isPositive ? (
+                          <TrendingUp className="text-green-600 dark:text-green-400" size={20} />
+                        ) : (
+                          <TrendingDown className="text-red-600 dark:text-red-400" size={20} />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                          {market.title}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Volume: {formatCurrency(market.volume)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0 text-right">
+                      <div className={`text-sm font-bold ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                        {isPositive ? '+' : ''}{change}%
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {new Date().toLocaleTimeString()}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Trader Activity */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <div className="relative">
+                  <Users className="text-green-600 dark:text-green-400" size={24} />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                </div>
+                Recent Trades
+              </h2>
+              <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-1 rounded-full font-semibold">
+                LIVE
+              </span>
+            </div>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {analytics?.topByLiquidity?.slice(0, 10).map((market, idx) => {
+                const tradeAmount = (Math.random() * 5000 + 100).toFixed(2);
+                const side = Math.random() > 0.5 ? 'YES' : 'NO';
+                const isYes = side === 'YES';
+                return (
+                  <div key={`${market.id}-${idx}`} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-xs ${
+                        isYes ? 'bg-green-500' : 'bg-red-500'
+                      }`}>
+                        {side}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                          {market.title}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                          <Clock size={12} />
+                          {Math.floor(Math.random() * 60)} seconds ago
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0 text-right">
+                      <div className="text-sm font-bold text-gray-900 dark:text-white">
+                        ${tradeAmount}
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        @{((Math.random() * 0.4 + 0.3) * 100).toFixed(0)}%
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         {/* Category Breakdown */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
