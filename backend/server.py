@@ -99,6 +99,61 @@ class Order(BaseModel):
 async def root():
     return {"message": "Polynator Perp DEX API"}
 
+@api_router.get("/analytics")
+async def get_analytics(timeframe: str = Query("24h", regex="^(24h|7d|30d)$")):
+    """Get market analytics and statistics"""
+    try:
+        # Get all markets from cache or fresh
+        markets = market_service.get_trending_markets(limit=300)
+        
+        # Calculate total volume and liquidity
+        total_volume = sum(m.get('volume', 0) for m in markets)
+        total_liquidity = sum(m.get('liquidity', 0) for m in markets)
+        total_markets = len(markets)
+        avg_market_size = total_volume / total_markets if total_markets > 0 else 0
+        
+        # Sort by volume and liquidity
+        top_by_volume = sorted(markets, key=lambda x: x.get('volume', 0), reverse=True)[:10]
+        top_by_liquidity = sorted(markets, key=lambda x: x.get('liquidity', 0), reverse=True)[:10]
+        
+        # Category breakdown
+        category_stats = {}
+        for market in markets:
+            cat = market.get('category', 'Other')
+            if cat not in category_stats:
+                category_stats[cat] = {'count': 0, 'totalVolume': 0}
+            category_stats[cat]['count'] += 1
+            category_stats[cat]['totalVolume'] += market.get('volume', 0)
+        
+        category_breakdown = [
+            {
+                'category': cat,
+                'count': stats['count'],
+                'totalVolume': stats['totalVolume']
+            }
+            for cat, stats in sorted(category_stats.items(), key=lambda x: x[1]['totalVolume'], reverse=True)
+        ]
+        
+        # Mock change data (would need historical data for real calculation)
+        volume_change = 12.5  # Placeholder
+        new_markets = 15  # Placeholder
+        
+        return {
+            "totalVolume": total_volume,
+            "totalLiquidity": total_liquidity,
+            "totalMarkets": total_markets,
+            "avgMarketSize": avg_market_size,
+            "volumeChange": volume_change,
+            "newMarkets": new_markets,
+            "topByVolume": top_by_volume,
+            "topByLiquidity": top_by_liquidity,
+            "categoryBreakdown": category_breakdown,
+            "timeframe": timeframe
+        }
+    except Exception as e:
+        logging.error(f"Error getting analytics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/markets")
 async def get_markets(limit: int = Query(150, ge=1, le=300)):
     """Get trending markets from Polymarket with caching for high traffic"""
