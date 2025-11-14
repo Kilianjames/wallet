@@ -116,19 +116,19 @@ const Markets = () => {
         {loading ? (
           <div className="grid grid-cols-1 gap-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="bg-white rounded-xl p-4 border border-gray-200 animate-pulse">
+              <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 animate-pulse">
                 <div className="flex items-start gap-4">
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg" />
+                  <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-lg" />
                   <div className="flex-1 space-y-3">
-                    <div className="h-4 bg-gray-200 rounded w-1/4" />
-                    <div className="h-6 bg-gray-200 rounded w-3/4" />
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
+                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
                     <div className="flex gap-4">
-                      <div className="h-4 bg-gray-200 rounded w-20" />
-                      <div className="h-4 bg-gray-200 rounded w-20" />
-                      <div className="h-4 bg-gray-200 rounded w-20" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20" />
                     </div>
                   </div>
-                  <div className="w-24 h-16 bg-gray-200 rounded" />
+                  <div className="w-24 h-16 bg-gray-200 dark:bg-gray-700 rounded" />
                 </div>
               </div>
             ))}
