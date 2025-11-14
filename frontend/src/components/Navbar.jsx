@@ -9,6 +9,7 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isConnected, address, connect, disconnect, isReady } = useWallet();
+  const { isDarkMode, toggleTheme } = useTheme();
 
   const navItems = [
     { path: '/markets', label: 'Markets' },
