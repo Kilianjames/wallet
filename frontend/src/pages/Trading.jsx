@@ -719,8 +719,8 @@ const Trading = () => {
                       <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
                         <div className="absolute inset-0 bg-green-500 opacity-10" style={{ width: `${(total / maxTotal) * 100}%` }} />
                         <div className="text-green-600 relative z-10">${(price * 100).toFixed(2)}</div>
-                        <div className="text-right relative z-10 text-gray-900">{size.toFixed(0)}</div>
-                        <div className="text-right text-gray-600 relative z-10">{total.toFixed(0)}</div>
+                        <div className="text-right relative z-10 text-gray-900 dark:text-gray-100">{size.toFixed(0)}</div>
+                        <div className="text-right text-gray-600 dark:text-gray-400 relative z-10">{total.toFixed(0)}</div>
                       </div>
                     );
                   })
@@ -747,8 +747,8 @@ const Trading = () => {
                       <div key={i} className="grid grid-cols-3 gap-2 text-sm py-1 px-2 hover:bg-gray-50 rounded relative">
                         <div className="absolute inset-0 bg-red-500 opacity-10" style={{ width: `${(total / maxTotal) * 100}%` }} />
                         <div className="text-red-600 relative z-10">${(price * 100).toFixed(2)}</div>
-                        <div className="text-right relative z-10 text-gray-900">{size.toFixed(0)}</div>
-                        <div className="text-right text-gray-600 relative z-10">{total.toFixed(0)}</div>
+                        <div className="text-right relative z-10 text-gray-900 dark:text-gray-100">{size.toFixed(0)}</div>
+                        <div className="text-right text-gray-600 dark:text-gray-400 relative z-10">{total.toFixed(0)}</div>
                       </div>
                     );
                   })
