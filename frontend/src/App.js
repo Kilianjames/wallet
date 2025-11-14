@@ -21,6 +21,7 @@ function App() {
               <Route path="/trade" element={<Trading />} />
               <Route path="/markets" element={<Markets />} />
               <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/analytics" element={<Analytics />} />
               <Route path="*" element={<Navigate to="/markets" replace />} />
             </Routes>
             <Toaster />
