@@ -265,6 +265,22 @@ frontend:
         agent: "main"
         comment: "Portfolio page displays positions from localStorage. Need to test end-to-end: place bet -> see in portfolio -> verify live price updates."
 
+
+  - task: "Improve UI Clarity - Fix Confusing 'bps' Display"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/Trading.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Users confused by '78ers game' showing '70 bps' - unclear what this means. UI needs better labeling to distinguish outcome names from probabilities."
+      - working: true
+        agent: "main"
+        comment: "UI CLARITY IMPROVEMENTS APPLIED: (1) Added informational note for markets with 'bps' (basis points) terminology explaining: 'bps = basis points. 1 bps = 0.01%. The percentage shown is the PROBABILITY, not the bps value.' (2) Enhanced outcome card layout with clear 'Probability' and 'Price' labels to distinguish values. (3) Changed 'Trading on:' to 'You're betting on:' with 'Current Odds' label for better clarity. (4) Added visual indicators (blue dot) for selected outcome. (5) Improved visual hierarchy with larger probability display and better spacing. Frontend restarted. Screenshot confirms improvements are live and clear."
+
   - task: "Close Position - Insufficient Balance Error Debug"
     implemented: true
     working: true
