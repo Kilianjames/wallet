@@ -511,7 +511,7 @@ const Trading = () => {
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-3">
-                      <div className="text-sm text-gray-900 font-medium line-clamp-2 flex-1">{outcome.title}</div>
+                      <div className="text-sm text-gray-900 dark:text-gray-100 font-medium line-clamp-2 flex-1">{outcome.title}</div>
                       {selectedOutcome?.market_id === outcome.market_id && (
                         <div className="flex-shrink-0 w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
                       )}
