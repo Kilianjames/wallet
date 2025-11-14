@@ -280,6 +280,21 @@ frontend:
         agent: "main"
         comment: "INVESTIGATION COMPLETE - Backend is working perfectly. Verified: (1) SolanaService initializes successfully with 0.538 SOL balance, (2) Close position endpoint tested via curl - works correctly and returns valid transaction signature, (3) Backend logs show successful refunds with no 'insufficient balance' errors. FRONTEND FIX APPLIED: Enhanced error handling in Portfolio.jsx to properly capture and display exact error messages from backend. Added comprehensive logging to help debug if issue occurs again. Issue likely was: (a) cached error from old session, or (b) JSON parsing error masking real error message. User should now see detailed error messages if any issue occurs."
 
+  - task: "Prevent Bets with Empty Wallet (Ghost Positions Bug)"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/contexts/WalletContext.jsx, /app/frontend/src/pages/Trading.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "CRITICAL BUG: Users with empty wallets (0 SOL) can place bets and see 'Betting complete' message. Failed bets appear in portfolio as 'ghost positions'."
+      - working: true
+        agent: "main"
+        comment: "CRITICAL BUG FIXED - Root cause identified: (1) WalletContext.jsx was returning 'confirmed: true' immediately after sending transaction, WITHOUT actually waiting for on-chain confirmation. (2) No balance validation before transaction attempt. FIXES APPLIED: (1) Modified signAndSendTransaction to WAIT for transaction confirmation (30s timeout) before returning success. Only returns confirmed:true if transaction succeeds on-chain. (2) Added pre-transaction wallet balance check in Trading.jsx - validates user has sufficient SOL + fees before attempting transaction. (3) Enhanced error handling for timeout scenarios - warns user to check Solscan instead of falsely showing success. (4) Positions only added to portfolio if transaction is CONFIRMED on blockchain. Both frontend and backend restarted."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
