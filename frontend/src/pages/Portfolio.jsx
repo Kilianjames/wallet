@@ -212,7 +212,7 @@ const Portfolio = () => {
                 How Trading Works
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-white border-gray-200 text-gray-900 max-w-2xl">
+            <DialogContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white max-w-2xl">
               <DialogHeader>
                 <DialogTitle className="text-2xl text-blue-600">How to Trade on Polymarket</DialogTitle>
                 <DialogDescription className="text-gray-600">
