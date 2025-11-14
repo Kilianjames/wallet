@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://predict-fluid.preview.emergentagent.com/sitemap.xml
+
+# This is a legitimate prediction market trading interface
+# - Uses official Phantom wallet integration
+# - Connects to public Polymarket API
+# - No private keys requested or stored
+# - All transactions through user's own Phantom wallet
