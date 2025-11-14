@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Get backend URL from environment
-BACKEND_URL = "https://betfluid.preview.emergentagent.com/api"
+BACKEND_URL = "https://predict-fluid.preview.emergentagent.com/api"
 
 def test_comprehensive_backend():
     """Run comprehensive backend tests"""

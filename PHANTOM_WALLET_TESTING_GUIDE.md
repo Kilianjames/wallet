@@ -17,7 +17,7 @@ The Polynator app now has direct Phantom wallet integration with Solana Mainnet 
 ### Step-by-Step Testing
 
 #### 1. **Connect Wallet**
-   - Open the app: https://betfluid.preview.emergentagent.com/trade
+   - Open the app: https://predict-fluid.preview.emergentagent.com/trade
    - Look for the **"Connect Phantom Wallet"** button (mint/turquoise color)
    - Click the button
    - Phantom will popup asking for permission
@@ -171,7 +171,7 @@ Open browser DevTools (F12) to see helpful logs:
 
 ## 🌐 URLs
 
-- **App**: https://betfluid.preview.emergentagent.com/trade
+- **App**: https://predict-fluid.preview.emergentagent.com/trade
 - **Phantom Download**: https://phantom.app/download
 - **Solana Status**: https://status.solana.com/
 - **Transaction Explorer**: https://solscan.io/
