@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Trading from "./pages/Trading";
 import Markets from "./pages/Markets";
 import Portfolio from "./pages/Portfolio";
+import Analytics from "./pages/Analytics";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
