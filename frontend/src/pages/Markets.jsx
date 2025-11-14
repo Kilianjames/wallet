@@ -75,8 +75,8 @@ const Markets = () => {
               <p className="text-sm text-gray-600 dark:text-gray-300">Live prediction markets • Updated real-time</p>
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <div className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-full font-medium">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <div className="flex items-center gap-1 px-3 py-1.5 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full font-medium">
+                <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse" />
                 {filteredMarkets.length} Active
               </div>
             </div>
