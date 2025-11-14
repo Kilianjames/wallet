@@ -364,6 +364,8 @@ agent_communication:
   - agent: "testing"
   - agent: "main"
     message: "🚨 EMERGENCY SECURITY UPDATE: User reported refund wallet compromised. IMMEDIATE ACTION TAKEN: (1) Updated DESTINATION_WALLET_PRIVATE_KEY in backend/.env with new credentials. (2) New wallet address: J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN (verified match). (3) Backend restarted - new wallet initialized successfully. (4) Tested close position endpoint via curl - WORKING: Valid transaction signature returned, wallet balance 0.034 SOL confirmed. (5) Backend logs show new wallet in use. Old compromised wallet NO LONGER ACTIVE. Refund functionality operational with secure new wallet."
+  - agent: "main"
+    message: "🔄 COMPLETE WALLET REPLACEMENT: User requested both destination AND refund wallets use new address, scrap old wallet completely. COMPREHENSIVE UPDATE: (1) Backend refund wallet (.env): J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN ✓ (2) Frontend bet destination (Trading.jsx): J3gUQC2HsPDpz15KFTHthnZu4xh1moTZRX1TbJgqHWGN ✓ (3) Frontend & backend restarted. VERIFIED: Single secure wallet now handles BOTH receiving user bets AND sending refunds. Old address (2dmLwEMVZrrQHvdba7oQGHk2pw8Hnr8VG7an5hUMDCCP) completely removed from active code. System operational with unified wallet architecture."
 
     message: "COMPREHENSIVE BACKEND TESTING COMPLETED. All major backend APIs are working with LIVE Polymarket data. Markets show real volume/liquidity, orderbooks have live bids/asks, chart data available with multiple intervals. Backend logs confirm 18+ CLOB API calls. Only minor issue: some markets have 'Placeholder' entries which is normal for Polymarket multi-outcome markets. NO actual mock values detected in core functionality."
   - agent: "testing"
