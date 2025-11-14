@@ -369,15 +369,15 @@ const Trading = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-blue-600" size={48} />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <Loader2 className="animate-spin text-blue-600 dark:text-blue-400" size={48} />
       </div>
     );
   }
 
   if (!selectedMarket) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-900">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center text-gray-900 dark:text-gray-100">
         <div>No markets available</div>
       </div>
     );
