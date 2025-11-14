@@ -843,9 +843,9 @@ const Trading = () => {
             </div>
 
             {/* Leverage - FIRST */}
-            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
               <div className="flex justify-between mb-3">
-                <label className="text-sm font-semibold text-gray-900">Leverage</label>
+                <label className="text-sm font-semibold text-gray-900 dark:text-white">Leverage</label>
                 <span className="text-2xl font-bold text-blue-600">{leverage[0]}x</span>
               </div>
               <Slider
