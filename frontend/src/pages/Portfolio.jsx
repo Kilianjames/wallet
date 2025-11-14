@@ -383,8 +383,8 @@ const Portfolio = () => {
                               {position.leverage}x
                             </span>
                           </div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1">{position.marketTitle}</h3>
-                          <p className="text-sm text-gray-600">{position.outcome}</p>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{position.marketTitle}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{position.outcome}</p>
                         </div>
                         <div className="text-right">
                           <div className={`text-2xl font-bold mb-1 ${pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
